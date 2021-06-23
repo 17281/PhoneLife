@@ -23,6 +23,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  #slq database storage
+  sqflite: ^2.0.0+3
+
+  #format datetime
+  intl: ^0.17.0
+
+  #display todos in grid
+  flutter_staggered_grid_view: ^0.4.0-nullsafety.3
 
 
   # The following adds the Cupertino Icons font to your application.
