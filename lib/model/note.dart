@@ -1,4 +1,6 @@
 //Name of table created , This part is basically SQA
+import 'package:sqflite/sqflite.dart';
+
 final String tableNotes = 'notes';
 
 //contents created in SQL
@@ -55,6 +57,20 @@ class Note {
     description: description ?? this.description,
     createdTime: createdTime ?? this.createdTime,
   );
+
+  //converting map fields into json (for data inserting)
+  static Note fromJson(Map<String, Object?> json) => Note(
+    id: json[NoteFields.id] as int?,
+    number: json[NoteFields.number] as int,
+    title: json[NoteFields.title] as String,
+    description: json[NoteFields.description] as String,
+
+    //specials cases that need extra converting i.e bool and tim
+    createdTime: DateTime.parse(json[NoteFields.time] as String),
+    isImportant: json[NoteFields.isImportant] == 1,
+
+  );
+
 
   // Map to allow data to be inserted into sql
   Map<String, Object?>toJson() => {
