@@ -19,6 +19,7 @@ class DatabaseHelper{
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
   static Database _database;
+
   Future<Database> get database async{
     //if database not Null
     if(_database != null) return _database;
