@@ -39,7 +39,24 @@ class _ContentPageState extends State<ContentPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    //Text Style can be added for different Text sizes.
+    appBar: AppBar (title: Text('Goals'),
+    ),
+    body: Center(
+    child: isLoading
+    ? CircularProgressIndicator()
+        : goals.isEmpty
+    //if goals returned is empty then return 'No Goals
+    ? Text(
+    'No goals found',
+    //text styling
+    style: TextStyle(color: Colors.white, fontSize: 24),
+    )
+        //build the Goals (By calling the buildGoals function/widget)
+
+    // TODO: build the widget
+        : buildGoals(),
+    )
 
   );
-
 }
