@@ -26,6 +26,7 @@ class UserContent {
   final DateTime createdTime;
 
 
+  //constructs users table contents
   const UserContent ({
     this.id,
     required this.isImportant,
@@ -35,6 +36,7 @@ class UserContent {
 
   //copies note objects and changes items within database
   UserContent copy({
+    //primary key for id
     int? id,
     bool? isImportant,
     String? name,
@@ -42,6 +44,7 @@ class UserContent {
 
 }) =>
   UserContent(
+    //setting type to the listed contents
     id: id ?? this.id,
     isImportant: isImportant ?? this.isImportant,
     name: name ?? this.name,
