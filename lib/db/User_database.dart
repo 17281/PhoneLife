@@ -1,5 +1,5 @@
 import 'package:path/path.dart';
-import 'package:phoneapp/model/note.dart';
+import 'package:phoneapp/model/Goals.dart';
 import 'package:sqflite/sqflite.dart';
 
 
@@ -93,16 +93,15 @@ class UserDatabase {
 }
 
   //Reading multiple data at a time
-  Future<List<UserContent>> readAllNotes() async {
+  Future<List<UserContent>> readAllGoals() async {
     final db =await instance.database;
-    //database table (tableNotes) could be changed
+    //database table and table could be changed
 
     ///   Sorts data by time      ASC == asending order
     final orderBy = '${UserFields.time} ASC';
     //final result =
     //this allows raw sql query to be used *Very NICE
-        ///await db.rawQuery('SELECT * FROM $tableNotes ORDER BY $orderBy');
-    ///                          tableNotes, 'Sql where statement can be inserted and changed
+        ///await db.rawQuery('SELECT * FROM $UserFields ORDER BY $orderBy');
     final result = await db.query(userTable, orderBy: orderBy);
     //Convert json string to sql
     return result.map((json)=> UserContent.fromJson(json)).toList();

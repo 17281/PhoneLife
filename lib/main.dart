@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:phoneapp/model/note.dart';
-import 'package:phoneapp/db/notes_database.dart';
+import 'package:phoneapp/model/Goals.dart';
+import 'package:phoneapp/db/User_database.dart';
 import 'package:flutter/services.dart';
 import 'package:phoneapp/page/content_page.dart';
 
