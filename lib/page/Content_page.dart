@@ -40,9 +40,14 @@ class _ContentPageState extends State<ContentPage> {
   @override
   Widget build(BuildContext context) =>
       Scaffold(
-        //Text Style can be added for different Text sizes.
-          appBar: AppBar(title: Text('Goals'),
+
+          appBar: AppBar(
+            //Text Style can be added for different Text sizes.
+            title: Text('Goals', style: TextStyle(fontSize: 30),),
+            //added a icon for actions (Can be changed)
+            actions: [Icon(Icons.search), SizedBox(width: 12)],
           ),
+
           body: Center(
             child: isLoading
                 ? CircularProgressIndicator()
@@ -55,8 +60,22 @@ class _ContentPageState extends State<ContentPage> {
             )
             //build the Goals (By calling the buildGoals function/widget)
                 : buildGoals(),
-          )
-      );
+          ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.black,
+          //adds icon for adding new goals
+          // TODO: Create dynamic adding system rather manual input
+          child: Icon(Icons.add),
+          onPressed: () async {
+            //when pressed activates editing page (creates new page for editing.
+            await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => AddEditGoalsPage()),
+            );
+            //Once created refresh goals display page
+            refreshGoals();
+          },
+      ),
+  );
 
 
   // TODO: find a better looking goal display---------------------------
@@ -72,6 +91,20 @@ class _ContentPageState extends State<ContentPage> {
         crossAxisSpacing: 4,
         itemBuilder: (context, index) {
           final goal = goals[index];
-        },
+          //detects when the user taps a button
+          return GestureDetector(
+            //when user clicks on tap
+            onTap: () async {
+              await Navigator.of(context).push(MaterialPageRoute(
+                //builds the page where new goals are added and then refresh display page.
+                builder: (context) => GoalDetailPage(noteId: goal.id!),
+              ));
+              //calls function to refresh page.
+              refreshGoals();
+            },
+            //uses the card dependent widget
+            //TODO: find better looking display plz
+            child: GoalCardWidget(note: goal, indexe: index),
+          );  },
       );
 }
