@@ -13,8 +13,31 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
   //creates a validation method for when users insert data into database
   final _formkey = GlobalKey<FormState>();
   late bool isImportant;
-  late int number;
-  late String title;
+  late DateTime createdTime;
+  late String name;
   late String description;
+
+  //initiate database and conversions.
+  @override
+  void initState() {
+    super.initState();
+    //setting isImportant factor to false when created
+    isImportant = widget.goal?.isImportant ?? false;
+    //chang-able '' field
+    name = widget.goal?.name ?? '';
+    description = widget.goal?.description ?? '';
+  }
+
+  //build the editing widget
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      //input action - TODO: create simple sliding goal setting system
+      actions: [],
+    ),
+    body: Form(
+      key: _formkey, child: (isImportant),
+    ),
+  );
 
 }
