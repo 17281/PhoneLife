@@ -17,7 +17,7 @@ class _ContentPageState extends State<ContentPage> {
   void initState() {
     super.initState();
     //refresh future content per update (Useful fo updating goals)
-    refreshContents();
+    refreshGoals();
   }
 
   //closing database when app is down
@@ -29,10 +29,10 @@ class _ContentPageState extends State<ContentPage> {
   }
 
   //updates content when ever new content added
-  Future refreshContents() async {
+  Future refreshGoals() async {
     //when loading database
     setState(() => isLoading = true);
-
+    //refreshes all goals when new data added
     this.goals = await UserDatabase.instance.readAllGoals();
     setState(() => isLoading = false);
   }
@@ -102,9 +102,9 @@ class _ContentPageState extends State<ContentPage> {
               //calls function to refresh page.
               refreshGoals();
             },
-            //uses the card dependent widget
+            //uses the card widget in folder to display data
             //TODO: find better looking display plz
-            child: GoalCardWidget(note: goal, indexe: index),
+            child: GoalCardWidget(goal: goal, index: index),
           );  },
       );
 }
