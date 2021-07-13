@@ -7,6 +7,8 @@ class ContentPage extends StatefulWidget {
   @override
   _ContentPageState createState() => _ContentPageState();
 }
+
+//the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> {
   //finds all 'goals' from userTable
   late List<UserContent> goals;
@@ -66,6 +68,8 @@ class _ContentPageState extends State<ContentPage> {
           //adds icon for adding new goals
           // TODO: Create dynamic adding system rather manual input
           child: Icon(Icons.add),
+
+          //makes the object interactable, when pressed, await for response
           onPressed: () async {
             //when pressed activates editing page (creates new page for editing.
             await Navigator.of(context).push(
@@ -97,7 +101,8 @@ class _ContentPageState extends State<ContentPage> {
             onTap: () async {
               await Navigator.of(context).push(MaterialPageRoute(
                 //builds the page where new goals are added and then refresh display page.
-                builder: (context) => GoalDetailPage(noteId: goal.id!),
+                //builds content based on goalId = id
+                builder: (context) => GoalDetailPage(goalId: goal.id!),
               ));
               //calls function to refresh page.
               refreshGoals();
