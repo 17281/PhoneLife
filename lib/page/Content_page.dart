@@ -38,25 +38,40 @@ class _ContentPageState extends State<ContentPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    //Text Style can be added for different Text sizes.
-    appBar: AppBar (title: Text('Goals'),
-    ),
-    body: Center(
-    child: isLoading
-    ? CircularProgressIndicator()
-        : goals.isEmpty
-    //if goals returned is empty then return 'No Goals
-    ? Text(
-    'No goals found',
-    //text styling
-    style: TextStyle(color: Colors.white, fontSize: 24),
-    )
-        //build the Goals (By calling the buildGoals function/widget)
+  Widget build(BuildContext context) =>
+      Scaffold(
+        //Text Style can be added for different Text sizes.
+          appBar: AppBar(title: Text('Goals'),
+          ),
+          body: Center(
+            child: isLoading
+                ? CircularProgressIndicator()
+                : goals.isEmpty
+            //if goals returned is empty then return 'No Goals
+                ? Text(
+              'No goals found',
+              //text styling
+              style: TextStyle(color: Colors.white, fontSize: 24),
+            )
+            //build the Goals (By calling the buildGoals function/widget)
+                : buildGoals(),
+          )
+      );
 
-    // TODO: build the widget
-        : buildGoals(),
-    )
 
-  );
+  // TODO: find a better looking goal display---------------------------
+  Widget buildGoals() =>
+  //builds the display for goals
+      StaggeredGridView.countBuilder(
+        padding: EdgeInsets.all(8),
+        itemCount: goals.length,
+        //default
+        staggeredTileBuilder: (index) => StaggeredTile.fit(2),
+        crossAxisCount: 4,
+        mainAxisSpacing: 4,
+        crossAxisSpacing: 4,
+        itemBuilder: (context, index) {
+          final goal = goals[index];
+        },
+      );
 }
