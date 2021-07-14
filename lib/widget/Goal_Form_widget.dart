@@ -19,14 +19,30 @@ class GoalFormWidget extends StatelessWidget {
     required this.onChangedDescription,
   }) : super(key: key);
 
-
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-}
+  //building the name widget for singular goal pages
+  //TextForm is validating input methods
+  Widget buildName() => TextFormField(
+    //only allows one line for name
+    maxLines: 1,
+    //Value inserted into database is name
+    initialValue: name,
+    //styling
+    //TODO:Change TEXTSTYLE======================
+    style: TextStyle(
+      color: Colors.white70,
+      fontWeight: FontWeight.bold,
+      fontSize: 26,
+    ),
+    //UI TODO: MIght Change this to a simple block format -------------
+    decoration: InputDecoration(
+      border: InputBorder.none,
+      hintText: 'Title',
+      hintStyle: TextStyle(color: Colors.white70),
+    ),
+    //Validation of method
+    validator: (name) =>
+    //the name column can't be null
+    name != null && name.isEmpty ? 'The name cannot be empty' : null,
+    onChanged: onChangedName,
+  );
 
