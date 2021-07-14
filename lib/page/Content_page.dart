@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/Goals.dart';
+import 'package:phoneapp/widget/Goal_card_widget.dart';
 
 class ContentPage extends StatefulWidget {
   @override
