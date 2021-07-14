@@ -19,6 +19,7 @@ class GoalFormWidget extends StatelessWidget {
     required this.onChangedDescription,
   }) : super(key: key);
 
+
   //building the name widget for singular goal pages
   //TextForm is validating input methods
   Widget buildName() => TextFormField(
@@ -46,3 +47,18 @@ class GoalFormWidget extends StatelessWidget {
     onChanged: onChangedName,
   );
 
+  //TODO:Might NOT use the description builder. AS it is not needed, database structure reviewing needed.
+  Widget buildDescription() => TextFormField(
+    maxLines: 5,
+    initialValue: description,
+    style: TextStyle(color: Colors.white60, fontSize: 18),
+    decoration: InputDecoration(
+      border: InputBorder.none,
+      hintText: 'Type something...',
+      hintStyle: TextStyle(color: Colors.white60),
+    ),
+    validator: (description) => description != null && description.isEmpty
+        ? 'The description cannot be empty'
+        : null,
+    onChanged: onChangedDescription,
+  );
