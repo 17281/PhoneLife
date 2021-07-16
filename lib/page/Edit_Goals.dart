@@ -46,6 +46,11 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
   Widget buildButton(){
     //only allow data to be pushed if name and description is not empty
     final isFormValid = name.isNotEmpty && description.isNotEmpty;
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+
+    );
+  }
 
   }
 }
