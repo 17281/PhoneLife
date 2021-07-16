@@ -38,8 +38,18 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
     ),
     body: Form(
       key: _formkey, child: GoalFormWidget(
-        isImportant:isImportant),
+      //links each database column to each field that will be changed.
+      isImportant: isImportant,
+      name: name,
+      description: description,
 
+      //When the form is valid, add data to database via placing the inputted from the FormWidget into a sql statement
+      onChangedImportant: (isImportant) =>
+          setState(() => this.isImportant = isImportant),
+      onChangedName: (name) => setState(() => this.name= name),
+      onChangedDescription: (description) =>
+          setState(() => this.description = description),
+    ),
     ),
   );
 
@@ -52,8 +62,8 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          onPrimary: Colors.white,
-          primary: isFormValid ? null : Colors.grey.shade700,
+          onPrimary: Colors.green,
+          primary: isFormValid ? null : Colors.red,
         ),
         onPressed: addOrUpdateGoal,
         child: Text('Save'),
@@ -106,6 +116,5 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
     //create the submitted data into database
     await UserDatabase.instance.create(goal);
   }
-
 
 }
