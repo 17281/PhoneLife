@@ -93,6 +93,19 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
     await UserDatabase.instance.update(note);
   }
 
+  Future addGoal() async {
+    //add all the content from the fields into a single statement
+    final goal = UserContent(
+      name: name,
+      description: description,
+      isImportant: true,
+      //date created for each goal
+      //TODO:Using this, change the goals set each day to be dynamic
+      createdTime: DateTime.now(),
+    );
+    //create the submitted data into database
+    await UserDatabase.instance.create(goal);
+  }
 
 
 }
