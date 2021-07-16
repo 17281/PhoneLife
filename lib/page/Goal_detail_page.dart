@@ -38,5 +38,43 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
     setState(() => isLoading = false);
   }
 
+  //Building UI
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      ///Action Key for editing or deleting data
+      //TODO: use the edit button function to change it so that it's a slidable
+      actions: [editButton(), deleteButton()],
+    ),
+    body: isLoading
+        ? Center(child: CircularProgressIndicator())
+        : Padding(
+      padding: EdgeInsets.all(12),
+      child: ListView(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        children: [
+          Text(
+            goal.name,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            DateFormat.yMMMMEEEEd().format(goal.createdTime),
+            style: TextStyle(color: Colors.white38),
+          ),
+          SizedBox(height: 8),
+          Text(
+            goal.description,
+            style: TextStyle(color: Colors.white70, fontSize: 18),
+          )
+        ],
+      ),
+    ),
+  );
 
 }
+
