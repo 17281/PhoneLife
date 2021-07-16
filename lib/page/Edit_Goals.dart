@@ -55,11 +55,33 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
           onPrimary: Colors.white,
           primary: isFormValid ? null : Colors.grey.shade700,
         ),
-        onPressed: AddOrUpdateGoal,
+        onPressed: addOrUpdateGoal,
         child: Text('Save'),
       ),
     );
   }
 
+  ///When submit button is pressed then, Identify if the data returned is to be added or refreshed
+  void addOrUpdateGoal() async {
+    //Only if the validating key is correct then proceed to update or add new data.
+    final isValid = _formkey.currentState!.validate();
+
+    //when updating the data can't be Null
+    if (isValid) {
+      final isUpdating = widget.goal != null;
+
+      //wait for updating database and then add new content
+      if (isUpdating) {
+        await updateGoal();
+      } else {
+        await addGoal();
+      }
+
+      Navigator.of(context).pop();
+    }
   }
+
+
+
+
 }
