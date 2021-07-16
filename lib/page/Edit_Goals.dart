@@ -1,6 +1,7 @@
 import 'package:phoneapp/db/User_database.dart';
 import 'package:flutter/material.dart';
 import 'package:phoneapp/model/Goals.dart';
+import 'package:phoneapp/widget/Goal_Form_widget.dart';
 
 class AddEditGoalPage extends StatefulWidget {
   final UserContent? goal;
@@ -36,8 +37,15 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
       actions: [],
     ),
     body: Form(
-      key: _formkey, child: (isImportant),
+      key: _formkey, child: GoalFormWidget(
+        isImportant:isImportant),
+
     ),
   );
 
+  Widget buildButton(){
+    //only allow data to be pushed if name and description is not empty
+    final isFormValid = name.isNotEmpty && description.isNotEmpty;
+
+  }
 }
