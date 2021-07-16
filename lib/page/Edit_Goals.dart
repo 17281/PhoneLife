@@ -81,6 +81,17 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
     }
   }
 
+  Future updateGoal() async {
+    //copies all the content fields and then display any new data added
+    final note = widget.goal!.copy(
+      isImportant: isImportant,
+      name: name,
+      description: description,
+    );
+
+    //update the content
+    await UserDatabase.instance.update(note);
+  }
 
 
 
