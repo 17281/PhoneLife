@@ -20,6 +20,7 @@ class GoalDetailPage extends StatefulWidget {
 
 }
 
+//Starts the UI page/makes a new detail page
 class _GoalDetailPageState extends State<GoalDetailPage> {
   late UserContent goal;
   bool isLoading = false;
@@ -30,10 +31,12 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
     refreshNote();
   }
 
+  //refreshes content
   Future refreshNote() async {
     setState(() => isLoading = true);
-
     this.goal = await UserDatabase.instance.readGoal(widget.goalID);
-
     setState(() => isLoading = false);
   }
+
+
+}
