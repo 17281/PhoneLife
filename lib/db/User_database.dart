@@ -70,7 +70,7 @@ class UserDatabase {
   }
 
   //adding data into sql with statements
-  Future<UserContent> readNote(int id) async{
+  Future<UserContent> readGoal(int id) async{
     final db = await instance.database;
 
     final maps = await db.query(

@@ -14,4 +14,26 @@ class GoalDetailPage extends StatefulWidget {
     Key? key,
     required this.goalID,
 }) :super(key: key);
+
+  @override
+  _GoalDetailPageState createState() => _GoalDetailPageState();
+
 }
+
+class _GoalDetailPageState extends State<GoalDetailPage> {
+  late UserContent goal;
+  bool isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+
+    refreshNote();
+  }
+
+  Future refreshNote() async {
+    setState(() => isLoading = true);
+
+    this.goal = await UserDatabase.instance.readGoal(widget.goalID);
+
+    setState(() => isLoading = false);
+  }
