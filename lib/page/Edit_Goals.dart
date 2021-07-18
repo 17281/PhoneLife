@@ -34,7 +34,7 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
       //input action - TODO: create simple sliding goal setting system
-      actions: [],
+      actions: [buildButton()],
     ),
     body: Form(
       key: _formkey, child: GoalFormWidget(

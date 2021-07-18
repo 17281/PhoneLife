@@ -39,7 +39,8 @@ class UserDatabase {
     ${UserFields.id} $idType, 
     ${UserFields.isImportant} $boolType, 
     ${UserFields.name} $textType,
-    ${UserFields.time} $textType
+    ${UserFields.time} $textType,
+    ${UserFields.description} $stringType
     )''');
   }
 

@@ -75,6 +75,25 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
       ),
     ),
   );
+  Widget editButton() => IconButton(
+      icon: Icon(Icons.edit_outlined),
+      onPressed: () async {
+        if (isLoading) return;
 
+        await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AddEditGoalPage(goal: goal),
+        ));
+//refresh page when new data added
+        refreshNote();
+      });
+
+  Widget deleteButton() => IconButton(
+    icon: Icon(Icons.delete),
+    onPressed: () async {
+      await UserDatabase.instance.delete(widget.goalID);
+
+      Navigator.of(context).pop();
+    },
+  );
 }
 

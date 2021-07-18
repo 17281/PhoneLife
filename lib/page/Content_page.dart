@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/Goals.dart';
+import 'package:phoneapp/page/Edit_Goals.dart';
 import 'package:phoneapp/widget/Goal_card_widget.dart';
+
+import 'Goal_detail_page.dart';
 
 class ContentPage extends StatefulWidget {
   @override
@@ -74,7 +77,7 @@ class _ContentPageState extends State<ContentPage> {
           onPressed: () async {
             //when pressed activates editing page (creates new page for editing.
             await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => AddEditGoalsPage()),
+              MaterialPageRoute(builder: (context) => AddEditGoalPage()),
             );
             //Once created refresh goals display page
             refreshGoals();
@@ -103,7 +106,7 @@ class _ContentPageState extends State<ContentPage> {
               await Navigator.of(context).push(MaterialPageRoute(
                 //builds the page where new goals are added and then refresh display page.
                 //builds content based on goalId = id
-                builder: (context) => GoalDetailPage(goalId: goal.id!),
+                builder: (context) => GoalDetailPage(goalID: goal.id!),
               ));
               //calls function to refresh page.
               refreshGoals();
