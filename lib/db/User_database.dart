@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:phoneapp/model/Goals.dart';
+import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:sqflite/sqflite.dart';
 
 
@@ -131,3 +133,16 @@ class UserDatabase {
 }
 
 ///Screen time Database ----------------------------------------------------------------------------
+class ScreenTimeDatabase {
+  static final ScreenTimeDatabase instance = ScreenTimeDatabase._int();
+  static Database? _STDatabase;
+  ScreenTimeDatabase._int();
+
+Future<Database> _ScreenTimeDB(String filepath ) async {
+  final dbPath = await getDatabasesPath();
+  final path = join(dbPath, filepath);
+
+return await openDatabase(path, version: 1 );
+}
+
+}
