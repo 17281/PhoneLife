@@ -53,12 +53,14 @@ static ScreenContents fromJson (Map<String, Object?> json) => ScreenContents(
     startTime: DateTime.parse(json[STFields.startTime] as String),
     ST_id: json[STFields.ST_id] as int?);
 
-//converting maps v
-
-
-
-
-
-
-
+//converting maps
+  Map<String, Object?>toJson() => {
+    //a map of key values
+    //Table name:Key: other Value
+    STFields.ST_id: ST_id,
+    STFields.averageTime: averageTime,
+    //TODO: Change '.toIso8601String' to different string method to enable adding numbers in screen time.
+    STFields.startTime: startTime.toIso8601String(),
+    STFields.stopTime: stopTime.toIso8601String(),
+  };
 }
