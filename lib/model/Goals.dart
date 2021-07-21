@@ -34,7 +34,7 @@ class UserContent {
     required this.createdTime,
 });
 
-  //copies note objects and changes items within database
+  //copies objects and changes items within database
   UserContent copy({
     //primary key for id
     int? id,

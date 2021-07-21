@@ -45,7 +45,7 @@ class UserDatabase {
   }
 
 
-  //Users adding things to 'Note' table
+  //Users adding things to 'User' table
   Future<UserContent> create(UserContent content) async {
   //reference to database
     final db = await instance.database;
