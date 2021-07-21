@@ -31,6 +31,7 @@ class UserDatabase {
   Future _createDB(Database db, int version) async {
     //Type of field in sql
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    final intType = 'INTEGER NOT NULL';
     final boolType = 'BOOLEAN NOT NULL';
     final textType = 'TEXT NOT NULL';
 
@@ -138,11 +139,37 @@ class ScreenTimeDatabase {
   static Database? _STDatabase;
   ScreenTimeDatabase._int();
 
-Future<Database> _ScreenTimeDB(String filepath ) async {
+
+  Future<Database> get database async{
+    //the database will ONLY be created if the database return is null (which will always be null upon download)
+    if (_STDatabase != null) return _STDatabase!;
+    //creates Screen time database
+    _STDatabase = await _initScreenTimeDB('ScreenTime.db');
+    return _STDatabase!;
+  }
+
+  //initializing path of database
+Future<Database> _initScreenTimeDB(String filepath ) async {
   final dbPath = await getDatabasesPath();
   final path = join(dbPath, filepath);
 
-return await openDatabase(path, version: 1 );
+return await openDatabase(path, version: 1, onCreate: _createScreenTimeDB);
 }
+
+}
+
+Future _createScreenTimeDB(Database db, int version) async {
+  //Type of field in sql
+  final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+  final stringType = 'STRING NOT NULL';
+  final textType = 'TEXT NOT NULL';
+
+  //creates the table based on the model table listed before
+  await db.execute(''' CREATE TABLE $ScreenTimeTable (
+    ${STFields.id} $idType, 
+    ${STFields.text} $textType,
+    ${STFields.time} $stringType
+    )''');
+
 
 }
