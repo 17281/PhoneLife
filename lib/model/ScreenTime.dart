@@ -1,4 +1,4 @@
-import 'package:phoneapp/model/Goals.dart';
+
 
 ///converts SQL into json, maps and genral model of sql database for Screen Time
 final String ScreenTimeTable = 'Screen_Time';
@@ -28,7 +28,7 @@ class ScreenContents {
     required this.stopTime,
     required this.startTime
 });
-}
+
 
 //Preparing contents to be converted
 ScreenContents copy ({
@@ -45,3 +45,20 @@ ScreenContents copy ({
     stopTime: stopTime ?? this.stopTime,
     startTime: startTime ?? this.startTime,
 );
+
+//converting to json
+static ScreenContents fromJson (Map<String, Object?> json) => ScreenContents(
+    averageTime: json[STFields.averageTime] as String,
+    stopTime: DateTime.parse(json[STFields.stopTime]as String),
+    startTime: DateTime.parse(json[STFields.startTime] as String),
+    ST_id: json[STFields.ST_id] as int?);
+
+//converting maps v
+
+
+
+
+
+
+
+}
