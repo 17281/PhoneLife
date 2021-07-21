@@ -17,8 +17,10 @@ Future main() async {
   runApp(MyApp());
 }
 
+
+
 class MyApp extends StatelessWidget {
-  static final String title = 'User SQLite';
+  static final String title = 'User';
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,

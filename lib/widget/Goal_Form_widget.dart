@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 class GoalFormWidget extends StatelessWidget {
   final bool? isImportant;
   final String? name;
-  final String? description;
+  ///final String? description;
   final ValueChanged<bool> onChangedImportant;
   final ValueChanged<String> onChangedName;
-  final ValueChanged<String> onChangedDescription;
+  ///final ValueChanged<String> onChangedDescription;
 
 //Validating methods of inserting, ie. Name can't be null
   const GoalFormWidget({
     Key? key,
     this.isImportant = false,
     this.name = '',
-    this.description = '',
+    ///this.description = '',
     required this.onChangedImportant,
     required this.onChangedName,
-    required this.onChangedDescription,
+    ///required this.onChangedDescription,
   }) : super(key: key);
 
   //Final displaying UI
@@ -38,9 +38,9 @@ class GoalFormWidget extends StatelessWidget {
               ),
               //builds Name and Description in Column
               buildName(),
-              SizedBox(height: 8),
-              buildDescription(),
               SizedBox(height: 16),
+              ///buildDescription(),
+              ///SizedBox(height: 16),
             ],
           ),
         ),
@@ -64,7 +64,7 @@ class GoalFormWidget extends StatelessWidget {
         //UI TODO: MIght Change this to a simple block format -------------
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: 'Title',
+          hintText: 'Goal',
           hintStyle: TextStyle(color: Colors.white70),
         ),
         //Validation of method
@@ -78,7 +78,7 @@ class GoalFormWidget extends StatelessWidget {
   Widget buildDescription() =>
       TextFormField(
         maxLines: 5,
-        initialValue: description,
+        ///initialValue: description,
         style: TextStyle(color: Colors.white60, fontSize: 18),
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -89,7 +89,7 @@ class GoalFormWidget extends StatelessWidget {
         description != null && description.isEmpty
             ? 'The description cannot be empty'
             : null,
-        onChanged: onChangedDescription,
+        ///onChanged: onChangedDescription,
 
 
       );

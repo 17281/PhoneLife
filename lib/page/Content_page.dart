@@ -68,7 +68,7 @@ class _ContentPageState extends State<ContentPage> {
                 : buildGoals(),
           ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.white12,
           //adds icon for adding new goals
           // TODO: Create dynamic adding system rather manual input
           child: Icon(Icons.add),

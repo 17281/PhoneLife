@@ -26,7 +26,7 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
     isImportant = widget.goal?.isImportant ?? false;
     //chang-able '' field
     name = widget.goal?.name ?? '';
-    description = widget.goal?.description ?? '';
+    ///description = widget.goal?.description ?? '';
   }
 
   //build the editing widget
@@ -41,21 +41,20 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
       //links each database column to each field that will be changed.
       isImportant: isImportant,
       name: name,
-      description: description,
+      ///description: description,
 
       //When the form is valid, add data to database via placing the inputted from the FormWidget into a sql statement
       onChangedImportant: (isImportant) =>
           setState(() => this.isImportant = isImportant),
       onChangedName: (name) => setState(() => this.name= name),
-      onChangedDescription: (description) =>
-          setState(() => this.description = description),
+      //onChangedDescription: (description) =>setState(() => this.description = description),
     ),
     ),
   );
 
   Widget buildButton(){
     //only allow data to be pushed if name and description is not empty
-    final isFormValid = name.isNotEmpty && description.isNotEmpty;
+    final isFormValid = name.isNotEmpty;
 
     //UI for the button
     return Padding(
@@ -63,7 +62,7 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           onPrimary: Colors.green,
-          primary: isFormValid ? null : Colors.red,
+          primary: isFormValid ? null : Colors.white,
         ),
         onPressed: addOrUpdateGoal,
         child: Text('Save'),
@@ -96,7 +95,7 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
     final note = widget.goal!.copy(
       isImportant: isImportant,
       name: name,
-      description: description,
+      ///description: description,
     );
 
     //update the content
@@ -107,7 +106,7 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
     //add all the content from the fields into a single statement
     final goal = UserContent(
       name: name,
-      description: description,
+      ///description: description,
       isImportant: true,
       //date created for each goal
       //TODO:Using this, change the goals set each day to be dynamic

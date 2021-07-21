@@ -66,11 +66,11 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
             DateFormat.yMMMMEEEEd().format(goal.createdTime),
             style: TextStyle(color: Colors.white38),
           ),
-          SizedBox(height: 8),
-          Text(
-            goal.description,
-            style: TextStyle(color: Colors.white70, fontSize: 18),
-          )
+          ///SizedBox(height: 8),
+          ///Text(
+            ///goal.description,
+           ///style: TextStyle(color: Colors.white70, fontSize: 18),
+    ///)
         ],
       ),
     ),

@@ -5,7 +5,6 @@ import 'package:sqflite/sqflite.dart';
 
 class UserDatabase {
   static final UserDatabase instance = UserDatabase._init();
-
   static Database? _database;
 
   UserDatabase._init();
@@ -13,7 +12,7 @@ class UserDatabase {
   Future<Database> get database async{
     //the database will ONLY (if _initDB != exist) be created if the database return is null (which will always be null upon download
     if (_database != null) return _database!;
-    _database = await _initDB('app.db');
+    _database = await _initDB('Goal.db');
     return _database!;
   }
   //finds the path for the database on Android and IOS
@@ -31,7 +30,6 @@ class UserDatabase {
     //Type of field in sql
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final boolType = 'BOOLEAN NOT NULL';
-    final stringType = 'INTEGER NOT NULL';
     final textType = 'TEXT NOT NULL';
 
     //creates the table based on the model table listed before
@@ -39,8 +37,7 @@ class UserDatabase {
     ${UserFields.id} $idType, 
     ${UserFields.isImportant} $boolType, 
     ${UserFields.name} $textType,
-    ${UserFields.time} $textType,
-    ${UserFields.description} $stringType
+    ${UserFields.time} $textType
     )''');
   }
 
@@ -49,22 +46,12 @@ class UserDatabase {
   Future<UserContent> create(UserContent content) async {
   //reference to database
     final db = await instance.database;
-
-    final json = content.toJson();
-    //column name
-    final columns =
-        '${UserFields.name}, ${UserFields.time}';
-    //value for inserting by sql statement
-    final values =
-        '${json[UserFields.name]}, ${json[UserFields.time]}';
-
     //passing sql statements
     ///final id = await db
       ///.rawInsert('INSERT INTO table_name ($columns) VALUES ($values)');
 
     //insert into selected      table       data-selected
     final id = await db.insert(userTable, content.toJson());
-
     //object modified is id in this case
   return content.copy(id: id);
 
@@ -82,6 +69,7 @@ class UserDatabase {
       ///adding values [id, values] then add = '? ?' etc
       whereArgs: [id],
     );
+
 
     //if maps exists, run map
     if (maps.isNotEmpty) {
@@ -142,4 +130,4 @@ class UserDatabase {
   }
 }
 
-
+///Screen time Database ----------------------------------------------------------------------------
