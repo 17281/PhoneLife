@@ -166,9 +166,10 @@ Future _createScreenTimeDB(Database db, int version) async {
 
   //creates the table based on the model table listed before
   await db.execute(''' CREATE TABLE $ScreenTimeTable (
-    ${STFields.id} $idType, 
-    ${STFields.text} $textType,
-    ${STFields.time} $stringType
+    ${STFields.ST_id} $idType, 
+    ${STFields.startTime} $textType,
+    ${STFields.stopTime} $textType,
+    ${STFields.averageTime} $textType
     )''');
 
 
