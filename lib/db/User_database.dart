@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:phoneapp/model/Goals.dart';
@@ -184,6 +186,35 @@ Future _createScreenTimeDB(Database db, int version) async {
     final ST_id = await db.insert(ScreenTimeTable, content.toJson());
     //objects modified is where id = id
     return content.copy(ST_id: ST_id);
+  }
+
+  //adding data into sql with statements
+  Future<ScreenContents> readGoal(int ST_id) async {
+    final db = await instance.database;
+//selecting a single content to display where id = ?
+    final maps = await db.query(
+      ScreenTimeTable,
+      columns: STFields.values,
+
+      ///using ? instead of $id as it stops sql injections
+      where: '${STFields.ST_id} = ?',
+
+      ///adding values [id, values] then add = '? ?' etc
+      whereArgs: [ST_id],
+    );
+
+    //if maps exists, run map
+    if (maps.isNotEmpty) {
+      //converts note into Json object for the first item
+      return ScreenContents.fromJson(maps.first);
+    } //If item can't be found
+    else {
+      throw Exception('No data found $ST_id');
+    }
 
   }
-}}
+
+
+}
+
+}
