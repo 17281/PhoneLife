@@ -242,5 +242,11 @@ Future _createScreenTimeDB(Database db, int version) async {
 
     );
 }
+  Future closeDB() async{
+    final db = await instance.database;
+
+    //Finds the database then closes it
+    db.close();
+  }
 }
 }
