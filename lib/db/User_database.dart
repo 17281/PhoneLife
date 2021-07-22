@@ -154,11 +154,12 @@ class ScreenTimeDatabase {
 Future<Database> _initScreenTimeDB(String filepath ) async {
   final dbPath = await getDatabasesPath();
   final path = join(dbPath, filepath);
-
+//version of database
 return await openDatabase(path, version: 1, onCreate: _createScreenTimeDB);
 }
 
-}
+
+
 
 Future _createScreenTimeDB(Database db, int version) async {
   //Type of field in sql
@@ -175,5 +176,14 @@ Future _createScreenTimeDB(Database db, int version) async {
     ${STFields.totalTime} $textType
     )''');
 
+//Users adding screen time/contents
+  Future<ScreenContents> create(ScreenContents content) async {
+    //reference to database
+    final db = await instance.database;
+    //Adds ST_contents to json and then passed back
+    final ST_id = await db.insert(ScreenTimeTable, content.toJson());
+    //objects modified is where id = id
+    return content.copy(ST_id: ST_id);
 
-}
+  }
+}}
