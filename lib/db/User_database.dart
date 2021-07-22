@@ -189,7 +189,7 @@ Future _createScreenTimeDB(Database db, int version) async {
   }
 
   //adding data into sql with statements
-  Future<ScreenContents> readGoal(int ST_id) async {
+  Future<ScreenContents> readScreenTime(int ST_id) async {
     final db = await instance.database;
 //selecting a single content to display where id = ?
     final maps = await db.query(
@@ -198,7 +198,6 @@ Future _createScreenTimeDB(Database db, int version) async {
 
       ///using ? instead of $id as it stops sql injections
       where: '${STFields.ST_id} = ?',
-
       ///adding values [id, values] then add = '? ?' etc
       whereArgs: [ST_id],
     );
@@ -213,8 +212,35 @@ Future _createScreenTimeDB(Database db, int version) async {
     }
 
   }
+  //read all content then list them
+  //TODO: add graphing function here (when displaying)
+  Future<List<ScreenContents>> readAllTime() async {
+    final db =await instance.database;
+    //database table and table could be changed
 
+    ///   Sorts data by time      ASC == asending order
+    final orderBy = '${STFields.startTime} ASC';
+    //final result =
+    //this allows raw sql query to be used *Very NICE
+    ///await db.rawQuery('SELECT * FROM $UserFields ORDER BY $orderBy');
+    final result = await db.query(userTable, orderBy: orderBy);
+    //Convert json string to sql
+    return result.map((json)=> ScreenContents.fromJson(json)).toList();
+  }
 
+  //updates our data
+  Future<int> update(ScreenContents content) async {
+    final db = await instance.database;
+    ///if you want to use raw sql statements; use db.rawUpdate
+    return db.update(
+      ScreenTimeTable,
+      content.toJson(),
+
+      //defining which data you want to update
+      where: '${STFields.ST_id} = ?',
+      whereArgs: [content.ST_id],
+
+    );
 }
-
+}
 }
