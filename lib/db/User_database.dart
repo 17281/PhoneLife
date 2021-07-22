@@ -35,6 +35,8 @@ class UserDatabase {
     final boolType = 'BOOLEAN NOT NULL';
     final textType = 'TEXT NOT NULL';
 
+    //TODO: Change isImportant => isCompleted
+    //TODO: Change name => intType
     //creates the table based on the model table listed before
     await db.execute(''' CREATE TABLE $userTable (
     ${UserFields.id} $idType, 
@@ -169,7 +171,8 @@ Future _createScreenTimeDB(Database db, int version) async {
     ${STFields.ST_id} $idType, 
     ${STFields.startTime} $textType,
     ${STFields.stopTime} $textType,
-    ${STFields.averageTime} $textType
+    ${STFields.averageTime} $textType,
+    ${STFields.totalTime} $textType
     )''');
 
 
