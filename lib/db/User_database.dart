@@ -1,6 +1,4 @@
-import 'dart:html';
 
-import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:phoneapp/model/Goals.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
@@ -153,33 +151,33 @@ class ScreenTimeDatabase {
   }
 
   //initializing path of database
-Future<Database> _initScreenTimeDB(String filepath ) async {
-  final dbPath = await getDatabasesPath();
-  final path = join(dbPath, filepath);
-//version of database
-return await openDatabase(path, version: 1, onCreate: _createScreenTimeDB);
-}
+  Future<Database> _initScreenTimeDB(String filepath ) async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, filepath);
+  //version of database
+  return await openDatabase(path, version: 1, onCreate: _createScreenTimeDB);
+  }
 
 
 
 
-Future _createScreenTimeDB(Database db, int version) async {
-  //Type of field in sql
-  final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-  final stringType = 'STRING NOT NULL';
-  final textType = 'TEXT NOT NULL';
+  Future _createScreenTimeDB(Database db, int version) async {
+    //Type of field in sql
+    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    final stringType = 'STRING NOT NULL';
+    final textType = 'TEXT NOT NULL';
 
-  //creates the table based on the model table listed before
-  await db.execute(''' CREATE TABLE $ScreenTimeTable (
-    ${STFields.ST_id} $idType, 
-    ${STFields.startTime} $textType,
-    ${STFields.stopTime} $textType,
-    ${STFields.averageTime} $textType,
-    ${STFields.totalTime} $textType
-    )''');
+    //creates the table based on the model table listed before
+    await db.execute(''' CREATE TABLE $ScreenTimeTable (
+      ${STFields.ST_id} $idType, 
+      ${STFields.startTime} $textType,
+      ${STFields.stopTime} $textType,
+      ${STFields.averageTime} $textType,
+      ${STFields.totalTime} $textType
+      )'''); }
 
 //Users adding screen time/contents
-  Future<ScreenContents> create(ScreenContents content) async {
+  Future<ScreenContents> createST(ScreenContents content) async {
     //reference to database
     final db = await instance.database;
     //Adds ST_contents to json and then passed back
@@ -217,7 +215,6 @@ Future _createScreenTimeDB(Database db, int version) async {
   Future<List<ScreenContents>> readAllTime() async {
     final db =await instance.database;
     //database table and table could be changed
-
     ///   Sorts data by time      ASC == asending order
     final orderBy = '${STFields.startTime} ASC';
     //final result =
@@ -229,7 +226,7 @@ Future _createScreenTimeDB(Database db, int version) async {
   }
 
   //updates our data
-  Future<int> update(ScreenContents content) async {
+  Future<int> updateST(ScreenContents content) async {
     final db = await instance.database;
     ///if you want to use raw sql statements; use db.rawUpdate
     return db.update(
@@ -242,11 +239,10 @@ Future _createScreenTimeDB(Database db, int version) async {
 
     );
 }
-  Future closeDB() async{
+  Future closeSTDB() async{
     final db = await instance.database;
 
     //Finds the database then closes it
     db.close();
   }
-}
 }

@@ -4,8 +4,8 @@ import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/Goals.dart';
 import 'package:phoneapp/page/Edit_Goals.dart';
 import 'package:phoneapp/widget/Goal_card_widget.dart';
-
 import 'Goal_detail_page.dart';
+import 'package:phoneapp/model/ScreenTime.dart';
 
 class ContentPage extends StatefulWidget {
   @override
@@ -16,6 +16,9 @@ class ContentPage extends StatefulWidget {
 class _ContentPageState extends State<ContentPage> {
   //finds all 'goals' from userTable
   late List<UserContent> goals;
+  //finds all screen time value
+  late List<ScreenContents> screenTime;
+
   bool isLoading = false;
 
   //refresh database when ever updated
@@ -24,6 +27,7 @@ class _ContentPageState extends State<ContentPage> {
     super.initState();
     //refresh future content per update (Useful fo updating goals)
     refreshGoals();
+    refreshScreenTime();
   }
 
   //closing database when app is down
@@ -31,9 +35,22 @@ class _ContentPageState extends State<ContentPage> {
   void dispose() {
     //closes db
     UserDatabase.instance.closeDB();
+    ScreenTimeDatabase.instance.closeSTDB();
     super.dispose();
   }
 
+
+  Future refreshScreenTime() async {
+    //sets database to be async loading to the page
+    setState(() => isLoading = true);{
+      //refresh and display new data on page
+      this.screenTime = await ScreenTimeDatabase.instance.readAllTime();
+      setState(() => isLoading = false);{
+
+      }
+
+    }
+  }
   //updates content when ever new content added
   Future refreshGoals() async {
     //when loading database
@@ -59,8 +76,7 @@ class _ContentPageState extends State<ContentPage> {
                 ? CircularProgressIndicator()
                 : goals.isEmpty
             //if goals returned is empty then return 'No Goals
-                ? Text(
-              'No goals found',
+                ? Text('No goals found',
               //text styling
               style: TextStyle(color: Colors.white, fontSize: 24),
             )
