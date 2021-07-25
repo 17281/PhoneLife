@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:phoneapp/model/Goals.dart';
-import 'package:phoneapp/db/User_database.dart';
 import 'package:flutter/services.dart';
 import 'package:phoneapp/page/content_page.dart';
 
@@ -13,7 +11,6 @@ Future main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
   runApp(MyApp());
 }
 
@@ -30,7 +27,7 @@ class MyApp extends StatelessWidget {
     theme: ThemeData(
       //colors of theme
       primaryColor: Colors.black,
-      scaffoldBackgroundColor: Colors.blueGrey.shade900,
+      scaffoldBackgroundColor: Colors.grey,
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
