@@ -173,7 +173,6 @@ class ScreenTimeDatabase {
       ${STFields.startTime} $textType,
       ${STFields.stopTime} $textType,
       ${STFields.averageTime} $textType,
-      ${STFields.totalTime} $textType
       )'''); }
 
 //Users adding screen time/contents

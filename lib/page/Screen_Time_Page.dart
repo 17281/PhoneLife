@@ -62,16 +62,34 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(onPrimary: Colors.green, primary: Colors.blue),
-          onPressed: (){startTimer(startTime);}, child: Text('start time'),
+          onPressed: startTimer(), child: Text('start time'),
         ),
     );
   }
 
-    startTimer(startTime) async {
-    final db = await ScreenTimeDatabase.instance.database;
-     final time = await startTime.rawInsert(
-     'INSERT INTO ScreenTimeTable (startTime) VALUES (',DateTime.now(),'');
+    startTimer() async {
+      final db = await ScreenTimeDatabase.instance.database;
+      await db.rawInsert(
+        'INSERT INTO Screen_Time (startTime) VALUES (${DateTime.now()})'
 
+      );
+
+
+    }
+  Widget stopButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(onPrimary: Colors.red, primary: Colors.orange),
+        onPressed: stopTimer(), child: Text('Stop time'),
+      ),
+    );
+  }
+  stopTimer() async{
+    final db = await ScreenTimeDatabase.instance.database;
+    await db.rawInsert('INSERT INTO Screen_Time (startTime) VALUES (${DateTime.now()})'
+
+    );
   }
 }
 
