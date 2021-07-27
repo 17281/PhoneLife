@@ -16,7 +16,6 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
   late bool isImportant;
   late DateTime createdTime;
   late String name;
-  late String description;
 
   //initiate database and conversions.
   @override
@@ -55,7 +54,6 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
   Widget buildButton(){
     //only allow data to be pushed if name and description is not empty
     final isFormValid = name.isNotEmpty;
-
     //UI for the button
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -74,7 +72,6 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
   void addOrUpdateGoal() async {
     //Only if the validating key is correct then proceed to update or add new data.
     final isValid = _formkey.currentState!.validate();
-
     //when updating the data can't be Null
     if (isValid) {
       final isUpdating = widget.goal != null;

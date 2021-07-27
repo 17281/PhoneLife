@@ -27,7 +27,6 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
   @override
   void initState() {
     super.initState();
-
     refreshNote();
   }
 
@@ -43,7 +42,7 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
       ///Action Key for editing or deleting data
-      //TODO: use the edit button function to change it so that it's a slidable
+      //TODO: use the edit button function to change it so that it's a slideable
       actions: [editButton(), deleteButton()],
     ),
     body: isLoading
@@ -63,14 +62,9 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
           ),
           SizedBox(height: 8),
           Text(
-            DateFormat.yMMMMEEEEd().format(goal.createdTime),
+            DateFormat.yMMMMd().format(goal.createdTime),
             style: TextStyle(color: Colors.white38),
           ),
-          ///SizedBox(height: 8),
-          ///Text(
-            ///goal.description,
-           ///style: TextStyle(color: Colors.white70, fontSize: 18),
-    ///)
         ],
       ),
     ),
@@ -91,7 +85,6 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
     icon: Icon(Icons.delete),
     onPressed: () async {
       await UserDatabase.instance.delete(widget.goalID);
-
       Navigator.of(context).pop();
     },
   );

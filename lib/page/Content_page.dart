@@ -103,7 +103,7 @@ class _ContentPageState extends State<ContentPage> {
       ),
   );
 
-
+//TODO: add graphing function here
   Widget buildTimeGraph() =>
   StaggeredGridView.countBuilder( padding: EdgeInsets.all(8),
     itemCount: screenTime.length,
