@@ -17,6 +17,8 @@ class ScreenTimePage extends StatefulWidget {
 
 }
 
+
+
 class _TimeDetailPageState extends State <ScreenTimePage> {
   late ScreenContents screenTime;
   late DateTime stopTime;

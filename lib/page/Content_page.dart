@@ -68,7 +68,6 @@ class _ContentPageState extends State<ContentPage> {
         //displaying 2 widget trees
 
         children: [
-
           ///ScreenTime display Widget
           Scaffold(
           appBar: AppBar (
@@ -81,7 +80,6 @@ class _ContentPageState extends State<ContentPage> {
                 ? Text('No Data found', style: TextStyle(color: Colors.white , fontSize: 24),
             ) : buildTimeGraph()
           ),
-
 
         ),
 
@@ -137,7 +135,7 @@ class _ContentPageState extends State<ContentPage> {
     mainAxisSpacing: 4,
     crossAxisSpacing: 4,
     itemBuilder: (context, index) {
-      final STime = screenTime[index];
+      final sTime = screenTime[index];
       //detects when the user taps a button
       return GestureDetector(
         //when user clicks on tap
@@ -145,13 +143,11 @@ class _ContentPageState extends State<ContentPage> {
           await Navigator.of(context).push(MaterialPageRoute(
             //builds the page where new goals are added and then refresh display page.
             //builds content based on goalId = id
-            builder: (context) => ScreenTimePage(timeID: STime.ST_id!),
+            builder: (context) => ScreenTimePage(timeID: sTime.ST_id!),
           ));
           //calls function to refresh page.
           refreshScreenTime();
         },
-        //uses the card widget in folder to display data
-        //TODO: find better looking display plz
         child: TimeGraphWidget(timeGraph: timeGraph),
       );  },
   );
