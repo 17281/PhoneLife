@@ -64,44 +64,68 @@ class _ContentPageState extends State<ContentPage> {
   @override
   ///Main Page display
   Widget build(BuildContext context) =>
-      Scaffold(
-          appBar: AppBar(
-            //Text Style can be added for different Text sizes.
-            title: Text('Screen Time', style: TextStyle(fontSize: 30),),
+      Column(
+        //displaying 2 widget trees
 
+        children: [
+
+          ///ScreenTime display Widget
+          Scaffold(
+          appBar: AppBar (
+            title: Text('Screen time', style: TextStyle(fontSize: 30),)
           ),
 
-          body: Center(
-            child: isLoading
-            //loading display
-            ? CircularProgressIndicator()
-            : goals.isEmpty && screenTime.isEmpty
-            //if goals returned is empty then return 'No Goals
-            ? Text('No data found',
-              //text styling
-              style: TextStyle(color: Colors.white, fontSize: 24),
-            )
-            //build the Goals (By calling the buildGoals function/widget)
-            : buildGoals(),
+          body: Center (
+            child: isLoading ? CircularProgressIndicator() : screenTime.isEmpty
+            //return a no data found to tell the user
+                ? Text('No Data found', style: TextStyle(color: Colors.white , fontSize: 24),
+            ) : buildTimeGraph()
           ),
 
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.white12,
-          //adds icon for adding new goals
-          // TODO: Create dynamic adding system rather manual input
-          child: Icon(Icons.add),
 
-          //makes the object interactable, when pressed, await for response
-          onPressed: () async {
-            //when pressed activates editing page (creates new page for editing.
-            await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => AddEditGoalPage()),
-            );
-            //Once created refresh goals display page
-            refreshGoals();
-          },
+        ),
+
+          ///Goal display Widget
+          Scaffold(
+            appBar: AppBar(
+              //Text Style can be added for different Text sizes.
+              title: Text('Goal', style: TextStyle(fontSize: 30),),
+
+            ),
+
+            body: Center(
+              child: isLoading
+              //loading display
+              ? CircularProgressIndicator()
+              : goals.isEmpty
+              //if goals returned is empty then return 'No Goals
+              ? Text('No data found',
+                //text styling
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              )
+              //build the Goals (By calling the buildGoals function/widget)
+              : buildGoals(),
+            ),
+
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.white12,
+            //adds icon for adding new goals
+            // TODO: Create dynamic adding system rather manual input
+            child: Icon(Icons.add),
+
+            //makes the object interactable, when pressed, await for response
+            onPressed: () async {
+              //when pressed activates editing page (creates new page for editing.
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => AddEditGoalPage()),
+              );
+              //Once created refresh goals display page
+              refreshGoals();
+            },
+        ),
       ),
-  );
+        ],
+      );
 
 //TODO: add graphing function here
   Widget buildTimeGraph() =>
@@ -128,7 +152,7 @@ class _ContentPageState extends State<ContentPage> {
         },
         //uses the card widget in folder to display data
         //TODO: find better looking display plz
-        child: TimeGraphWidget(timeGraph: timeGraph, index: index),
+        child: TimeGraphWidget(timeGraph: timeGraph),
       );  },
   );
 

@@ -1,8 +1,7 @@
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:sqflite/sqflite.dart';
+
 
 
 class ScreenTimePage extends StatefulWidget {
@@ -34,7 +33,7 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
 
   Future refreshTime() async {
     setState(() => isLoading = true); {
-      this.screenTime = await ScreenTimeDatabase.instance.readScreenTime(widget.ST_id);
+      this.screenTime = await ScreenTimeDatabase.instance.readScreenTime(widget.timeID);
     }
   }
 
