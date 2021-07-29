@@ -219,7 +219,7 @@ class ScreenTimeDatabase {
     //final result =
     //this allows raw sql query to be used *Very NICE
     ///await db.rawQuery('SELECT * FROM $UserFields ORDER BY $orderBy');
-    final result = await db.query(userTable, orderBy: orderBy);
+    final result = await db.query(ScreenTimeTable, orderBy: orderBy);
     //Convert json string to sql
     return result.map((json)=> ScreenContents.fromJson(json)).toList();
   }

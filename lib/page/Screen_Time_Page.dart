@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,6 @@ class ScreenTimePage extends StatefulWidget {
   _TimeDetailPageState createState() => _TimeDetailPageState();
 
 }
-
 
 
 class _TimeDetailPageState extends State <ScreenTimePage> {
@@ -53,7 +53,27 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
         padding: EdgeInsets.symmetric(vertical: 8),
         children: [
 
-        ],
+          Text(
+            DateFormat.yMMMMEEEEd().format(screenTime.startTime),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8),
+
+          Text(
+            DateFormat.yMMMMEEEEd().format(screenTime.stopTime),
+            style: TextStyle(
+                color: Colors.black,
+              fontSize: 22,
+            ),
+          ),
+          SizedBox(height: 8),
+
+
+        ], //Children
       ),
     ),
   );

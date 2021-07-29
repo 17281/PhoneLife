@@ -7,6 +7,10 @@ import 'package:phoneapp/widget/Goal_card_widget.dart';
 import 'Goal_detail_page.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:phoneapp/page/Screen_Time_Page.dart';
+import 'package:phoneapp/widget/Graph_Widget.dart';
+
+
+
 class ContentPage extends StatefulWidget {
   @override
   _ContentPageState createState() => _ContentPageState();
@@ -18,7 +22,6 @@ class _ContentPageState extends State<ContentPage> {
   late List<UserContent> goals;
   //finds all screen time value
   late List<ScreenContents> screenTime;
-
   bool isLoading = false;
 
   //refresh database when ever updated
@@ -27,7 +30,7 @@ class _ContentPageState extends State<ContentPage> {
     super.initState();
     //refresh future content per update (Useful fo updating goals)
     refreshGoals();
-    refreshScreenTime();
+   refreshScreenTime();
   }
 
   //closing database when app is down
@@ -64,70 +67,68 @@ class _ContentPageState extends State<ContentPage> {
   @override
   ///Main Page display
   Widget build(BuildContext context) =>
-      Column(
-        //displaying 2 widget trees
 
-        children: [
-          ///ScreenTime display Widget
-          Scaffold(
-          appBar: AppBar (
-            title: Text('Screen time', style: TextStyle(fontSize: 30),)
-          ),
 
-          body: Center (
-            child: isLoading ? CircularProgressIndicator() : screenTime.isEmpty
-            //return a no data found to tell the user
-                ? Text('No Data found', style: TextStyle(color: Colors.white , fontSize: 24),
-            ) : buildTimeGraph()
-          ),
-
-        ),
-
-          ///Goal display Widget
-          Scaffold(
-            appBar: AppBar(
-              //Text Style can be added for different Text sizes.
-              title: Text('Goal', style: TextStyle(fontSize: 30),),
-
-            ),
-
-            body: Center(
-              child: isLoading
-              //loading display
-              ? CircularProgressIndicator()
-              : goals.isEmpty
-              //if goals returned is empty then return 'No Goals
-              ? Text('No data found',
-                //text styling
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              )
-              //build the Goals (By calling the buildGoals function/widget)
-              : buildGoals(),
-            ),
-
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.white12,
-            //adds icon for adding new goals
-            // TODO: Create dynamic adding system rather manual input
-            child: Icon(Icons.add),
-
-            //makes the object interactable, when pressed, await for response
-            onPressed: () async {
-              //when pressed activates editing page (creates new page for editing.
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => AddEditGoalPage()),
-              );
-              //Once created refresh goals display page
-              refreshGoals();
-            },
-        ),
-      ),
-        ],
-      );
+    // Scaffold(
+    //   appBar: AppBar (
+    //       title: Text('Screen time', style: TextStyle(fontSize: 30),)
+    //   ),
+    //   body:
+    //   Expanded( child: Column(
+    //     //displaying 2 widget trees
+    //
+    //     children: [
+    //       ///ScreenTime display Widget
+    //       Container(
+    //         child:
+    //         // Center (
+    //         //   child:
+    //           isLoading ? CircularProgressIndicator() : screenTime.isEmpty
+    //           //return a no data found to tell the user
+    //             ? Text('No Data found', style: TextStyle(color: Colors.white , fontSize: 24),
+    //           ) : buildTimeGraph()
+    //         ),
+    //       // ),
+    //       ///Goal display Widget
+    //       Container(
+    //         child:
+    //         // Center(
+    //         //   //loading display
+    //         //   child:
+    //           isLoading ? CircularProgressIndicator() : goals.isEmpty
+    //           //if goals returned is empty then return 'No Goals
+    //           // text styling
+    //           ? Text('No data found', style: TextStyle(color: Colors.white, fontSize: 24),
+    //           )
+    //           //build the Goals (By calling the buildGoals function/widget)
+    //           : buildGoals(),
+    //         ),
+    //       // ),
+    //     ], //Children
+    //   ),
+    //   ),
+    //   floatingActionButton: FloatingActionButton(
+    //   backgroundColor: Colors.white12,
+    //   //adds icon for adding new goals
+    //   // TODO: Create dynamic adding system rather manual input
+    //   child: Icon(Icons.add),
+    //
+    //   //makes the object interactable, when pressed, await for response
+    //   onPressed: () async {
+    //     //when pressed activates editing page (creates new page for editing.
+    //     await Navigator.of(context).push(
+    //       MaterialPageRoute(builder: (context) => AddEditGoalPage()),
+    //     );
+    //     //Once created refresh goals display page
+    //     refreshGoals();
+    //   },
+    // ),
+    // );
 
 //TODO: add graphing function here
   Widget buildTimeGraph() =>
-  StaggeredGridView.countBuilder( padding: EdgeInsets.all(8),
+  StaggeredGridView.countBuilder(
+    padding: EdgeInsets.all(8),
     itemCount: screenTime.length,
     //default
     staggeredTileBuilder: (index) => StaggeredTile.fit(2),
@@ -148,7 +149,7 @@ class _ContentPageState extends State<ContentPage> {
           //calls function to refresh page.
           refreshScreenTime();
         },
-        child: TimeGraphWidget(timeGraph: timeGraph),
+        child: TimeGraphWidget(screenContent: sTime, index: index),
       );  },
   );
 
