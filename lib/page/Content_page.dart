@@ -66,8 +66,20 @@ class _ContentPageState extends State<ContentPage> {
 
   @override
   ///Main Page display
-  Widget build(BuildContext context) =>
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Screen Time test'),
+        ),
+    body: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
 
+
+    ),
+    );
+  }
 
     // Scaffold(
     //   appBar: AppBar (
