@@ -25,7 +25,6 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
     isImportant = widget.goal?.isImportant ?? false;
     //chang-able '' field
     name = widget.goal?.name ?? '';
-    ///description = widget.goal?.description ?? '';
   }
 
   //build the editing widget
@@ -40,13 +39,10 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
       //links each database column to each field that will be changed.
       isImportant: isImportant,
       name: name,
-      ///description: description,
-
       //When the form is valid, add data to database via placing the inputted from the FormWidget into a sql statement
       onChangedImportant: (isImportant) =>
           setState(() => this.isImportant = isImportant),
       onChangedName: (name) => setState(() => this.name= name),
-      //onChangedDescription: (description) =>setState(() => this.description = description),
     ),
     ),
   );
@@ -92,7 +88,6 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
     final note = widget.goal!.copy(
       isImportant: isImportant,
       name: name,
-      ///description: description,
     );
 
     //update the content

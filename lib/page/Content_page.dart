@@ -75,11 +75,54 @@ class _ContentPageState extends State<ContentPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+    Container(
+    child:
+    Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          ElevatedButton(onPressed: () async {
+            await Navigator.of(context).push (
+              MaterialPageRoute(builder: (context) => ScreenTimePage(timeID: ,)));
+            refreshScreenTime();
+      }, child: Icon(Icons.atm),
+              )
+        ]
+    ),
+      alignment: Alignment.center,
+    ),
 
+          Container(
+            child:
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  ElevatedButton( onPressed: () async {
+                            await Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => AddEditGoalPage()));
+                            //Once created refresh goals display page
+                            refreshGoals();},
+                    child: Icon(Icons.add),
+                  )
+                ]
+            ),
+            padding: const EdgeInsets.all(0.0),
+            alignment: Alignment.center,
+          )
+        ]
 
     ),
+
     );
+
   }
+
+
+
 
     // Scaffold(
     //   appBar: AppBar (

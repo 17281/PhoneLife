@@ -2,16 +2,14 @@ import 'package:intl/intl.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:flutter/material.dart';
+import 'package:phoneapp/model/ScreenTime.dart';
 
 
 
 class ScreenTimePage extends StatefulWidget {
  //displays where timeID = ST_ID from time database
-  final int timeID;
-  const ScreenTimePage ({
-    Key? key,
-    required this.timeID,
-  }) :super(key: key);
+  final ScreenContents? ScreenContent;
+  const ScreenTimePage ({Key? key, this.ScreenContent,}) :super(key: key);
 
   @override
   _TimeDetailPageState createState() => _TimeDetailPageState();
