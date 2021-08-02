@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart';
+import 'package:phoneapp/widget/Time_Form_Widget.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:flutter/material.dart';
@@ -36,9 +36,9 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
       actions: [startButton(), stopButton()],
     ),
 
-    body: Form(child: Center (
-      onChangedAverageTime =
-
+    body: Form(
+        child: TimeFormWidget (
+        onChangedAverageTime: (averageTime) => setState (() => this.averageTime = averageTime)
     )
     ),
   );
@@ -62,6 +62,7 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
           stopTime: stopTime,
           startTime: DateTime.now()
       );
+      await ScreenTimeDatabase.instance.createST(startTimer);
     }
 
   Widget stopButton() {
@@ -78,8 +79,8 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     // await db.rawInsert('INSERT INTO Screen_Time (stopTime) VALUES (${DateTime.now()}) );'
     final stopTimer = ScreenContents(
         averageTime: averageTime,
-        stopTime: stopTime,
-        startTime: DateTime.now()
+        stopTime: DateTime.now(),
+        startTime: startTime,
     );
 
     await ScreenTimeDatabase.instance.createST(stopTimer);
