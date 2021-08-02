@@ -20,7 +20,6 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
   late DateTime stopTime;
   late DateTime startTime;
   late String averageTime;
-  late String totalTime;
   bool isLoading = false;
 
 
@@ -36,35 +35,11 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     appBar: AppBar(
       actions: [startButton(), stopButton()],
     ),
-    body: isLoading
-        ? Center(child: CircularProgressIndicator())
-        : Padding(
-      padding: EdgeInsets.all(12),
-      child: ListView(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        children: [
-          Text(
-            DateFormat.yMMMMEEEEd().format(screenTime.startTime),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 8),
 
-          Text(
-            DateFormat.yMMMMEEEEd().format(screenTime.stopTime),
-            style: TextStyle(
-                color: Colors.black,
-              fontSize: 22,
-            ),
-          ),
-          SizedBox(height: 8),
+    body: Form(child: Center (
+      onChangedAverageTime =
 
-
-        ], //Children
-      ),
+    )
     ),
   );
 
@@ -73,34 +48,41 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(onPrimary: Colors.green, primary: Colors.blue),
-          onPressed: startTimer(), child: Text('start time'),
+          onPressed: () {startTimer();}, child: Text('start time'),
         ),
     );
   }
 
     startTimer() async {
-      final db = await ScreenTimeDatabase.instance.database;
-      await db.rawInsert(
-        'INSERT INTO Screen_Time (startTime) VALUES (${DateTime.now()})'
-
+      // final db = await ScreenTimeDatabase.instance.database;
+      // await db.rawInsert(
+      //   'INSERT INTO Screen_Time (startTime) VALUES (${DateTime.now()})'
+      final startTimer = ScreenContents(
+          averageTime: averageTime,
+          stopTime: stopTime,
+          startTime: DateTime.now()
       );
-
-
     }
+
   Widget stopButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(onPrimary: Colors.red, primary: Colors.orange),
-        onPressed: stopTimer(), child: Text('Stop time'),
+        onPressed: () {stopTimer();}, child: Text('Stop time'),
       ),
     );
   }
   stopTimer() async{
-    final db = await ScreenTimeDatabase.instance.database;
-    await db.rawInsert('INSERT INTO Screen_Time (startTime) VALUES (${DateTime.now()})'
-
+    // final db = await ScreenTimeDatabase.instance.database;
+    // await db.rawInsert('INSERT INTO Screen_Time (stopTime) VALUES (${DateTime.now()}) );'
+    final stopTimer = ScreenContents(
+        averageTime: averageTime,
+        stopTime: stopTime,
+        startTime: DateTime.now()
     );
+
+    await ScreenTimeDatabase.instance.createST(stopTimer);
   }
 }
 

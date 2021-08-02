@@ -43,8 +43,7 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
       ///description: description,
 
       //When the form is valid, add data to database via placing the inputted from the FormWidget into a sql statement
-      onChangedImportant: (isImportant) =>
-          setState(() => this.isImportant = isImportant),
+      onChangedImportant: (isImportant) => setState(() => this.isImportant = isImportant),
       onChangedName: (name) => setState(() => this.name= name),
       //onChangedDescription: (description) =>setState(() => this.description = description),
     ),

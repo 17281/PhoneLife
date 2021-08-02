@@ -6,10 +6,8 @@ import 'package:flutter/material.dart';
 
 class TimeDetailPage extends StatefulWidget {
   //displays where timeID = ST_ID from time database
-  final ScreenContents? ScreenContent;
   final int timeID;
   const TimeDetailPage ({Key? key,
-    this.ScreenContent,
     required this.timeID}) :super(key: key);
 
   @override
@@ -19,10 +17,6 @@ class TimeDetailPage extends StatefulWidget {
 
 class _TimeDetailPageState extends State <TimeDetailPage> {
   late ScreenContents screenTime;
-  late DateTime stopTime;
-  late DateTime startTime;
-  late String averageTime;
-  late String totalTime;
   bool isLoading = false;
 
 

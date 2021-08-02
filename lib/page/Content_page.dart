@@ -114,6 +114,13 @@ class _ContentPageState extends State<ContentPage> {
             padding: const EdgeInsets.all(0.0),
             alignment: Alignment.center,
           ),
+
+
+          Container(
+            child: Center(
+
+            ),
+          ),
         ]
 
     ),
@@ -208,34 +215,34 @@ class _ContentPageState extends State<ContentPage> {
 
 
 
-  // TODO: find a better looking goal display---------------------------
-  Widget buildGoals() =>
-  //builds the display for goals
-      StaggeredGridView.countBuilder(
-        padding: EdgeInsets.all(8),
-        itemCount: goals.length,
-        //default
-        staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-        crossAxisCount: 4,
-        mainAxisSpacing: 4,
-        crossAxisSpacing: 4,
-        itemBuilder: (context, index) {
-          final goal = goals[index];
-          //detects when the user taps a button
-          return GestureDetector(
-            //when user clicks on tap
-            onTap: () async {
-              await Navigator.of(context).push(MaterialPageRoute(
-                //builds the page where new goals are added and then refresh display page.
-                //builds content based on goalId = id
-                builder: (context) => GoalDetailPage(goalID: goal.id!),
-              ));
-              //calls function to refresh page.
-              refreshGoals();
-            },
-            //uses the card widget in folder to display data
-            //TODO: find better looking display plz
-            child: GoalCardWidget(goal: goal, index: index),
-          );  },
-      );
+//   // TODO: find a better looking goal display---------------------------
+//   Widget buildGoals() =>
+//   //builds the display for goals
+//       StaggeredGridView.countBuilder(
+//         padding: EdgeInsets.all(8),
+//         itemCount: goals.length,
+//         //default
+//         staggeredTileBuilder: (index) => StaggeredTile.fit(2),
+//         crossAxisCount: 4,
+//         mainAxisSpacing: 4,
+//         crossAxisSpacing: 4,
+//         itemBuilder: (context, index) {
+//           final goal = goals[index];
+//           //detects when the user taps a button
+//           return GestureDetector(
+//             //when user clicks on tap
+//             onTap: () async {
+//               await Navigator.of(context).push(MaterialPageRoute(
+//                 //builds the page where new goals are added and then refresh display page.
+//                 //builds content based on goalId = id
+//                 builder: (context) => GoalDetailPage(goalID: goal.id!),
+//               ));
+//               //calls function to refresh page.
+//               refreshGoals();
+//             },
+//             //uses the card widget in folder to display data
+//             //TODO: find better looking display plz
+//             child: GoalCardWidget(goal: goal, index: index),
+//           );  },
+//       );
 }
