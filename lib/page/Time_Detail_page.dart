@@ -4,18 +4,20 @@ import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:flutter/material.dart';
 
 
-class ScreenTimePage extends StatefulWidget {
- //displays where timeID = ST_ID from time database
+class TimeDetailPage extends StatefulWidget {
+  //displays where timeID = ST_ID from time database
   final ScreenContents? ScreenContent;
-  const ScreenTimePage ({Key? key,
-    this.ScreenContent,}) :super(key: key);
+  final int timeID;
+  const TimeDetailPage ({Key? key,
+    this.ScreenContent,
+    required this.timeID}) :super(key: key);
 
   @override
   _TimeDetailPageState createState() => _TimeDetailPageState();
 
 }
 
-class _TimeDetailPageState extends State <ScreenTimePage> {
+class _TimeDetailPageState extends State <TimeDetailPage> {
   late ScreenContents screenTime;
   late DateTime stopTime;
   late DateTime startTime;
@@ -27,15 +29,19 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
   @override
   void initState() {
     super.initState();
+    refreshTime();
   }
 
+  Future refreshTime() async {
+    setState(() => isLoading = true); {
+      this.screenTime = await ScreenTimeDatabase.instance.readScreenTime(widget.timeID);
+    }
+  }
 
   //TODO: add graph display return here
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      actions: [startButton(), stopButton()],
-    ),
+    appBar: AppBar ( actions:[deleteButton()]),
     body: isLoading
         ? Center(child: CircularProgressIndicator())
         : Padding(
@@ -43,6 +49,7 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
       child: ListView(
         padding: EdgeInsets.symmetric(vertical: 8),
         children: [
+
           Text(
             DateFormat.yMMMMEEEEd().format(screenTime.startTime),
             style: TextStyle(
@@ -56,7 +63,7 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
           Text(
             DateFormat.yMMMMEEEEd().format(screenTime.stopTime),
             style: TextStyle(
-                color: Colors.black,
+              color: Colors.black,
               fontSize: 22,
             ),
           ),
@@ -68,44 +75,11 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     ),
   );
 
-  Widget startButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(onPrimary: Colors.green, primary: Colors.blue),
-          onPressed: startTimer(), child: Text('start time'),
-        ),
-    );
-  }
-
-    startTimer() async {
-      final db = await ScreenTimeDatabase.instance.database;
-      await db.rawInsert(
-        'INSERT INTO Screen_Time (startTime) VALUES (${DateTime.now()})'
-
-      );
-
-
-    }
-  Widget stopButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(onPrimary: Colors.red, primary: Colors.orange),
-        onPressed: stopTimer(), child: Text('Stop time'),
-      ),
-    );
-  }
-  stopTimer() async{
-    final db = await ScreenTimeDatabase.instance.database;
-    await db.rawInsert('INSERT INTO Screen_Time (startTime) VALUES (${DateTime.now()})'
-
-    );
-  }
+  Widget deleteButton() => IconButton(
+    icon: Icon(Icons.delete),
+    onPressed: () async {
+      await UserDatabase.instance.delete(widget.timeID);
+      Navigator.of(context).pop();
+    },
+  );
 }
-
-
-
-
-
-

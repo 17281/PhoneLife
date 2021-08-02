@@ -77,17 +77,18 @@ class _ContentPageState extends State<ContentPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
     Container(
-    child:
-    Row(
+
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           ElevatedButton(onPressed: () async {
-            await Navigator.of(context).push (
-              MaterialPageRoute(builder: (context) => ScreenTimePage(timeID: ,)));
-            refreshScreenTime();
-      }, child: Icon(Icons.atm),
+                  await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => ScreenTimePage()));
+    //Once created refresh goals display page
+              refreshScreenTime();},
+            child: Icon(Icons.atm),
               )
         ]
     ),
@@ -112,7 +113,7 @@ class _ContentPageState extends State<ContentPage> {
             ),
             padding: const EdgeInsets.all(0.0),
             alignment: Alignment.center,
-          )
+          ),
         ]
 
     ),
@@ -180,33 +181,30 @@ class _ContentPageState extends State<ContentPage> {
     // ),
     // );
 
-//TODO: add graphing function here
-  Widget buildTimeGraph() =>
-  StaggeredGridView.countBuilder(
-    padding: EdgeInsets.all(8),
-    itemCount: screenTime.length,
-    //default
-    staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-    crossAxisCount: 4,
-    mainAxisSpacing: 4,
-    crossAxisSpacing: 4,
-    itemBuilder: (context, index) {
-      final sTime = screenTime[index];
-      //detects when the user taps a button
-      return GestureDetector(
-        //when user clicks on tap
-        onTap: () async {
-          await Navigator.of(context).push(MaterialPageRoute(
-            //builds the page where new goals are added and then refresh display page.
-            //builds content based on goalId = id
-            builder: (context) => ScreenTimePage(timeID: sTime.ST_id!),
-          ));
-          //calls function to refresh page.
-          refreshScreenTime();
-        },
-        child: TimeGraphWidget(screenContent: sTime, index: index),
-      );  },
-  );
+// //TODO: add graphing function here
+//   Widget buildTimeGraph() =>
+//   StaggeredGridView.countBuilder(
+//     padding: EdgeInsets.all(8),
+//     itemCount: screenTime.length,
+//     //default
+//     staggeredTileBuilder: (index) => StaggeredTile.fit(2),
+//     crossAxisCount: 4,
+//     mainAxisSpacing: 4,
+//     crossAxisSpacing: 4,
+//     itemBuilder: (context, index) {
+//       final sTime = screenTime[index];
+//       //detects when the user taps a button
+//       return GestureDetector(
+//         //when user clicks on tap
+//         onTap: () async {
+//           await Navigator.of(context).push(MaterialPageRoute(
+//             builder: (context) => (timeID: sTime.ST_id!),
+//           ));
+//           refreshScreenTime();
+//         },
+//         child: TimeGraphWidget(screenContent: sTime, index: index),
+//       );  },
+//   );
 
 
 

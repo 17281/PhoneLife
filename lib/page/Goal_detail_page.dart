@@ -10,7 +10,10 @@ class GoalDetailPage extends StatefulWidget {
   ///display goals where goalID = ?
   final int goalID;
 
-  const GoalDetailPage ({Key? key, required this.goalID,}) :super(key: key);
+  const GoalDetailPage ({
+    Key? key,
+    required this.goalID,
+}) :super(key: key);
 
   @override
   _GoalDetailPageState createState() => _GoalDetailPageState();
