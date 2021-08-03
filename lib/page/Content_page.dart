@@ -77,7 +77,6 @@ class _ContentPageState extends State<ContentPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
     Container(
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.max,
@@ -96,8 +95,7 @@ class _ContentPageState extends State<ContentPage> {
     ),
 
           Container(
-            child:
-            Row(
+            child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,8 +112,6 @@ class _ContentPageState extends State<ContentPage> {
             padding: const EdgeInsets.all(0.0),
             alignment: Alignment.center,
           ),
-
-
           Container(
             child: Center(
 
@@ -128,121 +124,4 @@ class _ContentPageState extends State<ContentPage> {
     );
 
   }
-
-
-
-
-    // Scaffold(
-    //   appBar: AppBar (
-    //       title: Text('Screen time', style: TextStyle(fontSize: 30),)
-    //   ),
-    //   body:
-    //   Expanded( child: Column(
-    //     //displaying 2 widget trees
-    //
-    //     children: [
-    //       ///ScreenTime display Widget
-    //       Container(
-    //         child:
-    //         // Center (
-    //         //   child:
-    //           isLoading ? CircularProgressIndicator() : screenTime.isEmpty
-    //           //return a no data found to tell the user
-    //             ? Text('No Data found', style: TextStyle(color: Colors.white , fontSize: 24),
-    //           ) : buildTimeGraph()
-    //         ),
-    //       // ),
-    //       ///Goal display Widget
-    //       Container(
-    //         child:
-    //         // Center(
-    //         //   //loading display
-    //         //   child:
-    //           isLoading ? CircularProgressIndicator() : goals.isEmpty
-    //           //if goals returned is empty then return 'No Goals
-    //           // text styling
-    //           ? Text('No data found', style: TextStyle(color: Colors.white, fontSize: 24),
-    //           )
-    //           //build the Goals (By calling the buildGoals function/widget)
-    //           : buildGoals(),
-    //         ),
-    //       // ),
-    //     ], //Children
-    //   ),
-    //   ),
-    //   floatingActionButton: FloatingActionButton(
-    //   backgroundColor: Colors.white12,
-    //   //adds icon for adding new goals
-    //   // TODO: Create dynamic adding system rather manual input
-    //   child: Icon(Icons.add),
-    //
-    //   //makes the object interactable, when pressed, await for response
-    //   onPressed: () async {
-    //     //when pressed activates editing page (creates new page for editing.
-    //     await Navigator.of(context).push(
-    //       MaterialPageRoute(builder: (context) => AddEditGoalPage()),
-    //     );
-    //     //Once created refresh goals display page
-    //     refreshGoals();
-    //   },
-    // ),
-    // );
-
-// //TODO: add graphing function here
-//   Widget buildTimeGraph() =>
-//   StaggeredGridView.countBuilder(
-//     padding: EdgeInsets.all(8),
-//     itemCount: screenTime.length,
-//     //default
-//     staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-//     crossAxisCount: 4,
-//     mainAxisSpacing: 4,
-//     crossAxisSpacing: 4,
-//     itemBuilder: (context, index) {
-//       final sTime = screenTime[index];
-//       //detects when the user taps a button
-//       return GestureDetector(
-//         //when user clicks on tap
-//         onTap: () async {
-//           await Navigator.of(context).push(MaterialPageRoute(
-//             builder: (context) => (timeID: sTime.ST_id!),
-//           ));
-//           refreshScreenTime();
-//         },
-//         child: TimeGraphWidget(screenContent: sTime, index: index),
-//       );  },
-//   );
-
-
-
-//   // TODO: find a better looking goal display---------------------------
-//   Widget buildGoals() =>
-//   //builds the display for goals
-//       StaggeredGridView.countBuilder(
-//         padding: EdgeInsets.all(8),
-//         itemCount: goals.length,
-//         //default
-//         staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-//         crossAxisCount: 4,
-//         mainAxisSpacing: 4,
-//         crossAxisSpacing: 4,
-//         itemBuilder: (context, index) {
-//           final goal = goals[index];
-//           //detects when the user taps a button
-//           return GestureDetector(
-//             //when user clicks on tap
-//             onTap: () async {
-//               await Navigator.of(context).push(MaterialPageRoute(
-//                 //builds the page where new goals are added and then refresh display page.
-//                 //builds content based on goalId = id
-//                 builder: (context) => GoalDetailPage(goalID: goal.id!),
-//               ));
-//               //calls function to refresh page.
-//               refreshGoals();
-//             },
-//             //uses the card widget in folder to display data
-//             //TODO: find better looking display plz
-//             child: GoalCardWidget(goal: goal, index: index),
-//           );  },
-//       );
 }
