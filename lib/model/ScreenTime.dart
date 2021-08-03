@@ -36,7 +36,6 @@ ScreenContents copy ({
   String? averageTime,
   DateTime? startTime,
   DateTime? stopTime
-
 }) =>
 //Setting types to each column objects before converting
     ScreenContents(
@@ -44,6 +43,7 @@ ScreenContents copy ({
     averageTime: averageTime ?? this.averageTime,
     stopTime: stopTime ?? this.stopTime,
     startTime: startTime ?? this.startTime,
+
 );
 
 //converting to json

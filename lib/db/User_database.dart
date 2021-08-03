@@ -31,17 +31,15 @@ class UserDatabase {
   Future _createDB(Database db, int version) async {
     //Type of field in sql
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    final intType = 'INTEGER NOT NULL';
     final boolType = 'BOOLEAN NOT NULL';
     final textType = 'TEXT NOT NULL';
 
-    //TODO: Change isImportant => isCompleted
     //TODO: Change name => intType
     //creates the table based on the model table listed before
     await db.execute(''' CREATE TABLE $userTable (
     ${UserFields.id} $idType, 
-    ${UserFields.isImportant} $boolType, 
-    ${UserFields.name} $textType,
+    ${UserFields.isCompleted} $boolType, 
+    ${UserFields.goalTime} $textType,
     ${UserFields.time} $textType
     )''');
   }
@@ -155,7 +153,7 @@ class ScreenTimeDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
   //version of database
-  return await openDatabase(path, version: 1, onCreate: _createScreenTimeDB);
+  return await openDatabase(path, version: 2, onCreate: _createScreenTimeDB);
   }
 
 
@@ -172,8 +170,10 @@ class ScreenTimeDatabase {
       ${STFields.ST_id} $idType, 
       ${STFields.startTime} $textType,
       ${STFields.stopTime} $textType,
-      ${STFields.averageTime} $textType,
-      )'''); }
+      ${STFields.averageTime} $textType
+      )'''
+    );
+  }
 
 //Users adding screen time/contents
   Future<ScreenContents> createST(ScreenContents content) async {
@@ -192,7 +192,6 @@ class ScreenTimeDatabase {
     final maps = await db.query(
       ScreenTimeTable,
       columns: STFields.values,
-
       ///using ? instead of $id as it stops sql injections
       where: '${STFields.ST_id} = ?',
       ///adding values [id, values] then add = '? ?' etc

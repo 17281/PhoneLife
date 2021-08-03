@@ -31,7 +31,7 @@ class GoalCardWidget extends StatelessWidget {
             ),
             SizedBox(height: 4),
             Text(
-              goal.name,
+              goal.goalTime,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 20,

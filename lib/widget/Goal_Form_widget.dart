@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class GoalFormWidget extends StatelessWidget {
-  final bool? isImportant;
-  final String? name;
+  final bool? isCompleted;
+  final String? goalTime;
   ///final String? description;
   final ValueChanged<bool> onChangedImportant;
   final ValueChanged<String> onChangedName;
@@ -11,8 +11,8 @@ class GoalFormWidget extends StatelessWidget {
 //Validating methods of inserting, ie. Name can't be null
   const GoalFormWidget({
     Key? key,
-    this.isImportant = false,
-    this.name = '',
+    this.isCompleted = false,
+    this.goalTime = '',
     ///this.description = '',
     required this.onChangedImportant,
     required this.onChangedName,
@@ -31,7 +31,7 @@ class GoalFormWidget extends StatelessWidget {
               Row(
                 children: [
                   Switch(
-                    value: isImportant ?? false,
+                    value: isCompleted ?? false,
                     onChanged: onChangedImportant,
                   ),
                 ],
@@ -53,7 +53,7 @@ class GoalFormWidget extends StatelessWidget {
         //only allows one line for name
         maxLines: 1,
         //Value inserted into database is name
-        initialValue: name,
+        initialValue: goalTime,
         //styling
         //TODO:Change TEXTSTYLE======================
         style: TextStyle(

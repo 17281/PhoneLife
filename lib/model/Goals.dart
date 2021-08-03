@@ -5,12 +5,12 @@ final String userTable = 'User';
 class UserFields {
   static final List<String> values = [
     ///add all fields
-    id, isImportant, name,time, //description
+    id, isCompleted, goalTime ,time, //description
   ];
 
   static final String id = '_id';
-  static final String isImportant = 'isImportant';
-  static final String name = 'name';
+  static final String isCompleted = 'isCompleted';
+  static final String goalTime = 'goalTime';
  // static final String description = 'description';
   static final String time = 'time';
 }
@@ -19,18 +19,17 @@ class UserFields {
 //Contents of table in flutter
 class UserContent {
   final int? id;
-  final bool isImportant;
-  final String name;
-  //final String description;
+  final bool isCompleted;
+  final String goalTime;
   final DateTime createdTime;
 
 
   //constructs users table contents
   const UserContent ({
     this.id,
-    required this.isImportant,
+    required this.isCompleted,
     //required this.description,
-    required this.name,
+    required this.goalTime,
     required this.createdTime,
 });
 
@@ -38,8 +37,8 @@ class UserContent {
   UserContent copy({
     //primary key for id
     int? id,
-    bool? isImportant,
-    String? name,
+    bool? isCompleted,
+    String? goalTime,
     //String? description,
     DateTime? createdTime,
 
@@ -47,8 +46,8 @@ class UserContent {
   UserContent(
     //setting type to the listed contents
     id: id ?? this.id,
-    isImportant: isImportant ?? this.isImportant,
-    name: name ?? this.name,
+    isCompleted: isCompleted ?? this.isCompleted,
+    goalTime: goalTime ?? this.goalTime,
     //description: description ?? this.description,
     createdTime: createdTime ?? this.createdTime,
   );
@@ -56,11 +55,11 @@ class UserContent {
   //converting map fields into json (for data inserting)
   static UserContent fromJson(Map<String, Object?> json) => UserContent(
     id: json[UserFields.id] as int?,
-    name: json[UserFields.name] as String,
+    goalTime: json[UserFields.goalTime] as String,
     //description: json[UserFields.description] as String,
     //specials cases that need extra converting i.e bool and tim
     createdTime: DateTime.parse(json[UserFields.time] as String),
-    isImportant: json[UserFields.isImportant] == 1,
+    isCompleted: json[UserFields.isCompleted] == 1,
 
   );
 
@@ -70,10 +69,10 @@ class UserContent {
     //a map of key values
     //Table name:Key:corrisponding value
     UserFields.id: id,
-    UserFields.name: name,
+    UserFields.goalTime: goalTime,
     //UserFields.description: description,
     //Bool and DateTime needs conversion before inserted into sql
-    UserFields.isImportant: isImportant ? 1 : 0,
+    UserFields.isCompleted: isCompleted ? 1 : 0,
 
     //converts time to string
     UserFields.time: createdTime.toIso8601String(),

@@ -53,7 +53,7 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
         padding: EdgeInsets.symmetric(vertical: 8),
         children: [
           Text(
-            goal.name,
+            goal.goalTime,
             style: TextStyle(
               color: Colors.white,
               fontSize: 22,

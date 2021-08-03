@@ -55,9 +55,6 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     );
   }
 
-  startTimer() async {
-    }
-
   Widget stopButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -68,29 +65,25 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     );
   }
 
-  stopTimer() async{
-
-  }
-
 
 
   Widget submitButton() {
     return Padding (
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: ElevatedButton (
-        style: ElevatedButton.styleFrom( onPrimary: Colors.red, primary: Colors.green),
+        style: ElevatedButton.styleFrom( onPrimary: Colors.red, primary: Colors.blueAccent),
         onPressed: () {submit();}, child: Text('Submit'),
         ),
       );
   }
 
   submit()async {
-    final startTimer = ScreenContents(
+    final finalTime = ScreenContents(
       averageTime: averageTime,
       stopTime: stopTime,
       startTime: startTime,
     );
-    await ScreenTimeDatabase.instance.createST(startTimer);
+    await ScreenTimeDatabase.instance.createST(finalTime);
   }
 }
 

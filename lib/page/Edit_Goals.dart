@@ -13,18 +13,18 @@ class AddEditGoalPage extends StatefulWidget {
 class _AddEditGoalPageState extends State<AddEditGoalPage>{
   //creates a validation method for when users insert data into database
   final _formkey = GlobalKey<FormState>();
-  late bool isImportant;
+  late bool isCompleted;
   late DateTime createdTime;
-  late String name;
+  late String goalTime;
 
   //initiate database and conversions.
   @override
   void initState() {
     super.initState();
     //setting isImportant factor to false when created
-    isImportant = widget.goal?.isImportant ?? false;
+    isCompleted = widget.goal?.isCompleted ?? false;
     //chang-able '' field
-    name = widget.goal?.name ?? '';
+    goalTime = widget.goal?.goalTime ?? '';
     ///description = widget.goal?.description ?? '';
   }
 
@@ -38,13 +38,12 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
     body: Form(
       key: _formkey, child: GoalFormWidget(
       //links each database column to each field that will be changed.
-      isImportant: isImportant,
-      name: name,
-      ///description: description,
+      isCompleted: isCompleted,
+      goalTime: goalTime,
 
       //When the form is valid, add data to database via placing the inputted from the FormWidget into a sql statement
-      onChangedImportant: (isImportant) => setState(() => this.isImportant = isImportant),
-      onChangedName: (name) => setState(() => this.name= name),
+      onChangedImportant: (isCompleted) => setState(() => this.isCompleted = isCompleted),
+      onChangedName: (goalTime) => setState(() => this.goalTime= goalTime),
       //onChangedDescription: (description) =>setState(() => this.description = description),
     ),
     ),
@@ -52,7 +51,7 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
 
   Widget buildButton(){
     //only allow data to be pushed if name and description is not empty
-    final isFormValid = name.isNotEmpty;
+    final isFormValid = goalTime.isNotEmpty;
     //UI for the button
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -89,8 +88,8 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
   Future updateGoal() async {
     //copies all the content fields and then display any new data added
     final note = widget.goal!.copy(
-      isImportant: isImportant,
-      name: name,
+      isCompleted: isCompleted,
+      goalTime: goalTime,
       ///description: description,
     );
 
@@ -101,9 +100,8 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
   Future addGoal() async {
     //add all the content from the fields into a single statement
     final goal = UserContent(
-      name: name,
-      ///description: description,
-      isImportant: true,
+      goalTime: goalTime,
+      isCompleted: true,
       //date created for each goal
       //TODO:Using this, change the goals set each day to be dynamic
       createdTime: DateTime.now(),
