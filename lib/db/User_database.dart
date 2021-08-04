@@ -24,7 +24,9 @@ class UserDatabase {
     final path = join(dbPath, filepath);
 
     //opens database file with its pathway
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path, version: 2, onCreate: _createDB);
+
+
   }
 
   //create database table

@@ -11,7 +11,6 @@ class UserFields {
   static final String id = '_id';
   static final String isCompleted = 'isCompleted';
   static final String goalTime = 'goalTime';
- // static final String description = 'description';
   static final String time = 'time';
 }
 
