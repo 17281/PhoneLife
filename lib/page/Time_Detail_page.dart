@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 
 class TimeDetailPage extends StatefulWidget {
   //displays where timeID = ST_ID from time database
+
   final int timeID;
   const TimeDetailPage ({Key? key,
     required this.timeID}) :super(key: key);
 
   @override
   _TimeDetailPageState createState() => _TimeDetailPageState();
-
 }
 
 class _TimeDetailPageState extends State <TimeDetailPage> {
@@ -40,33 +40,32 @@ class _TimeDetailPageState extends State <TimeDetailPage> {
         ? Center(child: CircularProgressIndicator())
         : Padding(
       padding: EdgeInsets.all(12),
-      child: ListView(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        children: [
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                DateFormat.yMMMMEEEEd().format(screenTime.startTime),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8),
 
-          Text(
-            DateFormat.yMMMMEEEEd().format(screenTime.startTime),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+              Text(
+                DateFormat.yMMMMEEEEd().format(screenTime.stopTime),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 22,
+                ),
+              ),
+              SizedBox(height: 8),
+            ], //Children
           ),
-          SizedBox(height: 8),
-
-          Text(
-            DateFormat.yMMMMEEEEd().format(screenTime.stopTime),
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-            ),
-          ),
-          SizedBox(height: 8),
-
-
-        ], //Children
+        ),
       ),
-    ),
   );
 
   Widget deleteButton() => IconButton(

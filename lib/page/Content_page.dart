@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/Goals.dart';
 import 'package:phoneapp/page/Edit_Goals.dart';
+import 'package:phoneapp/page/Time_Detail_page.dart';
 import 'package:phoneapp/widget/Goal_card_widget.dart';
 import 'Goal_detail_page.dart';
+import 'package:intl/intl.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'package:phoneapp/widget/Graph_Widget.dart';
@@ -15,14 +18,14 @@ class ContentPage extends StatefulWidget {
   @override
   _ContentPageState createState() => _ContentPageState();
 }
-
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> {
   //finds all 'goals' from userTable
   late List<UserContent> goals;
   //finds all screen time value
-  late List<ScreenContents> screenTime;
+  late List<ScreenContents> screenContent;
   bool isLoading = false;
+
 
   //refresh database when ever updated
   @override
@@ -32,6 +35,7 @@ class _ContentPageState extends State<ContentPage> {
     refreshGoals();
    refreshScreenTime();
   }
+
 
   //closing database when app is down
   @override
@@ -47,10 +51,9 @@ class _ContentPageState extends State<ContentPage> {
     //sets database to be async loading to the page
     setState(() => isLoading = true);{
       //refresh and display new data on page
-      this.screenTime = await ScreenTimeDatabase.instance.readAllTime();
+      this.screenContent = await ScreenTimeDatabase.instance.readAllTime();
       //after database loads, change the loading symbol to off
-      setState(() => isLoading = false);{
-      }
+      setState(() => isLoading = false);
     }
   }
 
@@ -63,6 +66,54 @@ class _ContentPageState extends State<ContentPage> {
     setState(() => isLoading = false);
   }
 
+  Widget buildGoals() =>
+      //builds the display for goals
+  StaggeredGridView.countBuilder(
+    padding: EdgeInsets.all(8),
+    itemCount: goals.length,
+    //default
+    staggeredTileBuilder: (index) => StaggeredTile.fit(2),
+    crossAxisCount: 4,
+    mainAxisSpacing: 4,
+    crossAxisSpacing: 4,
+    itemBuilder: (context, index) {
+      final goal = goals[index];
+      //detects when the user taps a button
+      return GestureDetector(
+        onTap: () async {
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => GoalDetailPage(goalID: goal.id!),)
+          );
+        },
+        child: GoalCardWidget(goal: goal, index: index),
+      );
+    },
+  );
+
+  Widget buildTime() =>
+      //builds the display for goals
+  StaggeredGridView.countBuilder(
+    padding: EdgeInsets.all(8),
+    itemCount: screenContent.length,
+    //default
+    staggeredTileBuilder: (index) => StaggeredTile.fit(2),
+    crossAxisCount: 4,
+    mainAxisSpacing: 4,
+    crossAxisSpacing: 4,
+    itemBuilder: (context, index) {
+      final time = screenContent[index];
+      //detects when the user taps a button
+      return GestureDetector(
+        onTap: () async {
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => TimeDetailPage(timeID: time.ST_id!),)
+          );
+        },
+
+        child: TimeGraphWidget(screenContent: time, index: index),
+      );
+    },
+  );
 
   @override
   ///Main Page display
@@ -98,7 +149,6 @@ class _ContentPageState extends State<ContentPage> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   ElevatedButton( onPressed: () async {
                             await Navigator.of(context).push(
@@ -106,22 +156,25 @@ class _ContentPageState extends State<ContentPage> {
                             //Once created refresh goals display page
                             refreshGoals();},
                     child: Icon(Icons.add),
-                  )
+                  ),
+                  SizedBox(height: 20),
                 ]
             ),
             padding: const EdgeInsets.all(0.0),
             alignment: Alignment.center,
           ),
-          Container(
-            child: Center(
 
-            ),
+          Container(
+            height: 300,
+            child: isLoading ? CircularProgressIndicator() : screenContent.isEmpty ?
+              Text('No data' , style: TextStyle(color: Colors.white, fontSize: 24),
+            ) : buildTime(),
           ),
         ]
-
     ),
-
     );
 
-  }
+
 }
+}
+

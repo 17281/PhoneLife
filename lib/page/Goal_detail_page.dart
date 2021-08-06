@@ -45,9 +45,7 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
       //TODO: use the edit button function to change it so that it's a slideable
       actions: [editButton(), deleteButton()],
     ),
-    body: isLoading
-        ? Center(child: CircularProgressIndicator())
-        : Padding(
+    body: Padding(
       padding: EdgeInsets.all(12),
       child: ListView(
         padding: EdgeInsets.symmetric(vertical: 8),
@@ -60,7 +58,7 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             DateFormat.yMMMMd().format(goal.createdTime),
             style: TextStyle(color: Colors.white38),

@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:phoneapp/widget/Time_Form_Widget.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
@@ -17,7 +16,6 @@ class ScreenTimePage extends StatefulWidget {
 }
 
 class _TimeDetailPageState extends State <ScreenTimePage> {
-  late ScreenContents screenTime;
   late String averageTime;
   late DateTime stopTime;
   late DateTime startTime;

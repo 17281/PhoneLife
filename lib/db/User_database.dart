@@ -35,6 +35,7 @@ class UserDatabase {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final boolType = 'BOOLEAN NOT NULL';
     final textType = 'TEXT NOT NULL';
+    final intType = 'INT NOT NULL';
 
     //TODO: Change name => intType
     //creates the table based on the model table listed before
@@ -89,11 +90,9 @@ class UserDatabase {
   //Reading multiple data at a time
   Future<List<UserContent>> readAllGoals() async {
     final db =await instance.database;
-    //database table and table could be changed
-
     ///   Sorts data by time      ASC == asending order
     final orderBy = '${UserFields.time} ASC';
-    //final result =
+
     //this allows raw sql query to be used *Very NICE
         ///await db.rawQuery('SELECT * FROM $UserFields ORDER BY $orderBy');
     final result = await db.query(userTable, orderBy: orderBy);
@@ -211,15 +210,10 @@ class ScreenTimeDatabase {
 
   }
   //read all content then list them
-  //TODO: add graphing function here (when displaying)
   Future<List<ScreenContents>> readAllTime() async {
     final db =await instance.database;
-    //database table and table could be changed
     ///   Sorts data by time      ASC == asending order
     final orderBy = '${STFields.startTime} ASC';
-    //final result =
-    //this allows raw sql query to be used *Very NICE
-    ///await db.rawQuery('SELECT * FROM $UserFields ORDER BY $orderBy');
     final result = await db.query(ScreenTimeTable, orderBy: orderBy);
     //Convert json string to sql
     return result.map((json)=> ScreenContents.fromJson(json)).toList();
