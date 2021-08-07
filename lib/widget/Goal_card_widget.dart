@@ -15,7 +15,7 @@ class GoalCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ///very useful DateTime method, might use in other screen time database
-    final time = DateFormat.yMMMd().format(goal.createdTime);
+    final time = DateFormat.yMMMMEEEEd().format(goal.createdTime);
     return Card(
       //returns the card UI, wrapping around goals displayed
       child: Container(

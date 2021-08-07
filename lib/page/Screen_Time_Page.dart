@@ -63,8 +63,6 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     );
   }
 
-
-
   Widget submitButton() {
     return Padding (
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -75,6 +73,9 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
       );
   }
 
+
+
+
   submit()async {
     final finalTime = ScreenContents(
       averageTime: averageTime,
@@ -83,6 +84,9 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     );
     await ScreenTimeDatabase.instance.createST(finalTime);
   }
+
+
+
 }
 
 

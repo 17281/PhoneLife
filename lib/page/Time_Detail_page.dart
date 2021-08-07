@@ -35,6 +35,7 @@ class _TimeDetailPageState extends State <TimeDetailPage> {
   //TODO: add graph display return here
   @override
   Widget build(BuildContext context) => Scaffold(
+
     appBar: AppBar ( actions:[deleteButton()]),
     body: isLoading
         ? Center(child: CircularProgressIndicator())
@@ -44,8 +45,9 @@ class _TimeDetailPageState extends State <TimeDetailPage> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              //when widget is pressed. (This is what it's displayed as)
               Text(
-                DateFormat.yMMMMEEEEd().format(screenTime.startTime),
+                DateFormat.yMMMEd().format(screenTime.startTime),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 22,
@@ -55,7 +57,7 @@ class _TimeDetailPageState extends State <TimeDetailPage> {
               SizedBox(height: 8),
 
               Text(
-                DateFormat.yMMMMEEEEd().format(screenTime.stopTime),
+                DateFormat.Hms().format(screenTime.stopTime),
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 22,

@@ -17,8 +17,8 @@ class TimeGraphWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     ///very useful DateTime method, might use in other screen time database
-    final stopTimer = DateFormat.yMMMMEEEEd().format(screenContent.stopTime);
-    final startTimer = DateFormat.yMMMMEEEEd().format(screenContent.startTime);
+    final stopTimer = DateFormat.Hms().format(screenContent.stopTime);
+    final startTimer = DateFormat.Hms().format(screenContent.startTime);
     final averageTimer = screenContent.averageTime;
     return Card(
       //returns the card UI, wrapping around goals displayed

@@ -153,6 +153,8 @@ class ScreenTimeDatabase {
   Future<Database> _initScreenTimeDB(String filepath ) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
+   ///TODO: REMOVE THE CODE BELOW FOR FINAL PRODUCTION
+    await deleteDatabase(path);
   //version of database
   return await openDatabase(path, version: 2, onCreate: _createScreenTimeDB);
   }
@@ -215,6 +217,7 @@ class ScreenTimeDatabase {
     ///   Sorts data by time      ASC == asending order
     final orderBy = '${STFields.startTime} ASC';
     final result = await db.query(ScreenTimeTable, orderBy: orderBy);
+    print (result);
     //Convert json string to sql
     return result.map((json)=> ScreenContents.fromJson(json)).toList();
   }
