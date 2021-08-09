@@ -6,6 +6,7 @@ import 'package:phoneapp/model/Goals.dart';
 import 'package:phoneapp/page/Edit_Goals.dart';
 import 'package:phoneapp/page/Time_Detail_page.dart';
 import 'package:phoneapp/widget/Goal_card_widget.dart';
+import '../Utils.dart';
 import 'Goal_detail_page.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:phoneapp/page/Screen_Time_Page.dart';
@@ -24,6 +25,7 @@ class _ContentPageState extends State<ContentPage> {
   int index = 0;
 
   static List<String> goalValues = [
+    'No Phone?!?!',
     'Living the life',
     'The Average Joe',
     'Middle Class',
@@ -146,29 +148,28 @@ class _ContentPageState extends State<ContentPage> {
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-    Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          ElevatedButton(onPressed: () async {
-                  await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => ScreenTimePage()));
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+              ElevatedButton(onPressed: () async {
+                   await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => ScreenTimePage()));
     //Once created refresh goals display page
-              refreshScreenTime();},
-            child: Icon(Icons.atm),
+                  refreshScreenTime();},
+                  child: Icon(Icons.atm),
               )
         ]
     ),
-      alignment: Alignment.center,
+      alignment: Alignment.centerRight,
     ),
 
           Container(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+                children: [
                   // ElevatedButton( onPressed: () async {
                   //           await Navigator.of(context).push(
                   //       MaterialPageRoute(builder: (context) => AddEditGoalPage()));
@@ -178,13 +179,8 @@ class _ContentPageState extends State<ContentPage> {
                   // ),
                   // SizedBox(height: 20),
                   buildCustomPicker()
-
-
-
                 ]
             ),
-            padding: const EdgeInsets.all(0.0),
-            alignment: Alignment.center,
           ),
 
           Container(
@@ -200,11 +196,26 @@ class _ContentPageState extends State<ContentPage> {
 
   }
   Widget buildCustomPicker() => SizedBox(
-    height: 300,
+    height: 200,
+
     child: CupertinoPicker(
       itemExtent: 64,
-      onSelectedItemChanged: (index) => setState(() => index = this.index),
-      children: modelBuilder<String> (
+      diameterRatio: 0.7,
+
+      onSelectedItemChanged: (index) => setState(() => this.index = index),
+      selectionOverlay: CupertinoPickerDefaultSelectionOverlay (
+        background: Colors.pink.withOpacity(0.1),
+      ),
+      children: Utils.modelBuilder<String> (
+        goalValues, (index, goalValues) {
+          final selValue = this.index == index;
+          final color = selValue ? Colors.pinkAccent:Colors.black;
+          return Center(
+            child: Text(
+              goalValues, style: TextStyle (color: color, fontSize: 24),
+            ),
+          );
+          },
 
       ),
 
