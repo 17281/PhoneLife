@@ -19,7 +19,7 @@ class UserFields {
 class UserContent {
   final int? id;
   final bool isCompleted;
-  final String goalTime;
+  final int goalTime;
   final DateTime createdTime;
 
 
@@ -37,7 +37,7 @@ class UserContent {
     //primary key for id
     int? id,
     bool? isCompleted,
-    String? goalTime,
+    int? goalTime,
     //String? description,
     DateTime? createdTime,
 
@@ -54,7 +54,7 @@ class UserContent {
   //converting map fields into json (for data inserting)
   static UserContent fromJson(Map<String, Object?> json) => UserContent(
     id: json[UserFields.id] as int?,
-    goalTime: json[UserFields.goalTime] as String,
+    goalTime: json[UserFields.goalTime] as int,
     //description: json[UserFields.description] as String,
     //specials cases that need extra converting i.e bool and tim
     createdTime: DateTime.parse(json[UserFields.time] as String),

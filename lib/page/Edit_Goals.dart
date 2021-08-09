@@ -24,7 +24,7 @@ class _AddEditGoalPageState extends State<AddEditGoalPage>{
     //setting isImportant factor to false when created
     isCompleted = widget.goal?.isCompleted ?? false;
     //chang-able '' field
-    goalTime = widget.goal?.goalTime ?? '';
+    goalTime =
     ///description = widget.goal?.description ?? '';
   }
 

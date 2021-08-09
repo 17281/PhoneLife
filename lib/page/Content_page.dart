@@ -22,8 +22,7 @@ class ContentPage extends StatefulWidget {
 
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> {
-  int index = 0;
-
+  int goalIndex = 0;
   static List<String> goalValues = [
     'No Phone?!?!',
     'Living the life',
@@ -170,6 +169,7 @@ class _ContentPageState extends State<ContentPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+
                   // ElevatedButton( onPressed: () async {
                   //           await Navigator.of(context).push(
                   //       MaterialPageRoute(builder: (context) => AddEditGoalPage()));
@@ -178,7 +178,7 @@ class _ContentPageState extends State<ContentPage> {
                   //   child: Icon(Icons.add),
                   // ),
                   // SizedBox(height: 20),
-                  buildCustomPicker()
+                  buildCustomPicker(),
                 ]
             ),
           ),
@@ -195,20 +195,21 @@ class _ContentPageState extends State<ContentPage> {
 
 
   }
+
+
   Widget buildCustomPicker() => SizedBox(
     height: 200,
-
     child: CupertinoPicker(
       itemExtent: 64,
       diameterRatio: 0.7,
-
-      onSelectedItemChanged: (index) => setState(() => this.index = index),
+      onSelectedItemChanged: (goalIndex) => setState(() => this.goalIndex = goalIndex),
+      
       selectionOverlay: CupertinoPickerDefaultSelectionOverlay (
         background: Colors.pink.withOpacity(0.1),
       ),
       children: Utils.modelBuilder<String> (
-        goalValues, (index, goalValues) {
-          final selValue = this.index == index;
+        goalValues, (goalIndex, goalValues) {
+          final selValue = this.goalIndex == goalIndex;
           final color = selValue ? Colors.pinkAccent:Colors.black;
           return Center(
             child: Text(
