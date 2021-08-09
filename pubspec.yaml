@@ -24,10 +24,9 @@ dependencies:
   flutter:
     sdk: flutter
   #slq database storage
-  sqflite:
-  #format datetime
-  intl: ^0.17.0
+  sqflite: ^2.0.0+3
 
+  intl: ^0.17.0
   #format datetime
   path_provider:
 

@@ -17,8 +17,21 @@ class ContentPage extends StatefulWidget {
   @override
   _ContentPageState createState() => _ContentPageState();
 }
+
+
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> {
+  int index = 0;
+
+  static List<String> goalValues = [
+    'Living the life',
+    'The Average Joe',
+    'Middle Class',
+    'Easy Life',
+    'Baby Mode'
+  ];
+
+
   //finds all 'goals' from userTable
   late List<UserContent> goals;
   //finds all screen time value
@@ -55,11 +68,10 @@ class _ContentPageState extends State<ContentPage> {
       //after database loads, change the loading symbol to off
       setState(() => isLoading = false);
 
-
-      var avg = screenContent.map((m) => m.averageTime).reduce((a, b) => a+b);
-      // /screenContent.length;
-      print (avg);
-
+      //
+      // var avg = screenContent.map((m) => m.averageTime).reduce((a, b) => a+b);
+      //     // / screenContent.length;
+      // print (avg);
 
     }
   }
@@ -157,14 +169,18 @@ class _ContentPageState extends State<ContentPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  ElevatedButton( onPressed: () async {
-                            await Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => AddEditGoalPage()));
-                            //Once created refresh goals display page
-                            refreshGoals();},
-                    child: Icon(Icons.add),
-                  ),
-                  SizedBox(height: 20),
+                  // ElevatedButton( onPressed: () async {
+                  //           await Navigator.of(context).push(
+                  //       MaterialPageRoute(builder: (context) => AddEditGoalPage()));
+                  //           //Once created refresh goals display page
+                  //           refreshGoals();},
+                  //   child: Icon(Icons.add),
+                  // ),
+                  // SizedBox(height: 20),
+                  buildCustomPicker()
+
+
+
                 ]
             ),
             padding: const EdgeInsets.all(0.0),
@@ -182,6 +198,21 @@ class _ContentPageState extends State<ContentPage> {
     );
 
 
+  }
+  Widget buildCustomPicker() => SizedBox(
+    height: 300,
+    child: CupertinoPicker(
+      itemExtent: 64,
+      onSelectedItemChanged: (index) => setState(() => index = this.index),
+      children: modelBuilder<String> (
+
+      ),
+
+    ),
+  );
+
 }
-}
+
+
+
 
