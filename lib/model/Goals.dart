@@ -20,7 +20,6 @@ class UserContent {
   final int? id;
   final bool isCompleted;
   final String goalTime;
-
   final DateTime createdTime;
 
 

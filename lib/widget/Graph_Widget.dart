@@ -37,7 +37,6 @@ class TimeGraphWidget extends StatelessWidget{
                 style: TextStyle(color: Colors.grey.shade700),
               ),
               SizedBox(height: 4),
-
               Text(
                 stopTimer,
                 style: TextStyle(

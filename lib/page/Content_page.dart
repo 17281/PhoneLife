@@ -7,7 +7,6 @@ import 'package:phoneapp/page/Edit_Goals.dart';
 import 'package:phoneapp/page/Time_Detail_page.dart';
 import 'package:phoneapp/widget/Goal_card_widget.dart';
 import 'Goal_detail_page.dart';
-import 'package:intl/intl.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'package:phoneapp/widget/Graph_Widget.dart';
@@ -46,6 +45,7 @@ class _ContentPageState extends State<ContentPage> {
     super.dispose();
   }
 
+
 //Updating screen time data displayed
   Future refreshScreenTime() async {
     //sets database to be async loading to the page
@@ -54,6 +54,13 @@ class _ContentPageState extends State<ContentPage> {
       this.screenContent = await ScreenTimeDatabase.instance.readAllTime();
       //after database loads, change the loading symbol to off
       setState(() => isLoading = false);
+
+
+      var avg = screenContent.map((m) => m.averageTime).reduce((a, b) => a+b);
+      // /screenContent.length;
+      print (avg);
+
+
     }
   }
 

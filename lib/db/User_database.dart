@@ -173,7 +173,7 @@ class ScreenTimeDatabase {
       ${STFields.ST_id} $idType, 
       ${STFields.startTime} $textType,
       ${STFields.stopTime} $textType,
-      ${STFields.averageTime} $textType
+      ${STFields.averageTime} $stringType
       )'''
     );
   }

@@ -1,4 +1,3 @@
-import 'package:phoneapp/widget/Time_Form_Widget.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,6 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
   @override
   void initState() {
     super.initState();
-    averageTime = widget.screenContent?.averageTime ?? '';
   }
 
 
@@ -35,11 +33,7 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     appBar: AppBar(
       actions: [startButton(), stopButton(), submitButton()],
     ),
-
-    body: Form(
-      child: TimeFormWidget (
-        onChangedAverageTime: (averageTime) => setState(() => this.averageTime = averageTime)
-      )
+    body: Center(
     ),
   );
 
@@ -73,14 +67,14 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
       );
   }
 
-
-
-
   submit()async {
+    Duration difference = stopTime.difference(startTime);
+    String diffTime = difference.toString();
+    print (difference);
     final finalTime = ScreenContents(
-      averageTime: averageTime,
       stopTime: stopTime,
       startTime: startTime,
+      averageTime: diffTime,
     );
     await ScreenTimeDatabase.instance.createST(finalTime);
   }
