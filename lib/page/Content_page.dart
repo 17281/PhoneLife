@@ -27,9 +27,8 @@ class _ContentPageState extends State<ContentPage> {
     'No Phone?!?!',
     'Living the life',
     'The Average Joe',
-    'Middle Class',
     'Easy Life',
-    'Baby Mode'
+    'Baby Mode',
   ];
 
 
@@ -110,6 +109,7 @@ class _ContentPageState extends State<ContentPage> {
   //   },
   // );
 
+
   Widget buildTime() =>
       //builds the display for goals
   StaggeredGridView.countBuilder(
@@ -146,6 +146,7 @@ class _ContentPageState extends State<ContentPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
+
         children: <Widget>[
           Container(
             child: Row(
@@ -173,12 +174,32 @@ class _ContentPageState extends State<ContentPage> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget> [
-                  Expanded(child: isLoading ?
-                  CircularProgressIndicator() : goals.isEmpty ?
-                  Text('No goals selected', style: TextStyle(color: Colors.white, fontSize: 24),) : buildGoals()
+                  ElevatedButton(
+                      onPressed: () => Utils.showSheet(context,
+                          child: buildCustomPicker(),
+                          onClicked: () {final goalValue = goalValues[goalIndex];
+                          Utils.showSnackBar(context, 'Selected "$goalValue", Your goal today is: Screen time less than $goalIndex hours');
+                          Navigator.pop(context);}),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                      padding: EdgeInsets.all(0.0),
                   ),
-
-
+                    child:Ink (
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: [Color(0xff374ABE), Color(0xff64B6FF)],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                          borderRadius: BorderRadius.circular(30.0)
+                      ),
+                      child: Container(
+                        constraints: BoxConstraints(maxWidth: 300.0, maxHeight: 40),
+                        alignment: Alignment.center,
+                        child: Text('Screen time less than $goalIndex hours', style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    ),
+                  ),
+                  ),
                   // ElevatedButton( onPressed: () async {
                   //           await Navigator.of(context).push(
                   //       MaterialPageRoute(builder: (context) => AddEditGoalPage()));
@@ -187,7 +208,6 @@ class _ContentPageState extends State<ContentPage> {
                   //   child: Icon(Icons.add),
                   // ),
                   // SizedBox(height: 20),
-
                 ]
             ),
           ),
@@ -219,6 +239,7 @@ class _ContentPageState extends State<ContentPage> {
         goalValues, (goalIndex, goalValues) {
           final selValue = this.goalIndex == goalIndex;
           final color = selValue ? Colors.pinkAccent:Colors.black;
+
           return Center(
             child: Text(
               goalValues, style: TextStyle (color: color, fontSize: 24),
