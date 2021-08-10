@@ -22,9 +22,10 @@ class UserDatabase {
     //if database is stored in different location, then use "path_provider"
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
-
+    //TODO: Remove for final development
+    await deleteDatabase(path);
     //opens database file with its pathway
-    return await openDatabase(path, version: 2, onCreate: _createDB);
+    return await openDatabase(path, version: 3, onCreate: _createDB);
 
 
   }
@@ -37,12 +38,11 @@ class UserDatabase {
     final textType = 'TEXT NOT NULL';
     final intType = 'INT NOT NULL';
 
-    //TODO: Change name => intType
     //creates the table based on the model table listed before
     await db.execute(''' CREATE TABLE $userTable (
     ${UserFields.id} $idType, 
     ${UserFields.isCompleted} $boolType, 
-    ${UserFields.goalTime} $textType,
+    ${UserFields.goalTime} $intType,
     ${UserFields.time} $textType
     )''');
   }
@@ -197,7 +197,6 @@ class ScreenTimeDatabase {
       columns: STFields.values,
       ///using ? instead of $id as it stops sql injections
       where: '${STFields.ST_id} = ?',
-      ///adding values [id, values] then add = '? ?' etc
       whereArgs: [ST_id],
     );
 

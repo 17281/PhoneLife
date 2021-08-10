@@ -27,7 +27,6 @@ class UserContent {
   const UserContent ({
     this.id,
     required this.isCompleted,
-    //required this.description,
     required this.goalTime,
     required this.createdTime,
 });
@@ -38,7 +37,6 @@ class UserContent {
     int? id,
     bool? isCompleted,
     int? goalTime,
-    //String? description,
     DateTime? createdTime,
 
 }) =>
@@ -66,10 +64,8 @@ class UserContent {
   // Map to allow data to be inserted into sql
   Map<String, Object?>toJson() => {
     //a map of key values
-    //Table name:Key:corrisponding value
     UserFields.id: id,
     UserFields.goalTime: goalTime,
-    //UserFields.description: description,
     //Bool and DateTime needs conversion before inserted into sql
     UserFields.isCompleted: isCompleted ? 1 : 0,
 

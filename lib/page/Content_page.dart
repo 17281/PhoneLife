@@ -86,29 +86,29 @@ class _ContentPageState extends State<ContentPage> {
     setState(() => isLoading = false);
   }
 
-  Widget buildGoals() =>
-      //builds the display for goals
-  StaggeredGridView.countBuilder(
-    padding: EdgeInsets.all(8),
-    itemCount: goals.length,
-    //default
-    staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-    crossAxisCount: 4,
-    mainAxisSpacing: 4,
-    crossAxisSpacing: 4,
-    itemBuilder: (context, index) {
-      final goal = goals[index];
-      //detects when the user taps a button
-      return GestureDetector(
-        onTap: () async {
-          await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => GoalDetailPage(goalID: goal.id!),)
-          );
-        },
-        child: GoalCardWidget(goal: goal, index: index),
-      );
-    },
-  );
+  // Widget buildGoals() =>
+  //     //builds the display for goals
+  // StaggeredGridView.countBuilder(
+  //   padding: EdgeInsets.all(8),
+  //   itemCount: goals.length,
+  //   //default
+  //   staggeredTileBuilder: (index) => StaggeredTile.fit(2),
+  //   crossAxisCount: 4,
+  //   mainAxisSpacing: 4,
+  //   crossAxisSpacing: 4,
+  //   itemBuilder: (context, index) {
+  //     final goal = goals[index];
+  //     //detects when the user taps a button
+  //     return GestureDetector(
+  //       onTap: () async {
+  //         await Navigator.of(context).push(MaterialPageRoute(
+  //           builder: (context) => GoalDetailPage(goalID: goal.id!),)
+  //         );
+  //       },
+  //       child: GoalCardWidget(goal: goal, index: index),
+  //     );
+  //   },
+  // );
 
   Widget buildTime() =>
       //builds the display for goals
@@ -203,7 +203,7 @@ class _ContentPageState extends State<ContentPage> {
       itemExtent: 64,
       diameterRatio: 0.7,
       onSelectedItemChanged: (goalIndex) => setState(() => this.goalIndex = goalIndex),
-      
+
       selectionOverlay: CupertinoPickerDefaultSelectionOverlay (
         background: Colors.pink.withOpacity(0.1),
       ),
