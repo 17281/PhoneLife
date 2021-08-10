@@ -166,9 +166,18 @@ class _ContentPageState extends State<ContentPage> {
     ),
 
           Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-                children: [
+            height: 200,
+            width: 250,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget> [
+                  Expanded(child: isLoading ?
+                  CircularProgressIndicator() : goals.isEmpty ?
+                  Text('No goals selected', style: TextStyle(color: Colors.white, fontSize: 24),) : buildGoals()
+                  ),
+
 
                   // ElevatedButton( onPressed: () async {
                   //           await Navigator.of(context).push(
@@ -178,7 +187,7 @@ class _ContentPageState extends State<ContentPage> {
                   //   child: Icon(Icons.add),
                   // ),
                   // SizedBox(height: 20),
-                  buildCustomPicker(),
+
                 ]
             ),
           ),
@@ -195,7 +204,6 @@ class _ContentPageState extends State<ContentPage> {
 
 
   }
-
 
   Widget buildCustomPicker() => SizedBox(
     height: 200,
