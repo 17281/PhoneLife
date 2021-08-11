@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/Goals.dart';
-import 'package:phoneapp/page/Edit_Goals.dart';
 import 'package:phoneapp/page/Time_Detail_page.dart';
-import 'package:phoneapp/widget/Goal_card_widget.dart';
 import '../Utils.dart';
-import 'Goal_detail_page.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'package:phoneapp/widget/Graph_Widget.dart';
@@ -31,12 +28,15 @@ class _ContentPageState extends State<ContentPage> {
     'Baby Mode',
   ];
 
-
   //finds all 'goals' from userTable
   late List<UserContent> goals;
   //finds all screen time value
   late List<ScreenContents> screenContent;
   bool isLoading = false;
+
+  get averageTime => screenContent.map((e) => e.diffTime);
+
+  
 
 
   //refresh database when ever updated
@@ -61,18 +61,17 @@ class _ContentPageState extends State<ContentPage> {
 
 //Updating screen time data displayed
   Future refreshScreenTime() async {
-    //sets database to be async loading to the page
+    //sets database to be async loading to the pag
     setState(() => isLoading = true);{
       //refresh and display new data on page
       this.screenContent = await ScreenTimeDatabase.instance.readAllTime();
       //after database loads, change the loading symbol to off
       setState(() => isLoading = false);
+      final splitTime = screenContent.map((e) => (e.diffTime).split(':').toList());
 
-      //
-      // var avg = screenContent.map((m) => m.averageTime).reduce((a, b) => a+b);
-      //     // / screenContent.length;
-      // print (avg);
-
+          //.reduce((value, time) => value.add(time));
+      // var avg = screenContent.map((m) => int.parse(m.averageTime))reduce((a, b) =>. a + b)/ screenContent.length;
+      print (splitTime);
     }
   }
 
@@ -154,7 +153,7 @@ class _ContentPageState extends State<ContentPage> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-              ElevatedButton(onPressed: () async {
+              ElevatedButton(onPressed: () async {parseDuration();
                    await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => ScreenTimePage()));
     //Once created refresh goals display page
@@ -176,7 +175,7 @@ class _ContentPageState extends State<ContentPage> {
                 children: <Widget> [
                   ElevatedButton(
                       onPressed: () => Utils.showSheet(context,
-                          child: buildCustomPicker(),
+                          child: buildPicker(),
                           onClicked: () {final goalValue = goalValues[goalIndex];
                           Utils.showSnackBar(context, 'Selected "$goalValue", Your goal today is: Screen time less than $goalIndex hours');
                           Navigator.pop(context);}),
@@ -225,13 +224,13 @@ class _ContentPageState extends State<ContentPage> {
 
   }
 
-  Widget buildCustomPicker() => SizedBox(
+  Widget buildPicker() => SizedBox(
     height: 200,
     child: CupertinoPicker(
       itemExtent: 64,
       diameterRatio: 0.7,
       onSelectedItemChanged: (goalIndex) => setState(() => this.goalIndex = goalIndex),
-
+      //onGoalChanged: (goalTime) => setState(() => this.goalIndex = goalTime),
       selectionOverlay: CupertinoPickerDefaultSelectionOverlay (
         background: Colors.pink.withOpacity(0.1),
       ),
@@ -239,7 +238,6 @@ class _ContentPageState extends State<ContentPage> {
         goalValues, (goalIndex, goalValues) {
           final selValue = this.goalIndex == goalIndex;
           final color = selValue ? Colors.pinkAccent:Colors.black;
-
           return Center(
             child: Text(
               goalValues, style: TextStyle (color: color, fontSize: 24),
@@ -252,6 +250,23 @@ class _ContentPageState extends State<ContentPage> {
     ),
   );
 
+  Duration parseDuration()
+  {
+    int hours = 0;
+    int minutes = 0;
+    int sec = 0;
+    final splitTime = averageTime.split(':');
+    print (splitTime);
+    if (splitTime.length > 2) {
+      hours = int.parse(splitTime[splitTime.length - 3] * 3600);
+    }
+    if (splitTime.length > 1) {
+      minutes = int.parse(splitTime[splitTime.length - 2] * 60);
+    }
+    sec = (double.parse(splitTime[splitTime.length - 1]).round());
+
+    return Duration(hours: hours, minutes: minutes, seconds: sec);
+  }
 }
 
 

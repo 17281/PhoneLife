@@ -69,12 +69,13 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
 
   submit()async {
     Duration difference = stopTime.difference(startTime);
+
     String diffTime = difference.toString();
     print (difference);
     final finalTime = ScreenContents(
       stopTime: stopTime,
       startTime: startTime,
-      averageTime: diffTime,
+      diffTime: diffTime,
     );
     await ScreenTimeDatabase.instance.createST(finalTime);
   }

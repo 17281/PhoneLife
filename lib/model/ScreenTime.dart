@@ -19,12 +19,12 @@ class ScreenContents {
   final int? ST_id;
   final DateTime startTime;
   final DateTime stopTime;
-  final String averageTime;
+  final String diffTime;
 
   //constructs contents of the column in the table
   const ScreenContents ({
     this.ST_id,
-    required this.averageTime,
+    required this.diffTime,
     required this.stopTime,
     required this.startTime
 });
@@ -33,14 +33,14 @@ class ScreenContents {
 //Preparing contents to be converted
 ScreenContents copy ({
   int? ST_id,
-  String? averageTime,
+  String? diffTime,
   DateTime? startTime,
   DateTime? stopTime
 }) =>
 //Setting types to each column objects before converting
     ScreenContents(
     ST_id: ST_id ?? this.ST_id,
-    averageTime: averageTime ?? this.averageTime,
+    diffTime: diffTime ?? this.diffTime,
     stopTime: stopTime ?? this.stopTime,
     startTime: startTime ?? this.startTime,
 
@@ -48,7 +48,7 @@ ScreenContents copy ({
 
 //converting to json
 static ScreenContents fromJson (Map<String, Object?> json) => ScreenContents(
-    averageTime: json[STFields.averageTime] as String,
+    diffTime: json[STFields.averageTime] as String,
     stopTime: DateTime.parse(json[STFields.stopTime]as String),
     startTime: DateTime.parse(json[STFields.startTime] as String),
     ST_id: json[STFields.ST_id] as int?);
@@ -58,7 +58,7 @@ static ScreenContents fromJson (Map<String, Object?> json) => ScreenContents(
     //a map of key values
     //Table name:Key: other Value
     STFields.ST_id: ST_id,
-    STFields.averageTime: averageTime,
+    STFields.averageTime: diffTime,
     STFields.startTime: startTime.toIso8601String(),
     STFields.stopTime: stopTime.toIso8601String(),
   };
