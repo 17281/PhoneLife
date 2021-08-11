@@ -15,7 +15,7 @@ class ScreenTimePage extends StatefulWidget {
 }
 
 class _TimeDetailPageState extends State <ScreenTimePage> {
-  late String averageTime;
+  late String diffTime;
   late DateTime stopTime;
   late DateTime startTime;
   bool isLoading = false;

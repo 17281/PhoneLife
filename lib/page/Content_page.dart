@@ -28,21 +28,30 @@ class _ContentPageState extends State<ContentPage> {
     'Baby Mode',
   ];
 
+
+  late final int goalID;
+  //Initiation of Goal Table variables
+  late DateTime createdTime;
+  late int goalTime;
+  late bool isCompleted;
+  late UserContent goal;
+
   //finds all 'goals' from userTable
   late List<UserContent> goals;
   //finds all screen time value
   late List<ScreenContents> screenContent;
   bool isLoading = false;
+  bool isValid = false;
+
 
   get averageTime => screenContent.map((e) => e.diffTime);
 
   
-
-
   //refresh database when ever updated
   @override
   void initState() {
     super.initState();
+
     //refresh future content per update (Useful fo updating goals)
     refreshGoals();
    refreshScreenTime();
@@ -79,34 +88,39 @@ class _ContentPageState extends State<ContentPage> {
   Future refreshGoals() async {
     //when loading database
     setState(() => isLoading = true);
+    this.goal = await UserDatabase.instance.readGoal(goalID);
     //refreshes all goals when new data added
     this.goals = await UserDatabase.instance.readAllGoals();
     setState(() => isLoading = false);
   }
 
-  // Widget buildGoals() =>
-  //     //builds the display for goals
-  // StaggeredGridView.countBuilder(
-  //   padding: EdgeInsets.all(8),
-  //   itemCount: goals.length,
-  //   //default
-  //   staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-  //   crossAxisCount: 4,
-  //   mainAxisSpacing: 4,
-  //   crossAxisSpacing: 4,
-  //   itemBuilder: (context, index) {
-  //     final goal = goals[index];
-  //     //detects when the user taps a button
-  //     return GestureDetector(
-  //       onTap: () async {
-  //         await Navigator.of(context).push(MaterialPageRoute(
-  //           builder: (context) => GoalDetailPage(goalID: goal.id!),)
-  //         );
-  //       },
-  //       child: GoalCardWidget(goal: goal, index: index),
-  //     );
-  //   },
-  // );
+
+
+  Future updateGoal() async {
+    //copies all the content fields and then display any new data added
+
+    final userGoal = goal.copy(
+      isCompleted: isCompleted,
+      goalTime: goalTime,
+    );
+
+    print (userGoal);
+    //update the content
+    await UserDatabase.instance.update(userGoal);
+  }
+
+  Future addGoal() async {
+    //add all the content from the fields into a single statement
+    final goal = UserContent(
+      goalTime: goalIndex,
+      isCompleted: false,
+      createdTime: DateTime.now(),
+    );
+    print (goal);
+    //create the submitted data into database
+    await UserDatabase.instance.create(goal);
+  }
+
 
 
   Widget buildTime() =>
@@ -153,10 +167,12 @@ class _ContentPageState extends State<ContentPage> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-              ElevatedButton(onPressed: () async {parseDuration();
+              ElevatedButton(onPressed: () async {
+
+                //parseDuration();
                    await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => ScreenTimePage()));
-    //Once created refresh goals display page
+                   //Once created refresh goals display page
                   refreshScreenTime();},
                   child: Icon(Icons.atm),
               )
@@ -177,8 +193,13 @@ class _ContentPageState extends State<ContentPage> {
                       onPressed: () => Utils.showSheet(context,
                           child: buildPicker(),
                           onClicked: () {final goalValue = goalValues[goalIndex];
+                          setState(() {
+                            isValid = true;
+                            goalTime =  goalIndex;
+                          });
                           Utils.showSnackBar(context, 'Selected "$goalValue", Your goal today is: Screen time less than $goalIndex hours');
                           Navigator.pop(context);}),
+
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
                       padding: EdgeInsets.all(0.0),
@@ -230,12 +251,15 @@ class _ContentPageState extends State<ContentPage> {
       itemExtent: 64,
       diameterRatio: 0.7,
       onSelectedItemChanged: (goalIndex) => setState(() => this.goalIndex = goalIndex),
-      //onGoalChanged: (goalTime) => setState(() => this.goalIndex = goalTime),
       selectionOverlay: CupertinoPickerDefaultSelectionOverlay (
         background: Colors.pink.withOpacity(0.1),
       ),
       children: Utils.modelBuilder<String> (
         goalValues, (goalIndex, goalValues) {
+          setState(() {
+            isValid = true;
+            this.goalTime = goalIndex;
+          });
           final selValue = this.goalIndex == goalIndex;
           final color = selValue ? Colors.pinkAccent:Colors.black;
           return Center(
