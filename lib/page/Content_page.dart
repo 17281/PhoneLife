@@ -19,7 +19,7 @@ class ContentPage extends StatefulWidget {
 
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> {
-  int goalIndex = 0;
+  int goalIndex = 2;
   static List<String> goalValues = [
     'No Phone?!?!',
     'Living the life',
@@ -29,7 +29,7 @@ class _ContentPageState extends State<ContentPage> {
   ];
 
 
-  late final int goalID;
+   //final int goalID;
   //Initiation of Goal Table variables
   late DateTime createdTime;
   late int goalTime;
@@ -43,10 +43,6 @@ class _ContentPageState extends State<ContentPage> {
   bool isLoading = false;
   bool isValid = false;
 
-
-  get averageTime => screenContent.map((e) => e.diffTime);
-
-  
   //refresh database when ever updated
   @override
   void initState() {
@@ -76,11 +72,13 @@ class _ContentPageState extends State<ContentPage> {
       this.screenContent = await ScreenTimeDatabase.instance.readAllTime();
       //after database loads, change the loading symbol to off
       setState(() => isLoading = false);
-      final splitTime = screenContent.map((e) => (e.diffTime).split(':').toList());
-
-          //.reduce((value, time) => value.add(time));
+      
+       var dur = screenContent.map((e) => (e.diffTime).split(":").toList());
+      // final Duration dur = parseDuration(splitTime);
+      print (dur);
+      //.reduce((value, time) => value.add(time));
       // var avg = screenContent.map((m) => int.parse(m.averageTime))reduce((a, b) =>. a + b)/ screenContent.length;
-      print (splitTime);
+      // print (splitTime);
     }
   }
 
@@ -88,7 +86,7 @@ class _ContentPageState extends State<ContentPage> {
   Future refreshGoals() async {
     //when loading database
     setState(() => isLoading = true);
-    this.goal = await UserDatabase.instance.readGoal(goalID);
+    // this.goal = await UserDatabase.instance.readGoal();
     //refreshes all goals when new data added
     this.goals = await UserDatabase.instance.readAllGoals();
     setState(() => isLoading = false);
@@ -98,7 +96,6 @@ class _ContentPageState extends State<ContentPage> {
 
   Future updateGoal() async {
     //copies all the content fields and then display any new data added
-
     final userGoal = goal.copy(
       isCompleted: isCompleted,
       goalTime: goalTime,
@@ -151,6 +148,16 @@ class _ContentPageState extends State<ContentPage> {
   @override
   ///Main Page display
   Widget build(BuildContext context) {
+    // if (isValid = true) {
+    //   //TODO: rephrase the condition below
+    //   final isNew = createdTime = DateTime.now();
+    //   if (isNew) {
+    //     updateGoal();
+    //   }else{
+    //     addGoal();
+    //     Navigator.of(context).pop();
+    //   }
+    // }
     return Scaffold(
         appBar: AppBar(
           title: Text('Screen Time test'),
@@ -203,10 +210,10 @@ class _ContentPageState extends State<ContentPage> {
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
                       padding: EdgeInsets.all(0.0),
-                  ),
+                    ),
                     child:Ink (
                       decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: [Color(0xff374ABE), Color(0xff64B6FF)],
+                          gradient: LinearGradient(colors: [Color(0xff64B6FF), Color(0xff374ABE)],
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                           ),
@@ -220,13 +227,6 @@ class _ContentPageState extends State<ContentPage> {
                     ),
                   ),
                   ),
-                  // ElevatedButton( onPressed: () async {
-                  //           await Navigator.of(context).push(
-                  //       MaterialPageRoute(builder: (context) => AddEditGoalPage()));
-                  //           //Once created refresh goals display page
-                  //           refreshGoals();},
-                  //   child: Icon(Icons.add),
-                  // ),
                   // SizedBox(height: 20),
                 ]
             ),
@@ -258,7 +258,7 @@ class _ContentPageState extends State<ContentPage> {
         goalValues, (goalIndex, goalValues) {
           setState(() {
             isValid = true;
-            this.goalTime = goalIndex;
+            goalTime = goalIndex;
           });
           final selValue = this.goalIndex == goalIndex;
           final color = selValue ? Colors.pinkAccent:Colors.black;
@@ -274,20 +274,22 @@ class _ContentPageState extends State<ContentPage> {
     ),
   );
 
-  Duration parseDuration()
+
+
+  Duration parseDuration(String s)
   {
     int hours = 0;
     int minutes = 0;
     int sec = 0;
-    final splitTime = averageTime.split(':');
-    print (splitTime);
+    final splitTime = s.split(':');
+    // print (splitTime);
     if (splitTime.length > 2) {
       hours = int.parse(splitTime[splitTime.length - 3] * 3600);
     }
     if (splitTime.length > 1) {
       minutes = int.parse(splitTime[splitTime.length - 2] * 60);
     }
-    sec = (double.parse(splitTime[splitTime.length - 1]).round());
+    sec = (int.parse(splitTime[splitTime.length - 1]).round());
 
     return Duration(hours: hours, minutes: minutes, seconds: sec);
   }

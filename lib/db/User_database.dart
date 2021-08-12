@@ -92,11 +92,11 @@ class UserDatabase {
     final db =await instance.database;
     ///   Sorts data by time      ASC == asending order
     final orderBy = '${UserFields.time} ASC';
-
     //this allows raw sql query to be used *Very NICE
         ///await db.rawQuery('SELECT * FROM $UserFields ORDER BY $orderBy');
-    final result = await db.query(userTable, orderBy: orderBy);
+    final result = await db.query(userTable);
     //Convert json string to sql
+    print (result);
     return result.map((json)=> UserContent.fromJson(json)).toList();
   }
 
@@ -173,7 +173,7 @@ class ScreenTimeDatabase {
       ${STFields.ST_id} $idType, 
       ${STFields.startTime} $textType,
       ${STFields.stopTime} $textType,
-      ${STFields.averageTime} $stringType
+      ${STFields.diffTime} $stringType
       )'''
     );
   }

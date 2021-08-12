@@ -70,17 +70,36 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
   submit()async {
     Duration difference = stopTime.difference(startTime);
 
-    String diffTime = difference.toString();
+     String diffTime = difference.toString();
     print (difference);
     final finalTime = ScreenContents(
       stopTime: stopTime,
       startTime: startTime,
       diffTime: diffTime,
     );
+    parseDuration(diffTime);
     await ScreenTimeDatabase.instance.createST(finalTime);
+
   }
 
 
+  Duration parseDuration(String s)
+  {
+    int hours = 0;
+    int minutes = 0;
+    int sec = 0;
+    final splitTime = s.split(':');
+    print (splitTime);
+    if (splitTime.length > 2) {
+      hours = int.parse(splitTime[splitTime.length - 3]);
+    }
+    if (splitTime.length > 1) {
+      minutes = int.parse(splitTime[splitTime.length - 2]);
+    }
+    sec = (int.parse(splitTime[splitTime.length - 1]).round());
+
+    return Duration(hours: hours, minutes: minutes, seconds: sec);
+  }
 
 }
 

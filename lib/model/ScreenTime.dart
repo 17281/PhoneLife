@@ -5,13 +5,13 @@ final String ScreenTimeTable = 'Screen_Time';
 
 class STFields {
   static final List<String> values = [
-    ST_id, startTime, stopTime, averageTime
+    ST_id, startTime, stopTime, diffTime
   ];
   ///TODO:Add Bool of IsScreenON?
   static final String ST_id = '_STid';
   static final String startTime = 'startTime';
   static final String stopTime = 'stopTime';
-  static final String averageTime = 'averageTime';
+  static final String diffTime = 'diffTime';
 
 }
 
@@ -48,7 +48,7 @@ ScreenContents copy ({
 
 //converting to json
 static ScreenContents fromJson (Map<String, Object?> json) => ScreenContents(
-    diffTime: json[STFields.averageTime] as String,
+    diffTime: json[STFields.diffTime] as String,
     stopTime: DateTime.parse(json[STFields.stopTime]as String),
     startTime: DateTime.parse(json[STFields.startTime] as String),
     ST_id: json[STFields.ST_id] as int?);
@@ -58,7 +58,7 @@ static ScreenContents fromJson (Map<String, Object?> json) => ScreenContents(
     //a map of key values
     //Table name:Key: other Value
     STFields.ST_id: ST_id,
-    STFields.averageTime: diffTime,
+    STFields.diffTime: diffTime,
     STFields.startTime: startTime.toIso8601String(),
     STFields.stopTime: stopTime.toIso8601String(),
   };
