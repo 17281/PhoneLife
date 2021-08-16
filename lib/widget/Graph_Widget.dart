@@ -19,7 +19,6 @@ class TimeGraphWidget extends StatelessWidget{
     ///very useful DateTime method, might use in other screen time database
     final stopTimer = DateFormat.Hms().format(screenContent.stopTime);
     final startTimer = DateFormat.Hms().format(screenContent.startTime);
-    final averageTimer = screenContent.diffTime;
     return Card(
       //returns the card UI, wrapping around goals displayed
         child: Padding(
@@ -27,11 +26,7 @@ class TimeGraphWidget extends StatelessWidget{
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [Text(
-              averageTimer,style: TextStyle(
-                fontSize: 14,
-                color: Colors.blue),
-            ),
+            children: [
               Text(
                 startTimer,
                 style: TextStyle(color: Colors.grey.shade700),

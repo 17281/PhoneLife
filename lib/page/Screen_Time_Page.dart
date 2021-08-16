@@ -68,39 +68,101 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
   }
 
   submit()async {
+    //Duration between initial time to final time
     Duration difference = stopTime.difference(startTime);
-
-     String diffTime = difference.toString();
+    final int diffTime = difference.inSeconds;
     print (difference);
+    print(diffTime);
+
     final finalTime = ScreenContents(
       stopTime: stopTime,
       startTime: startTime,
       diffTime: diffTime,
     );
-    parseDuration(diffTime);
+
+
+
     await ScreenTimeDatabase.instance.createST(finalTime);
 
   }
 
 
-  Duration parseDuration(String s)
-  {
-    final splitTime = s.split(':').map((e) => e.trim()).toList();
-    int? days;
-    int? hours;
-    int? minutes;
-    int? seconds;
+  // Duration parseDuration(String s)
+  // {
+  //   print(s);
+  //   final splitTime = s.split(':').map((e) => e.trim()).toList();
+  //   int? hours;
+  //   int? minutes;
+  //   int? seconds;
+  //   int? milliseconds;
+  //
+  //   print (splitTime);
+  //   for (String parts in splitTime) {
+  //     print('Parts: ' + parts);
+  //     final match = RegExp(r'^(\d+) (h|m|s|ms)$').matchAsPrefix(parts);
+  //     if (match == null) throw FormatException('Wrong format');
+  //
+  //     int value = int.parse(match.group(1)!);
+  //     String? unit = match.group(2);
+  //
+  //     switch(unit) {
+  //
+  //       case 'h' :
+  //         if (hours!=null) {
+  //           throw FormatException('Wrong hour duration');
+  //         }
+  //         hours = value;
+  //         break;
+  //
+  //       case 'm' :
+  //         if (minutes!=null) {
+  //           throw FormatException('Wrong Min duration');
+  //         }
+  //       minutes = value;
+  //       break;
+  //
+  //       case 's' :
+  //         if (seconds!=null) {
+  //           throw FormatException('Wrong seconds');
+  //         }
+  //         seconds = value;
+  //         break;
+  //
+  //       case 'ms' :
+  //         if (milliseconds!=null) {
+  //           throw FormatException('milli wrong');
+  //         }
+  //         milliseconds = value;
+  //         break;
+  //
+  //       default:
+  //         throw FormatException('Invalid Duration format on $unit');
+  //       }
+  //     }
+  //   return Duration(
+  //       hours: hours ?? 0,
+  //       minutes: minutes ?? 0,
+  //       seconds: seconds ?? 0,
+  //       milliseconds: milliseconds ?? 0);
+  // }
 
-
-    return Duration(
-        days: days ?? 0,
-        hours: hours ?? 0,
-        minutes: minutes ?? 0,
-        seconds: seconds ?? 0,
-
-    );
-  }
-
+  // parseDuration(String s)
+  // {
+  //   int hours = 0;
+  //   int minutes = 0;
+  //   int micros;
+  //
+  //   List<String> splitTime = s.split(':');
+  //   print (splitTime);
+  //   if (splitTime.length > 2) {
+  //     hours = int.parse(splitTime[splitTime.length - 3]);
+  //   }
+  //   if (splitTime.length > 1) {
+  //     minutes = int.parse(splitTime[splitTime.length - 2]);
+  //   }
+  //   micros = (double.parse(splitTime[splitTime.length - 1]* 100000.round()));
+  //   return Duration(hours: hours, minutes: minutes, microseconds: micros);
+  // }
 }
 
 

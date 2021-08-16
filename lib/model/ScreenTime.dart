@@ -19,7 +19,7 @@ class ScreenContents {
   final int? ST_id;
   final DateTime startTime;
   final DateTime stopTime;
-  final String diffTime;
+  final int diffTime;
 
   //constructs contents of the column in the table
   const ScreenContents ({
@@ -33,7 +33,7 @@ class ScreenContents {
 //Preparing contents to be converted
 ScreenContents copy ({
   int? ST_id,
-  String? diffTime,
+  int? diffTime,
   DateTime? startTime,
   DateTime? stopTime
 }) =>
@@ -48,7 +48,7 @@ ScreenContents copy ({
 
 //converting to json
 static ScreenContents fromJson (Map<String, Object?> json) => ScreenContents(
-    diffTime: json[STFields.diffTime] as String,
+    diffTime: json[STFields.diffTime] as int,
     stopTime: DateTime.parse(json[STFields.stopTime]as String),
     startTime: DateTime.parse(json[STFields.startTime] as String),
     ST_id: json[STFields.ST_id] as int?);

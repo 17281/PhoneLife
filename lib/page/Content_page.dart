@@ -71,10 +71,6 @@ class _ContentPageState extends State<ContentPage> {
       this.screenContent = await ScreenTimeDatabase.instance.readAllTime();
       //after database loads, change the loading symbol to off
       setState(() => isLoading = false);
-      
-       var dur = screenContent.map((e) => (e.diffTime).split(":").toList());
-      // final Duration dur = parseDuration(splitTime);
-      print (dur);
       //.reduce((value, time) => value.add(time));
       // var avg = screenContent.map((m) => int.parse(m.averageTime))reduce((a, b) =>. a + b)/ screenContent.length;
       // print (splitTime);
