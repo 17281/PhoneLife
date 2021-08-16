@@ -85,20 +85,20 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
 
   Duration parseDuration(String s)
   {
-    int hours = 0;
-    int minutes = 0;
-    int sec = 0;
-    final splitTime = s.split(':');
-    print (splitTime);
-    if (splitTime.length > 2) {
-      hours = int.parse(splitTime[splitTime.length - 3]);
-    }
-    if (splitTime.length > 1) {
-      minutes = int.parse(splitTime[splitTime.length - 2]);
-    }
-    sec = (int.parse(splitTime[splitTime.length - 1]).round());
+    final splitTime = s.split(':').map((e) => e.trim()).toList();
+    int? days;
+    int? hours;
+    int? minutes;
+    int? seconds;
 
-    return Duration(hours: hours, minutes: minutes, seconds: sec);
+
+    return Duration(
+        days: days ?? 0,
+        hours: hours ?? 0,
+        minutes: minutes ?? 0,
+        seconds: seconds ?? 0,
+
+    );
   }
 
 }

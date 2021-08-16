@@ -8,7 +8,6 @@ import 'package:sqflite/sqflite.dart';
 class UserDatabase {
   static final UserDatabase instance = UserDatabase._init();
   static Database? _database;
-
   UserDatabase._init();
 
   Future<Database> get database async{
@@ -94,7 +93,7 @@ class UserDatabase {
     final orderBy = '${UserFields.time} ASC';
     //this allows raw sql query to be used *Very NICE
         ///await db.rawQuery('SELECT * FROM $UserFields ORDER BY $orderBy');
-    final result = await db.query(userTable);
+    final result = await db.query(userTable, orderBy: orderBy);
     //Convert json string to sql
     print (result);
     return result.map((json)=> UserContent.fromJson(json)).toList();

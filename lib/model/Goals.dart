@@ -22,7 +22,6 @@ class UserContent {
   final int goalTime;
   final DateTime createdTime;
 
-
   //constructs users table contents
   const UserContent ({
     this.id,
@@ -45,7 +44,6 @@ class UserContent {
     id: id ?? this.id,
     isCompleted: isCompleted ?? this.isCompleted,
     goalTime: goalTime ?? this.goalTime,
-    //description: description ?? this.description,
     createdTime: createdTime ?? this.createdTime,
   );
 
@@ -68,7 +66,6 @@ class UserContent {
     UserFields.goalTime: goalTime,
     //Bool and DateTime needs conversion before inserted into sql
     UserFields.isCompleted: isCompleted ? 1 : 0,
-
     //converts time to string
     UserFields.time: createdTime.toIso8601String(),
   };

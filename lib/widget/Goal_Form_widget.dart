@@ -13,7 +13,6 @@ class GoalFormWidget extends StatelessWidget {
     Key? key,
     this.isCompleted = false,
     this.goalTime = '',
-    ///this.description = '',
     required this.onChangedImportant,
     required this.onChangedName,
     ///required this.onChangedDescription,

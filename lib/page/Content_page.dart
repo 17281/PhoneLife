@@ -29,12 +29,12 @@ class _ContentPageState extends State<ContentPage> {
   ];
 
 
-   //final int goalID;
+  //final int goalID;
   //Initiation of Goal Table variables
   late DateTime createdTime;
   late int goalTime;
   late bool isCompleted;
-  late UserContent goal;
+  late UserContent? goal;
 
   //finds all 'goals' from userTable
   late List<UserContent> goals;
@@ -47,7 +47,6 @@ class _ContentPageState extends State<ContentPage> {
   @override
   void initState() {
     super.initState();
-
     //refresh future content per update (Useful fo updating goals)
     refreshGoals();
    refreshScreenTime();
@@ -86,34 +85,41 @@ class _ContentPageState extends State<ContentPage> {
   Future refreshGoals() async {
     //when loading database
     setState(() => isLoading = true);
-    // this.goal = await UserDatabase.instance.readGoal();
+    //this.goal = await UserDatabase.instance.readGoal(widget.goalID);
     //refreshes all goals when new data added
     this.goals = await UserDatabase.instance.readAllGoals();
     setState(() => isLoading = false);
   }
 
 
+  Future addOrUpdateGoal() async {
+    if (isValid == true) {
+      final isUpdating = createdTime != DateTime.now();
+      if (isUpdating) {
+        await updateGoal();
+      }else
+        await addGoal();
+    }
+    Navigator.of(context).pop();
+}
 
   Future updateGoal() async {
     //copies all the content fields and then display any new data added
-    final userGoal = goal.copy(
-      isCompleted: isCompleted,
-      goalTime: goalTime,
-    );
-
-    print (userGoal);
-    //update the content
-    await UserDatabase.instance.update(userGoal);
+    // final userGoal = widget.goal!.copy(
+    //   isCompleted: isCompleted,
+    //   goalTime: goalTime,
+    // );
+    // //update the content
+    // await UserDatabase.instance.update(userGoal);
   }
 
   Future addGoal() async {
     //add all the content from the fields into a single statement
     final goal = UserContent(
-      goalTime: goalIndex,
+      goalTime: goalTime,
       isCompleted: false,
       createdTime: DateTime.now(),
     );
-    print (goal);
     //create the submitted data into database
     await UserDatabase.instance.create(goal);
   }
@@ -148,16 +154,6 @@ class _ContentPageState extends State<ContentPage> {
   @override
   ///Main Page display
   Widget build(BuildContext context) {
-    // if (isValid = true) {
-    //   //TODO: rephrase the condition below
-    //   final isNew = createdTime = DateTime.now();
-    //   if (isNew) {
-    //     updateGoal();
-    //   }else{
-    //     addGoal();
-    //     Navigator.of(context).pop();
-    //   }
-    // }
     return Scaffold(
         appBar: AppBar(
           title: Text('Screen Time test'),
@@ -197,15 +193,15 @@ class _ContentPageState extends State<ContentPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget> [
                   ElevatedButton(
-                      onPressed: () => Utils.showSheet(context,
+                      onPressed: () {
+                        Utils.showSheet(context,
                           child: buildPicker(),
                           onClicked: () {final goalValue = goalValues[goalIndex];
-                          setState(() {
-                            isValid = true;
-                            goalTime =  goalIndex;
-                          });
                           Utils.showSnackBar(context, 'Selected "$goalValue", Your goal today is: Screen time less than $goalIndex hours');
-                          Navigator.pop(context);}),
+                          Navigator.pop(context);});
+
+                        //addOrUpdateGoal();
+                      },
 
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
@@ -238,6 +234,8 @@ class _ContentPageState extends State<ContentPage> {
               Text('No data' , style: TextStyle(color: Colors.white, fontSize: 24),
             ) : buildTime(),
           ),
+
+
         ]
     ),
     );
@@ -258,7 +256,8 @@ class _ContentPageState extends State<ContentPage> {
         goalValues, (goalIndex, goalValues) {
           setState(() {
             isValid = true;
-            goalTime = goalIndex;
+            this.goalTime = goalIndex;
+            this.createdTime = DateTime.now();
           });
           final selValue = this.goalIndex == goalIndex;
           final color = selValue ? Colors.pinkAccent:Colors.black;
@@ -273,26 +272,6 @@ class _ContentPageState extends State<ContentPage> {
 
     ),
   );
-
-
-
-  Duration parseDuration(String s)
-  {
-    int hours = 0;
-    int minutes = 0;
-    int sec = 0;
-    final splitTime = s.split(':');
-    // print (splitTime);
-    if (splitTime.length > 2) {
-      hours = int.parse(splitTime[splitTime.length - 3] * 3600);
-    }
-    if (splitTime.length > 1) {
-      minutes = int.parse(splitTime[splitTime.length - 2] * 60);
-    }
-    sec = (int.parse(splitTime[splitTime.length - 1]).round());
-
-    return Duration(hours: hours, minutes: minutes, seconds: sec);
-  }
 }
 
 
