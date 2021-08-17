@@ -73,8 +73,8 @@ class _ContentPageState extends State<ContentPage> {
       setState(() => isLoading = false);
 
       //.reduce((value, time) => value.add(time));
-      final num avg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/ screenContent.length;
-      print (avg);
+      final avg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
+      print (avg.round());
     }
   }
 
