@@ -71,9 +71,10 @@ class _ContentPageState extends State<ContentPage> {
       this.screenContent = await ScreenTimeDatabase.instance.readAllTime();
       //after database loads, change the loading symbol to off
       setState(() => isLoading = false);
+
       //.reduce((value, time) => value.add(time));
-      // var avg = screenContent.map((m) => int.parse(m.averageTime))reduce((a, b) =>. a + b)/ screenContent.length;
-      // print (splitTime);
+      final num avg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/ screenContent.length;
+      print (avg);
     }
   }
 

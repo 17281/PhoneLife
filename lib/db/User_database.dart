@@ -140,6 +140,7 @@ class ScreenTimeDatabase {
   ScreenTimeDatabase._int();
 
 
+
   Future<Database> get database async{
     //the database will ONLY be created if the database return is null (which will always be null upon download)
     if (_STDatabase != null) return _STDatabase!;
