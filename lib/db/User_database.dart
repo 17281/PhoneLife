@@ -91,12 +91,11 @@ class UserDatabase {
     final db =await instance.database;
     ///   Sorts data by time      ASC == asending order
     final orderBy = '${UserFields.time} ASC';
-    //this allows raw sql query to be used *Very NICE
         ///await db.rawQuery('SELECT * FROM $UserFields ORDER BY $orderBy');
-    final result = await db.query(userTable, orderBy: orderBy);
+    final results = await db.query(userTable, orderBy: orderBy);
     //Convert json string to sql
-    print (result);
-    return result.map((json)=> UserContent.fromJson(json)).toList();
+    print (results);
+    return results.map((json)=> UserContent.fromJson(json)).toList();
   }
 
   //updates our data

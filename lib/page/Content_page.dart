@@ -71,8 +71,6 @@ class _ContentPageState extends State<ContentPage> {
       this.screenContent = await ScreenTimeDatabase.instance.readAllTime();
       //after database loads, change the loading symbol to off
       setState(() => isLoading = false);
-
-      //.reduce((value, time) => value.add(time));
       final avg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
       print (avg.round());
     }
@@ -89,26 +87,6 @@ class _ContentPageState extends State<ContentPage> {
   }
 
 
-  Future addOrUpdateGoal() async {
-    if (isValid == true) {
-      final isUpdating = createdTime != DateTime.now();
-      if (isUpdating) {
-        await updateGoal();
-      }else
-        await addGoal();
-    }
-    Navigator.of(context).pop();
-}
-
-  Future updateGoal() async {
-    //copies all the content fields and then display any new data added
-    // final userGoal = widget.goal!.copy(
-    //   isCompleted: isCompleted,
-    //   goalTime: goalTime,
-    // );
-    // //update the content
-    // await UserDatabase.instance.update(userGoal);
-  }
 
   Future addGoal() async {
     //add all the content from the fields into a single statement
@@ -117,7 +95,6 @@ class _ContentPageState extends State<ContentPage> {
       isCompleted: false,
       createdTime: DateTime.now(),
     );
-    //create the submitted data into database
     await UserDatabase.instance.create(goal);
   }
 
@@ -173,7 +150,8 @@ class _ContentPageState extends State<ContentPage> {
                    await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => ScreenTimePage()));
                    //Once created refresh goals display page
-                  refreshScreenTime();},
+                  refreshScreenTime();
+                  refreshGoals();},
                   child: Icon(Icons.atm),
               )
         ]
@@ -196,8 +174,11 @@ class _ContentPageState extends State<ContentPage> {
                           onClicked: () {final goalValue = goalValues[goalIndex];
                           Utils.showSnackBar(context, 'Selected "$goalValue", Your goal today is: Screen time less than $goalIndex hours');
                           Navigator.pop(context);});
-
-                        //addOrUpdateGoal();
+                        setState(() {
+                          goalTime = goalIndex;
+                          this.createdTime = DateTime.now();
+                        });
+                        addGoal();
                       },
 
                     style: ElevatedButton.styleFrom(
@@ -251,11 +232,6 @@ class _ContentPageState extends State<ContentPage> {
       ),
       children: Utils.modelBuilder<String> (
         goalValues, (goalIndex, goalValues) {
-          setState(() {
-            isValid = true;
-            this.goalTime = goalIndex;
-            this.createdTime = DateTime.now();
-          });
           final selValue = this.goalIndex == goalIndex;
           final color = selValue ? Colors.pinkAccent:Colors.black;
           return Center(
@@ -264,9 +240,7 @@ class _ContentPageState extends State<ContentPage> {
             ),
           );
           },
-
       ),
-
     ),
   );
 }

@@ -73,7 +73,6 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     final diffTime = difference.inSeconds;
     print(diffTime);
 
-
     final finalTime = ScreenContents(
       stopTime: stopTime,
       startTime: startTime,
