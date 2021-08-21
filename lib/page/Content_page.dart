@@ -8,6 +8,7 @@ import '../Utils.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'package:phoneapp/widget/Graph_Widget.dart';
+import 'dart:async';
 
 
 
@@ -19,6 +20,8 @@ class ContentPage extends StatefulWidget {
 
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> {
+
+  /// final int currentGoalID;
   int goalIndex = 2;
   static List<String> goalValues = [
     'No Phone?!?!',
@@ -34,14 +37,14 @@ class _ContentPageState extends State<ContentPage> {
   late DateTime createdTime;
   late int goalTime;
   late bool isCompleted;
-  late UserContent? goal;
+
+  late UserContent goal;
 
   //finds all 'goals' from userTable
   late List<UserContent> goals;
   //finds all screen time value
   late List<ScreenContents> screenContent;
   bool isLoading = false;
-  bool isValid = false;
 
   //refresh database when ever updated
   @override
@@ -61,7 +64,6 @@ class _ContentPageState extends State<ContentPage> {
     ScreenTimeDatabase.instance.closeSTDB();
     super.dispose();
   }
-
 
 //Updating screen time data displayed
   Future refreshScreenTime() async {
@@ -83,19 +85,24 @@ class _ContentPageState extends State<ContentPage> {
     //this.goal = await UserDatabase.instance.readGoal(widget.goalID);
     //refreshes all goals when new data added
     this.goals = await UserDatabase.instance.readAllGoals();
+
+    ///this.goal = await UserDatabase.instance.readGoal(currentGoalID);
     setState(() => isLoading = false);
+
   }
 
 
 
   Future addGoal() async {
     //add all the content from the fields into a single statement
-    final goal = UserContent(
+    final goalA = UserContent(
       goalTime: goalTime,
       isCompleted: false,
       createdTime: DateTime.now(),
     );
-    await UserDatabase.instance.create(goal);
+    ///currentGoalID = goal.id!;
+
+    await UserDatabase.instance.create(goalA);
   }
 
 
@@ -212,8 +219,6 @@ class _ContentPageState extends State<ContentPage> {
               Text('No data' , style: TextStyle(color: Colors.white, fontSize: 24),
             ) : buildTime(),
           ),
-
-
         ]
     ),
     );

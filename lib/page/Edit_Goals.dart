@@ -5,6 +5,7 @@
 //
 // class AddEditGoalPage extends StatefulWidget {
 //   final UserContent? goal;
+//
 //   const AddEditGoalPage({Key? key, this.goal}) : super(key: key);
 //   @override
 //   _AddEditGoalPageState createState() => _AddEditGoalPageState();
@@ -16,6 +17,8 @@
 //   late bool isCompleted;
 //   late DateTime createdTime;
 //   late String goalTime;
+//
+//
 //
 //   //initiate database and conversions.
 //   @override
