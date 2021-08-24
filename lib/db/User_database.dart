@@ -89,10 +89,10 @@ class UserDatabase {
   //Reading multiple data at a time
   Future<List<UserContent>> readAllGoals() async {
     final db =await instance.database;
-    ///   Sorts data by time      ASC == asending order
-    final orderBy = '${UserFields.time} ASC';
-        ///await db.rawQuery('SELECT * FROM $UserFields ORDER BY $orderBy');
-    final results = await db.query(userTable, orderBy: orderBy);
+    ///   Sorts data by time
+    final orderBy = '${UserFields.id} DESC';
+    ///await db.query(userTable, orderBy: orderBy);
+    final results = await db.rawQuery('SELECT * FROM $userTable ORDER BY $orderBy LIMIT 1');
     //Convert json string to sql
     print (results);
     return results.map((json)=> UserContent.fromJson(json)).toList();

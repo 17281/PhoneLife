@@ -32,7 +32,6 @@ class _ContentPageState extends State<ContentPage> {
   ];
 
 
-  //final int goalID;
   //Initiation of Goal Table variables
   late DateTime createdTime;
   late int goalTime;
@@ -85,8 +84,6 @@ class _ContentPageState extends State<ContentPage> {
     //this.goal = await UserDatabase.instance.readGoal(widget.goalID);
     //refreshes all goals when new data added
     this.goals = await UserDatabase.instance.readAllGoals();
-
-    ///this.goal = await UserDatabase.instance.readGoal(currentGoalID);
     setState(() => isLoading = false);
 
   }
@@ -100,8 +97,6 @@ class _ContentPageState extends State<ContentPage> {
       isCompleted: false,
       createdTime: DateTime.now(),
     );
-    ///currentGoalID = goal.id!;
-
     await UserDatabase.instance.create(goalA);
   }
 
