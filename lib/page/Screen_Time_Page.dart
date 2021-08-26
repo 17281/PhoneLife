@@ -27,7 +27,6 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
   }
 
 
-  //TODO: add graph display return here
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(

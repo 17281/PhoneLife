@@ -32,7 +32,6 @@ class _TimeDetailPageState extends State <TimeDetailPage> {
     }
   }
 
-  //TODO: add graph display return here
   @override
   Widget build(BuildContext context) => Scaffold(
 

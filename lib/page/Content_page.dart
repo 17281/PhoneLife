@@ -13,6 +13,7 @@ import 'dart:async';
 
 
 class ContentPage extends StatefulWidget {
+
   @override
   _ContentPageState createState() => _ContentPageState();
 }
@@ -37,6 +38,7 @@ class _ContentPageState extends State<ContentPage> {
   late int goalTime;
   late bool isCompleted;
 
+
   late UserContent goal;
 
   //finds all 'goals' from userTable
@@ -44,6 +46,9 @@ class _ContentPageState extends State<ContentPage> {
   //finds all screen time value
   late List<ScreenContents> screenContent;
   bool isLoading = false;
+
+  late int currentGoalId;
+
 
   //refresh database when ever updated
   @override
@@ -74,6 +79,7 @@ class _ContentPageState extends State<ContentPage> {
       setState(() => isLoading = false);
       final avg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
       print (avg.round());
+
     }
   }
 
@@ -81,14 +87,35 @@ class _ContentPageState extends State<ContentPage> {
   Future refreshGoals() async {
     //when loading database
     setState(() => isLoading = true);
-    //this.goal = await UserDatabase.instance.readGoal(widget.goalID);
     //refreshes all goals when new data added
     this.goals = await UserDatabase.instance.readAllGoals();
+    this.goal = await UserDatabase.instance.readGoal(currentGoalId);
     setState(() => isLoading = false);
+  }
+
+  Future updateGoal() async {
+    setState(() => isCompleted = true);
+  final currentGoal = goal.copy(
+    isCompleted: isCompleted
+  );
+    await UserDatabase.instance.update(currentGoal);
 
   }
 
 
+  Future<int> findID (int goalId) async {
+    final newGoalId = findID(goalId);
+  print ('This is the newGoalId $newGoalId');
+  return newGoalId;
+    // final id = goals.map((e) => e.id).toString();
+    // List<String> goalID = id.split("()");
+    // print (id);
+    // final int finalID = await UserDatabase.instance.getGoalId(goal);
+    // print ('Final id from content page $finalID');
+    // setState(() => currentGoalId = int.parse(goalID));
+    // print (currentGoalId);
+
+  }
 
   Future addGoal() async {
     //add all the content from the fields into a single statement
@@ -170,7 +197,7 @@ class _ContentPageState extends State<ContentPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget> [
                   ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         Utils.showSheet(context,
                           child: buildPicker(),
                           onClicked: () {final goalValue = goalValues[goalIndex];
@@ -180,6 +207,8 @@ class _ContentPageState extends State<ContentPage> {
                           goalTime = goalIndex;
                           this.createdTime = DateTime.now();
                         });
+
+
                         addGoal();
                       },
 

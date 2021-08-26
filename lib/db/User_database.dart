@@ -1,7 +1,7 @@
-
 import 'package:path/path.dart';
 import 'package:phoneapp/model/Goals.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
+import 'package:phoneapp/page/Content_page.dart';
 import 'package:sqflite/sqflite.dart';
 
 
@@ -10,12 +10,15 @@ class UserDatabase {
   static Database? _database;
   UserDatabase._init();
 
+
   Future<Database> get database async{
     //the database will ONLY (if _initDB != exist) be created if the database return is null (which will always be null upon download
     if (_database != null) return _database!;
     _database = await _initDB('Goal.db');
     return _database!;
   }
+
+
   //finds the path for the database on Android and IOS
   Future<Database> _initDB(String filepath) async {
     //if database is stored in different location, then use "path_provider"
@@ -25,8 +28,6 @@ class UserDatabase {
     await deleteDatabase(path);
     //opens database file with its pathway
     return await openDatabase(path, version: 3, onCreate: _createDB);
-
-
   }
 
   //create database table
@@ -47,25 +48,24 @@ class UserDatabase {
   }
 
 
+
   //Users adding things to 'User' table
   Future<UserContent> create(UserContent content) async {
   //reference to database
     final db = await instance.database;
     //passing sql statements
-    ///final id = await db
-      ///.rawInsert('INSERT INTO table_name ($columns) VALUES ($values)');
+    //insert into selected      table           data-selected
+    final goalId = await db.insert(userTable, content.toJson());
 
-    //insert into selected      table       data-selected
-    final id = await db.insert(userTable, content.toJson());
-    //object modified is id in this case
-  return content.copy(id: id);
+    print ('This goalId from UserDataBase is $goalId');
+    getGoalId(goalId);
 
+  return content.copy(id: goalId);
   }
 
   //adding data into sql with statements
   Future<UserContent> readGoal(int id) async{
     final db = await instance.database;
-
     final maps = await db.query(
       userTable,
       columns: UserFields.values,
@@ -74,7 +74,6 @@ class UserDatabase {
       ///adding values [id, values] then add = '? ?' etc
       whereArgs: [id],
     );
-
 
     //if maps exists, run map
     if (maps.isNotEmpty) {
@@ -88,7 +87,7 @@ class UserDatabase {
 
   //Reading multiple data at a time
   Future<List<UserContent>> readAllGoals() async {
-    final db =await instance.database;
+    final db = await instance.database;
     ///   Sorts data by time
     final orderBy = '${UserFields.id} DESC';
     ///await db.query(userTable, orderBy: orderBy);
@@ -101,15 +100,13 @@ class UserDatabase {
   //updates our data
   Future<int> update(UserContent content) async {
     final db = await instance.database;
+
     ///if you want to use raw sql statements; use db.rawUpdate
     return db.update(
       userTable,
       content.toJson(),
-
       //defining which data you want to update
-      where: '${UserFields.id} = ?',
-      whereArgs: [content.id],
-
+      where: '${UserFields.id} = ?', whereArgs: [content.id],
     );
   }
 
