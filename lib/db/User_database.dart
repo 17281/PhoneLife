@@ -1,13 +1,14 @@
 import 'package:path/path.dart';
 import 'package:phoneapp/model/Goals.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
-import 'package:phoneapp/page/Content_page.dart';
 import 'package:sqflite/sqflite.dart';
 
 
 class UserDatabase {
   static final UserDatabase instance = UserDatabase._init();
   static Database? _database;
+
+  static late int goalID;
   UserDatabase._init();
 
 
@@ -55,11 +56,10 @@ class UserDatabase {
     final db = await instance.database;
     //passing sql statements
     //insert into selected      table           data-selected
-    final goalId = await db.insert(userTable, content.toJson());
-
+     final goalId = await db.insert(userTable, content.toJson());
     print ('This goalId from UserDataBase is $goalId');
-    getGoalId(goalId);
-
+   goalID = goalId;
+   print('goalID: $goalID');
   return content.copy(id: goalId);
   }
 
@@ -91,7 +91,7 @@ class UserDatabase {
     ///   Sorts data by time
     final orderBy = '${UserFields.id} DESC';
     ///await db.query(userTable, orderBy: orderBy);
-    final results = await db.rawQuery('SELECT * FROM $userTable ORDER BY $orderBy LIMIT 1');
+    final results = await db.rawQuery('SELECT * FROM $userTable ORDER BY $orderBy');
     //Convert json string to sql
     print (results);
     return results.map((json)=> UserContent.fromJson(json)).toList();
@@ -100,7 +100,6 @@ class UserDatabase {
   //updates our data
   Future<int> update(UserContent content) async {
     final db = await instance.database;
-
     ///if you want to use raw sql statements; use db.rawUpdate
     return db.update(
       userTable,

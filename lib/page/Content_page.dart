@@ -13,16 +13,13 @@ import 'dart:async';
 
 
 class ContentPage extends StatefulWidget {
-
   @override
   _ContentPageState createState() => _ContentPageState();
 }
 
-
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> {
-
-  /// final int currentGoalID;
+  // final int currentGoalID;
   int goalIndex = 2;
   static List<String> goalValues = [
     'No Phone?!?!',
@@ -32,14 +29,13 @@ class _ContentPageState extends State<ContentPage> {
     'Baby Mode',
   ];
 
+  late UserContent goal;
+
 
   //Initiation of Goal Table variables
   late DateTime createdTime;
   late int goalTime;
   late bool isCompleted;
-
-
-  late UserContent goal;
 
   //finds all 'goals' from userTable
   late List<UserContent> goals;
@@ -49,16 +45,14 @@ class _ContentPageState extends State<ContentPage> {
 
   late int currentGoalId;
 
-
   //refresh database when ever updated
   @override
   void initState() {
     super.initState();
     //refresh future content per update (Useful fo updating goals)
     refreshGoals();
-   refreshScreenTime();
+    refreshScreenTime();
   }
-
 
   //closing database when app is down
   @override
@@ -69,6 +63,11 @@ class _ContentPageState extends State<ContentPage> {
     super.dispose();
   }
 
+  Future refreshGoal() async {
+    setState(() => isLoading = true);
+    this.goal = await UserDatabase.instance.readGoal(currentGoalId);
+    setState(() => isLoading = false);
+  }
 //Updating screen time data displayed
   Future refreshScreenTime() async {
     //sets database to be async loading to the pag
@@ -79,7 +78,6 @@ class _ContentPageState extends State<ContentPage> {
       setState(() => isLoading = false);
       final avg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
       print (avg.round());
-
     }
   }
 
@@ -89,32 +87,26 @@ class _ContentPageState extends State<ContentPage> {
     setState(() => isLoading = true);
     //refreshes all goals when new data added
     this.goals = await UserDatabase.instance.readAllGoals();
-    this.goal = await UserDatabase.instance.readGoal(currentGoalId);
     setState(() => isLoading = false);
   }
+  //
+  // Future refreshGoal() async {
+  //   setState(() => isLoading = true);
+  //   this.goal = await UserDatabase.instance.readGoal(currentGoalId);
+  //   setState(() => isLoading = false);
+  // }
+
 
   Future updateGoal() async {
-    setState(() => isCompleted = true);
+    currentGoalId = UserDatabase.goalID;
+    refreshGoal();
+
+    isCompleted = true;
   final currentGoal = goal.copy(
     isCompleted: isCompleted
   );
     await UserDatabase.instance.update(currentGoal);
-
-  }
-
-
-  Future<int> findID (int goalId) async {
-    final newGoalId = findID(goalId);
-  print ('This is the newGoalId $newGoalId');
-  return newGoalId;
-    // final id = goals.map((e) => e.id).toString();
-    // List<String> goalID = id.split("()");
-    // print (id);
-    // final int finalID = await UserDatabase.instance.getGoalId(goal);
-    // print ('Final id from content page $finalID');
-    // setState(() => currentGoalId = int.parse(goalID));
-    // print (currentGoalId);
-
+    print('Goal is update');
   }
 
   Future addGoal() async {
@@ -125,6 +117,9 @@ class _ContentPageState extends State<ContentPage> {
       createdTime: DateTime.now(),
     );
     await UserDatabase.instance.create(goalA);
+    Timer(Duration(seconds: 10), () {
+      updateGoal();
+    });
   }
 
 
@@ -207,8 +202,6 @@ class _ContentPageState extends State<ContentPage> {
                           goalTime = goalIndex;
                           this.createdTime = DateTime.now();
                         });
-
-
                         addGoal();
                       },
 

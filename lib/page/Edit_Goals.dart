@@ -5,8 +5,8 @@
 //
 // class AddEditGoalPage extends StatefulWidget {
 //   final UserContent? goal;
-//
 //   const AddEditGoalPage({Key? key, this.goal}) : super(key: key);
+//
 //   @override
 //   _AddEditGoalPageState createState() => _AddEditGoalPageState();
 // }
