@@ -9,7 +9,7 @@ import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'package:phoneapp/widget/Graph_Widget.dart';
 import 'dart:async';
-
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 
 class ContentPage extends StatefulWidget {
@@ -63,11 +63,13 @@ class _ContentPageState extends State<ContentPage> {
     super.dispose();
   }
 
+  //Updating goal
   Future refreshGoal() async {
     setState(() => isLoading = true);
     this.goal = await UserDatabase.instance.readGoal(currentGoalId);
     setState(() => isLoading = false);
   }
+
 //Updating screen time data displayed
   Future refreshScreenTime() async {
     //sets database to be async loading to the pag
@@ -89,24 +91,22 @@ class _ContentPageState extends State<ContentPage> {
     this.goals = await UserDatabase.instance.readAllGoals();
     setState(() => isLoading = false);
   }
-  //
-  // Future refreshGoal() async {
-  //   setState(() => isLoading = true);
-  //   this.goal = await UserDatabase.instance.readGoal(currentGoalId);
-  //   setState(() => isLoading = false);
-  // }
 
+  Future refreshIsCompleted() async {
+    this.goals = await UserDatabase.instance.readCompletedGoals();
+  }
 
   Future updateGoal() async {
     currentGoalId = UserDatabase.goalID;
     refreshGoal();
-
     isCompleted = true;
   final currentGoal = goal.copy(
     isCompleted: isCompleted
   );
     await UserDatabase.instance.update(currentGoal);
     print('Goal is update');
+
+    refreshIsCompleted();
   }
 
   Future addGoal() async {
@@ -196,7 +196,7 @@ class _ContentPageState extends State<ContentPage> {
                         Utils.showSheet(context,
                           child: buildPicker(),
                           onClicked: () {final goalValue = goalValues[goalIndex];
-                          Utils.showSnackBar(context, 'Selected "$goalValue", Your goal today is: Screen time less than $goalIndex hours');
+                          Utils.showSnackBar(context, '"$goalValue" has been selected, Survive the day without using your phone over $goalIndex hours');
                           Navigator.pop(context);});
                         setState(() {
                           goalTime = goalIndex;
@@ -220,7 +220,7 @@ class _ContentPageState extends State<ContentPage> {
                       child: Container(
                         constraints: BoxConstraints(maxWidth: 300.0, maxHeight: 40),
                         alignment: Alignment.center,
-                        child: Text('Screen time less than $goalIndex hours', style: TextStyle(color: Colors.white, fontSize: 20),
+                        child: Text('Use your phone under $goalIndex hours', style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                     ),
                   ),
@@ -232,15 +232,15 @@ class _ContentPageState extends State<ContentPage> {
 
           Container(
             height: 300,
-            child: isLoading ? CircularProgressIndicator() : screenContent.isEmpty ?
-              Text('No data' , style: TextStyle(color: Colors.white, fontSize: 24),
-            ) : buildTime(),
+            child: SfCircularChart(),
+
+            // isLoading ? CircularProgressIndicator() : screenContent.isEmpty ?
+            //   Text('No data' , style: TextStyle(color: Colors.white, fontSize: 24),
+            // ) : buildTime(),
           ),
         ]
     ),
     );
-
-
   }
 
   Widget buildPicker() => SizedBox(
@@ -265,8 +265,24 @@ class _ContentPageState extends State<ContentPage> {
       ),
     ),
   );
+
+  List<GoalCompletionData> getChartData() {
+    final List<GoalCompletionData> chartData = [
+      GoalCompletionData(, 'Completed'),
+      GoalCompletionData(, 'Not Completed')
+
+    ];
+  }
+
 }
 
 
+class GoalCompletionData {
+  GoalCompletionData (this.isComplete, this.name);
+  //the data of if a goal is completed or not
+  final int isComplete;
+  final String name;
+
+}
 
 

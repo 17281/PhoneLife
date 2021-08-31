@@ -55,7 +55,6 @@ class UserContent {
     //specials cases that need extra converting i.e bool and tim
     createdTime: DateTime.parse(json[UserFields.time] as String),
     isCompleted: json[UserFields.isCompleted] == 1,
-
   );
 
 

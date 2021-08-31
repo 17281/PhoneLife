@@ -56,10 +56,8 @@ class UserDatabase {
     final db = await instance.database;
     //passing sql statements
     //insert into selected      table           data-selected
-     final goalId = await db.insert(userTable, content.toJson());
-    print ('This goalId from UserDataBase is $goalId');
-   goalID = goalId;
-   print('goalID: $goalID');
+    final goalId = await db.insert(userTable, content.toJson());
+    goalID = goalId;
   return content.copy(id: goalId);
   }
 
@@ -95,6 +93,13 @@ class UserDatabase {
     //Convert json string to sql
     print (results);
     return results.map((json)=> UserContent.fromJson(json)).toList();
+  }
+
+  Future<List<UserContent>> readCompletedGoals() async {
+    final db = await instance.database;
+    final results = await db.rawQuery('SELECT isCompleted FROM $userTable WHERE isCompleted = TRUE');
+    print(results);
+    return results.map((e) => UserContent.fromJson(e)).toList();
   }
 
   //updates our data
@@ -227,12 +232,10 @@ class ScreenTimeDatabase {
       //defining which data you want to update
       where: '${STFields.ST_id} = ?',
       whereArgs: [content.ST_id],
-
     );
 }
   Future closeSTDB() async{
     final db = await instance.database;
-
     //Finds the database then closes it
     db.close();
   }
