@@ -42,7 +42,6 @@ class _ContentPageState extends State<ContentPage> {
   //finds all screen time value
   late List<ScreenContents> screenContent;
   bool isLoading = false;
-
   late int currentGoalId;
 
   //refresh database when ever updated
@@ -92,9 +91,6 @@ class _ContentPageState extends State<ContentPage> {
     setState(() => isLoading = false);
   }
 
-  Future refreshIsCompleted() async {
-    this.goals = await UserDatabase.instance.readCompletedGoals();
-  }
 
   Future updateGoal() async {
     currentGoalId = UserDatabase.goalID;
@@ -105,8 +101,6 @@ class _ContentPageState extends State<ContentPage> {
   );
     await UserDatabase.instance.update(currentGoal);
     print('Goal is update');
-
-    refreshIsCompleted();
   }
 
   Future addGoal() async {
@@ -119,9 +113,15 @@ class _ContentPageState extends State<ContentPage> {
     await UserDatabase.instance.create(goalA);
     Timer(Duration(seconds: 10), () {
       updateGoal();
+      numOfCompleted();
     });
   }
 
+  int? number = 0;
+  void numOfCompleted() async {
+    int? count = await UserDatabase.instance.countCompletedGoals();
+    setState(() => number = count);
+  }
 
 
   Widget buildTime() =>
@@ -154,7 +154,7 @@ class _ContentPageState extends State<ContentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Screen Time test'),
+          title: Text('Number of completed goals: $number'),
         ),
     body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -169,7 +169,6 @@ class _ContentPageState extends State<ContentPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
               ElevatedButton(onPressed: () async {
-
                 //parseDuration();
                    await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => ScreenTimePage()));
@@ -266,13 +265,13 @@ class _ContentPageState extends State<ContentPage> {
     ),
   );
 
-  List<GoalCompletionData> getChartData() {
-    final List<GoalCompletionData> chartData = [
-      GoalCompletionData(, 'Completed'),
-      GoalCompletionData(, 'Not Completed')
-
-    ];
-  }
+  // List<GoalCompletionData> getChartData() {
+  //   final List<GoalCompletionData> chartData = [
+  //     GoalCompletionData(, 'Completed'),
+  //     GoalCompletionData(, 'Not Completed')
+  //
+  //   ];
+  // }
 
 }
 
@@ -282,7 +281,6 @@ class GoalCompletionData {
   //the data of if a goal is completed or not
   final int isComplete;
   final String name;
-
 }
 
 

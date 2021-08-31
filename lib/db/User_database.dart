@@ -95,11 +95,12 @@ class UserDatabase {
     return results.map((json)=> UserContent.fromJson(json)).toList();
   }
 
-  Future<List<UserContent>> readCompletedGoals() async {
-    final db = await instance.database;
-    final results = await db.rawQuery('SELECT isCompleted FROM $userTable WHERE isCompleted = TRUE');
-    print(results);
-    return results.map((e) => UserContent.fromJson(e)).toList();
+  Future<int?>countCompletedGoals() async {
+    var db = await database;
+    final count = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $userTable WHERE isCompleted = TRUE'));
+    print('Final count of Goals completed: $count');
+    return count;
   }
 
   //updates our data
