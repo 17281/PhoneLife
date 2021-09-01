@@ -96,16 +96,25 @@ class UserDatabase {
   }
 
   Future<int?>countCompletedGoals() async {
-    var db = await database;
+    final db = await database;
     final count = Sqflite.firstIntValue(
         await db.rawQuery('SELECT COUNT(*) FROM $userTable WHERE isCompleted = TRUE'));
     print('Final count of Goals completed: $count');
     return count;
   }
 
+  Future<int?>countUnCompletedGoals() async {
+    final db = await database;
+    final count = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM $userTable WHERE isCompleted = False')
+    );
+    print('Uncompleted goals: $count');
+    return count;
+  }
+
   //updates our data
   Future<int> update(UserContent content) async {
-    final db = await instance.database;
+    final db = await database;
     ///if you want to use raw sql statements; use db.rawUpdate
     return db.update(
       userTable,

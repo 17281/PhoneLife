@@ -21,6 +21,8 @@ class ContentPage extends StatefulWidget {
 class _ContentPageState extends State<ContentPage> {
   // final int currentGoalID;
   int goalIndex = 2;
+  int? completedNum = 0;
+  int? unCompletedNum = 0;
   static List<String> goalValues = [
     'No Phone?!?!',
     'Living the life',
@@ -30,7 +32,6 @@ class _ContentPageState extends State<ContentPage> {
   ];
 
   late UserContent goal;
-
 
   //Initiation of Goal Table variables
   late DateTime createdTime;
@@ -117,12 +118,16 @@ class _ContentPageState extends State<ContentPage> {
     });
   }
 
-  int? number = 0;
+
   void numOfCompleted() async {
-    int? count = await UserDatabase.instance.countCompletedGoals();
-    setState(() => number = count);
+    int? countC = await UserDatabase.instance.countCompletedGoals();
+    setState(() => completedNum = countC);
   }
 
+  void numOfUnCompleted() async {
+    int? countUC = await UserDatabase.instance.countUnCompletedGoals();
+    setState(() => unCompletedNum = countUC);
+  }
 
   Widget buildTime() =>
       //builds the display for goals
@@ -154,7 +159,7 @@ class _ContentPageState extends State<ContentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Number of completed goals: $number'),
+          title: Text('Number of completed goals: $completedNum'),
         ),
     body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -265,21 +270,21 @@ class _ContentPageState extends State<ContentPage> {
     ),
   );
 
-  // List<GoalCompletionData> getChartData() {
-  //   final List<GoalCompletionData> chartData = [
-  //     GoalCompletionData(, 'Completed'),
-  //     GoalCompletionData(, 'Not Completed')
-  //
-  //   ];
-  // }
+  Future<List<GoalCompletionData>> getChartData() async {
+    final List<GoalCompletionData> chartData = [
+      GoalCompletionData(completedNum, 'Completed'),
+      GoalCompletionData(unCompletedNum, 'Not Completed')
 
+    ];
+    return chartData;
+  }
 }
 
 
 class GoalCompletionData {
   GoalCompletionData (this.isComplete, this.name);
   //the data of if a goal is completed or not
-  final int isComplete;
+  final int? isComplete;
   final String name;
 }
 
