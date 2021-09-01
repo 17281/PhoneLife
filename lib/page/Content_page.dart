@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/Goals.dart';
 import 'package:phoneapp/page/Time_Detail_page.dart';
@@ -19,10 +18,30 @@ class ContentPage extends StatefulWidget {
 
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> {
+
+
   // final int currentGoalID;
   int goalIndex = 2;
   int? completedNum = 0;
   int? unCompletedNum = 0;
+
+  int averageSec = 0;
+  num hours = 0;
+  num min = 0;
+  num sec = 0;
+
+  void calculate() async {
+    int testTime = 80;
+    var x = testTime/60;
+    if (x < 1) {
+      setState(() => sec = testTime);
+      print('seconds is = $sec');
+    }
+    else {
+    }
+    print ('X is = $x');
+  }
+
   static List<String> goalValues = [
     'No Phone?!?!',
     'Living the life',
@@ -30,6 +49,7 @@ class _ContentPageState extends State<ContentPage> {
     'Easy Life',
     'Baby Mode',
   ];
+
 
   late UserContent goal;
 
@@ -79,7 +99,9 @@ class _ContentPageState extends State<ContentPage> {
       //after database loads, change the loading symbol to off
       setState(() => isLoading = false);
       final avg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
-      print (avg.round());
+      setState(() => averageSec = avg.round());
+      print ('The average seconds: $averageSec');
+      calculate();
     }
   }
 
@@ -115,6 +137,7 @@ class _ContentPageState extends State<ContentPage> {
     Timer(Duration(seconds: 10), () {
       updateGoal();
       numOfCompleted();
+      numOfUnCompleted();
     });
   }
 
@@ -129,30 +152,6 @@ class _ContentPageState extends State<ContentPage> {
     setState(() => unCompletedNum = countUC);
   }
 
-  Widget buildTime() =>
-      //builds the display for goals
-  StaggeredGridView.countBuilder(
-    padding: EdgeInsets.all(8),
-    itemCount: screenContent.length,
-    //default
-    staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-    crossAxisCount: 4,
-    mainAxisSpacing: 4,
-    crossAxisSpacing: 4,
-    itemBuilder: (context, index) {
-      final time = screenContent[index];
-      //detects when the user taps a button
-      return GestureDetector(
-        onTap: () async {
-          await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => TimeDetailPage(timeID: time.ST_id!),)
-          );
-        },
-
-        child: TimeGraphWidget(screenContent: time, index: index),
-      );
-    },
-  );
 
   @override
   ///Main Page display
@@ -172,6 +171,7 @@ class _ContentPageState extends State<ContentPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
+
               children: <Widget>[
               ElevatedButton(onPressed: () async {
                 //parseDuration();
@@ -181,7 +181,12 @@ class _ContentPageState extends State<ContentPage> {
                   refreshScreenTime();
                   refreshGoals();},
                   child: Icon(Icons.atm),
-              )
+              ),
+
+                Container(
+                  child: Text(''),
+                ),
+
         ]
     ),
       alignment: Alignment.centerRight,
@@ -233,14 +238,19 @@ class _ContentPageState extends State<ContentPage> {
                 ]
             ),
           ),
-
           Container(
-            height: 300,
-            child: SfCircularChart(),
+            height: 200,
+            child: SfCircularChart(
+              series: <CircularSeries>[
+                DoughnutSeries<GoalCompletionData, String>(
+                  dataSource: getChartData(),
+                  xValueMapper: (GoalCompletionData data, _) => data.name,
+                  yValueMapper: (GoalCompletionData data, _) => data.isComplete,
+                  dataLabelSettings: DataLabelSettings (isVisible: true)
+                )
+              ],
+            ),
 
-            // isLoading ? CircularProgressIndicator() : screenContent.isEmpty ?
-            //   Text('No data' , style: TextStyle(color: Colors.white, fontSize: 24),
-            // ) : buildTime(),
           ),
         ]
     ),
@@ -270,11 +280,10 @@ class _ContentPageState extends State<ContentPage> {
     ),
   );
 
-  Future<List<GoalCompletionData>> getChartData() async {
+  List<GoalCompletionData> getChartData() {
     final List<GoalCompletionData> chartData = [
       GoalCompletionData(completedNum, 'Completed'),
       GoalCompletionData(unCompletedNum, 'Not Completed')
-
     ];
     return chartData;
   }
