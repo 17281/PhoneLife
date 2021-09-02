@@ -31,7 +31,7 @@ class _ContentPageState extends State<ContentPage> {
   num sec = 0;
 
   void calculate() async {
-    int testTime = 3610;
+    int testTime = 3739;
     var x = testTime/60;
     if (x <= 1) {
       //only seconds if average time is lesser than 60sec
@@ -42,12 +42,10 @@ class _ContentPageState extends State<ContentPage> {
       //Seconds
       var seconds = testTime%60;
       setState(() => sec = seconds);
-      print('seconds = $sec');
 
       //Minutes
       var z = (x%60).round();
       setState(() => min = z);
-      print ('min = $min');
 
       //Only hours if seconds < 3600
       var y = (x/60).round();
@@ -57,9 +55,9 @@ class _ContentPageState extends State<ContentPage> {
       else {
         //Hours
         setState(() => hours = y%60);
-        print ('Hours = $hours');
       }
     }
+    print ('Seconds = $sec Minutes = $min Hours = $hours');
   }
 
   static List<String> goalValues = [
