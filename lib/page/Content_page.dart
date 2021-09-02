@@ -31,15 +31,35 @@ class _ContentPageState extends State<ContentPage> {
   num sec = 0;
 
   void calculate() async {
-    int testTime = 80;
+    int testTime = 3610;
     var x = testTime/60;
-    if (x < 1) {
+    if (x <= 1) {
+      //only seconds if average time is lesser than 60sec
       setState(() => sec = testTime);
       print('seconds is = $sec');
     }
     else {
+      //Seconds
+      var seconds = testTime%60;
+      setState(() => sec = seconds);
+      print('seconds = $sec');
+
+      //Minutes
+      var z = (x%60).round();
+      setState(() => min = z);
+      print ('min = $min');
+
+      //Only hours if seconds < 3600
+      var y = (x/60).round();
+      if (y <= 0) {
+        setState(() => hours = 0);
+      }
+      else {
+        //Hours
+        setState(() => hours = y%60);
+        print ('Hours = $hours');
+      }
     }
-    print ('X is = $x');
   }
 
   static List<String> goalValues = [
