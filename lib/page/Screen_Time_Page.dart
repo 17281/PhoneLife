@@ -30,7 +30,7 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      actions: [startButton(), stopButton(), submitButton()],
+      actions: [startButton(), stopButton()],
     ),
     body: Center(
     ),
@@ -51,20 +51,14 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(onPrimary: Colors.red, primary: Colors.orange),
-        onPressed: () async {stopTime = DateTime.now();}, child: Text('Stop time'),
+        onPressed: () async {
+          stopTime = DateTime.now();
+          submit();
+        }, child: Text('Stop time'),
       ),
     );
   }
 
-  Widget submitButton() {
-    return Padding (
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      child: ElevatedButton (
-        style: ElevatedButton.styleFrom( onPrimary: Colors.red, primary: Colors.blueAccent),
-        onPressed: () {submit();}, child: Text('Submit'),
-        ),
-      );
-  }
 
   submit()async {
     //Duration between initial time to final time

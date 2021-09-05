@@ -2,11 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/Goals.dart';
-import 'package:phoneapp/page/Time_Detail_page.dart';
 import '../Utils.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:phoneapp/page/Screen_Time_Page.dart';
-import 'package:phoneapp/widget/Graph_Widget.dart';
 import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -29,18 +27,15 @@ class _ContentPageState extends State<ContentPage> {
   num hours = 0;
   num min = 0;
   num sec = 0;
-
   void calculate() async {
-    int testTime = 3739;
-    var x = testTime/60;
+    var x = averageSec/60;
     if (x <= 1) {
       //only seconds if average time is lesser than 60sec
-      setState(() => sec = testTime);
-      print('seconds is = $sec');
+      setState(() => sec = averageSec);
     }
     else {
       //Seconds
-      var seconds = testTime%60;
+      var seconds = averageSec%60;
       setState(() => sec = seconds);
 
       //Minutes
@@ -69,7 +64,7 @@ class _ContentPageState extends State<ContentPage> {
   ];
 
 
-  late UserContent goal;
+  late UserContent? goal;
 
   //Initiation of Goal Table variables
   late DateTime createdTime;
@@ -90,6 +85,7 @@ class _ContentPageState extends State<ContentPage> {
     //refresh future content per update (Useful fo updating goals)
     refreshGoals();
     refreshScreenTime();
+    refreshGoal();
   }
 
   //closing database when app is down
@@ -133,16 +129,27 @@ class _ContentPageState extends State<ContentPage> {
   }
 
 
+  void addOrUpdateGoal() async {
+    final isUpdateGoal = goal != null;
+    if (isUpdateGoal) {
+      await updateGoal();
+    }
+    else {
+      await addGoal();
+    }
+  }
+
   Future updateGoal() async {
     currentGoalId = UserDatabase.goalID;
-    refreshGoal();
+    await refreshGoal();
     isCompleted = true;
-  final currentGoal = goal.copy(
+  final currentGoal = goal!.copy(
     isCompleted: isCompleted
   );
     await UserDatabase.instance.update(currentGoal);
     print('Goal is update');
   }
+
 
   Future addGoal() async {
     //add all the content from the fields into a single statement
@@ -153,22 +160,26 @@ class _ContentPageState extends State<ContentPage> {
     );
     await UserDatabase.instance.create(goalA);
     Timer(Duration(seconds: 10), () {
+
       updateGoal();
       numOfCompleted();
-      numOfUnCompleted();
     });
   }
 
 
+  void isGoalComplete() {
+}
+
   void numOfCompleted() async {
     int? countC = await UserDatabase.instance.countCompletedGoals();
-    setState(() => completedNum = countC);
+    int? countUC = await UserDatabase.instance.countUnCompletedGoals();
+    setState(() {
+      completedNum = countC;
+      unCompletedNum = countUC;
+    });
   }
 
-  void numOfUnCompleted() async {
-    int? countUC = await UserDatabase.instance.countUnCompletedGoals();
-    setState(() => unCompletedNum = countUC);
-  }
+
 
 
   @override
@@ -202,7 +213,7 @@ class _ContentPageState extends State<ContentPage> {
               ),
 
                 Container(
-                  child: Text(''),
+                  child: Text('$hours : $min : $sec'),
                 ),
 
         ]
@@ -229,7 +240,7 @@ class _ContentPageState extends State<ContentPage> {
                           goalTime = goalIndex;
                           this.createdTime = DateTime.now();
                         });
-                        addGoal();
+                        addOrUpdateGoal();
                       },
 
                     style: ElevatedButton.styleFrom(
