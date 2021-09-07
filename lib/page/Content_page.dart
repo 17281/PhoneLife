@@ -23,21 +23,54 @@ class _ContentPageState extends State<ContentPage> {
   int? completedNum = 0;
   int? unCompletedNum = 0;
 
-  int averageSec = 0;
+  //Calculate the total time per day
   num hours = 0;
   num min = 0;
   num sec = 0;
 
+  //average difference
+  num diffH = 0;
+  num diffMin = 0;
+  num diffSec = 0;
+  int averageSec = 0;
 
-  void calculate() async {
+
+  void calculateDiffTime() async {
     var x = averageSec/60;
     if (x <= 1) {
       //only seconds if average time is lesser than 60sec
-      setState(() => sec = averageSec);
+      setState(() => diffSec = averageSec);
     }
     else {
       //Seconds
       var seconds = averageSec%60;
+      setState(() => diffSec = seconds);
+
+      //Minutes
+      var z = (x%60).round();
+      setState(() => diffMin = z);
+
+      //Only hours if seconds < 3600
+      var y = (x/60).round();
+      if (y <= 0) {
+        setState(() => diffH = 0);
+      }
+      else {
+        //Hours
+        setState(() => diffH = y%60);
+      }
+    }
+    print ('diffSeconds = $diffSec diffMinutes = $diffMin diffHours = $diffH');
+  }
+  void calculateTotalTime() async {
+    var x = finalTime/60;
+    if (x <= 1) {
+      //only seconds if average time is lesser than 60sec
+      setState(() => sec = finalTime);
+    }
+    else {
+      //Seconds
+      var seconds = finalTime%60;
       setState(() => sec = seconds);
 
       //Minutes
@@ -54,7 +87,7 @@ class _ContentPageState extends State<ContentPage> {
         setState(() => hours = y%60);
       }
     }
-    print ('Seconds = $sec Minutes = $min Hours = $hours');
+    print ('Sec = $sec Min = $min Hours = $hours');
   }
 
   static List<String> goalValues = [
@@ -80,7 +113,7 @@ class _ContentPageState extends State<ContentPage> {
   late List<ScreenContents> screenContent;
   bool isLoading = false;
   late int currentGoalId;
-
+  late int finalTime;
   //stop time function
   late Timer _timer;
   int secCounter = 30;
@@ -147,8 +180,11 @@ void checkGoal() async{
       setState(() => isLoading = false);
       final avg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
       setState(() => averageSec = avg.round());
-      calculate();
-      ScreenTimeDatabase.instance.findTotalTime();
+
+      calculateDiffTime();
+      await ScreenTimeDatabase.instance.findTotalTime();
+      this.finalTime = ScreenTimeDatabase.finalTime;
+      print('final time = $finalTime');
     }
   }
 

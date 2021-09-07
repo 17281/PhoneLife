@@ -147,6 +147,7 @@ class UserDatabase {
 class ScreenTimeDatabase {
   static final ScreenTimeDatabase instance = ScreenTimeDatabase._int();
   static Database? _STDatabase;
+  static late int finalTime;
   ScreenTimeDatabase._int();
 
   Future<Database> get database async{
@@ -156,6 +157,7 @@ class ScreenTimeDatabase {
     _STDatabase = await _initScreenTimeDB('ScreenTime.db');
     return _STDatabase!;
   }
+
 
   //initializing path of database
   Future<Database> _initScreenTimeDB(String filepath ) async {
@@ -193,21 +195,22 @@ class ScreenTimeDatabase {
     return content.copy(ST_id: ST_id);
   }
 
-  Future <int> findTotalTime() async {
+  Future findTotalTime() async {
     final db = await instance.database;
     final orderBy1 = '${STFields.ST_id} ASC';
     final orderBy2 = '${STFields.ST_id} DESC';
     final startTimeResults = await db.rawQuery('SELECT startTime FROM $screenTimeTable ORDER BY $orderBy1 LIMIT 1');
     final stopTimeResults = await db.rawQuery('SELECT stopTime FROM $screenTimeTable ORDER BY $orderBy2 LIMIT 1');
 
+    //converting string to datetime variables
     final startTimeResult = DateTime.parse(startTimeResults[0]['startTime'].toString());
     final stopTimeResult = DateTime.parse(stopTimeResults[0]['stopTime'].toString());
 
     print ('$stopTimeResult and $startTimeResult');
-
+    //calculates the difference between start and stop
     Duration totalTime = stopTimeResult.difference(startTimeResult);
-    int finalTime = totalTime.inSeconds.round();
-    return finalTime;
+    finalTime = totalTime.inSeconds.round();
+    return totalTime;
   }
 
   //adding data into sql with statements
