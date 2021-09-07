@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:phoneapp/model/Goals.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
@@ -72,6 +73,7 @@ class UserDatabase {
       ///adding values [id, values] then add = '? ?' etc
       whereArgs: [id],
     );
+
     //if maps exists, run map
     if (maps.isNotEmpty) {
       print(maps);
@@ -99,7 +101,6 @@ class UserDatabase {
     final db = await database;
     final count = Sqflite.firstIntValue(
         await db.rawQuery('SELECT COUNT(*) FROM $userTable WHERE isCompleted = TRUE'));
-    print('Final count of Goals completed: $count');
     return count;
   }
 
@@ -108,7 +109,6 @@ class UserDatabase {
     final count = Sqflite.firstIntValue(
       await db.rawQuery('SELECT COUNT(*) FROM $userTable WHERE isCompleted = False')
     );
-    print('Uncompleted goals: $count');
     return count;
   }
 
@@ -149,8 +149,6 @@ class ScreenTimeDatabase {
   static Database? _STDatabase;
   ScreenTimeDatabase._int();
 
-
-
   Future<Database> get database async{
     //the database will ONLY be created if the database return is null (which will always be null upon download)
     if (_STDatabase != null) return _STDatabase!;
@@ -169,9 +167,6 @@ class ScreenTimeDatabase {
   return await openDatabase(path, version: 2, onCreate: _createScreenTimeDB);
   }
 
-
-
-
   Future _createScreenTimeDB(Database db, int version) async {
     //Type of field in sql
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
@@ -179,7 +174,7 @@ class ScreenTimeDatabase {
     final textType = 'TEXT NOT NULL';
 
     //creates the table based on the model table listed before
-    await db.execute(''' CREATE TABLE $ScreenTimeTable (
+    await db.execute(''' CREATE TABLE $screenTimeTable (
       ${STFields.ST_id} $idType, 
       ${STFields.startTime} $textType,
       ${STFields.stopTime} $textType,
@@ -193,17 +188,34 @@ class ScreenTimeDatabase {
     //reference to database
     final db = await instance.database;
     //Adds ST_contents to json and then passed back
-    final ST_id = await db.insert(ScreenTimeTable, content.toJson());
+    final ST_id = await db.insert(screenTimeTable, content.toJson());
     //objects modified is where id = id
     return content.copy(ST_id: ST_id);
+  }
+
+  Future <int> findTotalTime() async {
+    final db = await instance.database;
+    final orderBy1 = '${STFields.ST_id} ASC';
+    final orderBy2 = '${STFields.ST_id} DESC';
+    final startTimeResults = await db.rawQuery('SELECT startTime FROM $screenTimeTable ORDER BY $orderBy1 LIMIT 1');
+    final stopTimeResults = await db.rawQuery('SELECT stopTime FROM $screenTimeTable ORDER BY $orderBy2 LIMIT 1');
+
+    final startTimeResult = DateTime.parse(startTimeResults[0]['startTime'].toString());
+    final stopTimeResult = DateTime.parse(stopTimeResults[0]['stopTime'].toString());
+
+    print ('$stopTimeResult and $startTimeResult');
+
+    Duration totalTime = stopTimeResult.difference(startTimeResult);
+    int finalTime = totalTime.inSeconds.round();
+    return finalTime;
   }
 
   //adding data into sql with statements
   Future<ScreenContents> readScreenTime(int ST_id) async {
     final db = await instance.database;
-//selecting a single content to display where id = ?
+  //selecting a single content to display where id = ?
     final maps = await db.query(
-      ScreenTimeTable,
+      screenTimeTable,
       columns: STFields.values,
       ///using ? instead of $id as it stops sql injections
       where: '${STFields.ST_id} = ?',
@@ -220,12 +232,13 @@ class ScreenTimeDatabase {
     }
 
   }
+
   //read all content then list them
   Future<List<ScreenContents>> readAllTime() async {
-    final db =await instance.database;
+    final db = await instance.database;
     ///   Sorts data by time      ASC == asending order
     final orderBy = '${STFields.startTime} ASC';
-    final result = await db.query(ScreenTimeTable, orderBy: orderBy);
+    final result = await db.query(screenTimeTable, orderBy: orderBy);
     print (result);
     //Convert json string to sql
     return result.map((json)=> ScreenContents.fromJson(json)).toList();
@@ -234,9 +247,8 @@ class ScreenTimeDatabase {
   //updates our data
   Future<int> updateST(ScreenContents content) async {
     final db = await instance.database;
-    ///if you want to use raw sql statements; use db.rawUpdate
     return db.update(
-      ScreenTimeTable,
+      screenTimeTable,
       content.toJson(),
 
       //defining which data you want to update
@@ -244,6 +256,7 @@ class ScreenTimeDatabase {
       whereArgs: [content.ST_id],
     );
 }
+
   Future closeSTDB() async{
     final db = await instance.database;
     //Finds the database then closes it

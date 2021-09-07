@@ -1,7 +1,7 @@
 
 
 ///converts SQL into json, maps and genral model of sql database for Screen Time
-final String ScreenTimeTable = 'Screen_Time';
+final String screenTimeTable = 'Screen_Time';
 
 class STFields {
   static final List<String> values = [

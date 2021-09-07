@@ -148,6 +148,7 @@ void checkGoal() async{
       final avg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
       setState(() => averageSec = avg.round());
       calculate();
+      ScreenTimeDatabase.instance.findTotalTime();
     }
   }
 
@@ -174,6 +175,7 @@ void checkGoal() async{
     await UserDatabase.instance.update(currentGoal);
     Utils.showSnackBar(context, 'the goal of $goalTime has been competed!');
   }
+
 
   Future updateGoal() async {
     _timer.cancel();
