@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:flutter/material.dart';
@@ -65,11 +66,13 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     Duration difference = stopTime.difference(startTime);
     final diffTime = difference.inSeconds;
     print(diffTime);
+    final createdTime = DateFormat.yMd().format(DateTime.now());
 
     final finalTime = ScreenContents(
       stopTime: stopTime,
       startTime: startTime,
       diffTime: diffTime,
+      createdTime: createdTime
     );
     await ScreenTimeDatabase.instance.createST(finalTime);
   }

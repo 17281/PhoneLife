@@ -199,7 +199,9 @@ class ScreenTimeDatabase {
     final db = await instance.database;
     final orderBy1 = '${STFields.ST_id} ASC';
     final orderBy2 = '${STFields.ST_id} DESC';
-    final startTimeResults = await db.rawQuery('SELECT startTime FROM $screenTimeTable ORDER BY $orderBy1 LIMIT 1');
+    final dateToday = DateFormat.yMd().format(DateTime.now());
+    print(dateToday);
+    final startTimeResults = await db.rawQuery('SELECT startTime FROM $screenTimeTable WHERE startTime == $dateToday ORDER BY $orderBy1 LIMIT 1');
     final stopTimeResults = await db.rawQuery('SELECT stopTime FROM $screenTimeTable ORDER BY $orderBy2 LIMIT 1');
 
     //converting string to datetime variables
