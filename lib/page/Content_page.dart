@@ -27,6 +27,8 @@ class _ContentPageState extends State<ContentPage> {
   num hours = 0;
   num min = 0;
   num sec = 0;
+
+
   void calculate() async {
     var x = averageSec/60;
     if (x <= 1) {
@@ -64,12 +66,13 @@ class _ContentPageState extends State<ContentPage> {
   ];
 
 
-  late UserContent? goal;
 
+  late UserContent? goal;
   //Initiation of Goal Table variables
   late DateTime createdTime;
   late int goalTime;
   late bool isCompleted;
+  late bool isNotCompleted;
 
   //finds all 'goals' from userTable
   late List<UserContent> goals;
@@ -78,6 +81,37 @@ class _ContentPageState extends State<ContentPage> {
   bool isLoading = false;
   late int currentGoalId;
 
+  //stop time function
+  late Timer _timer;
+  int secCounter = 30;
+
+  void startTimer() {
+    secCounter = 30;
+    _timer = Timer.periodic(Duration(seconds: 1),(timer) {
+      if (secCounter > 0) {
+        setState(() {
+          secCounter --;
+        });
+        print(secCounter);
+        refreshGoals();
+      }else {
+        timer.cancel();
+        checkGoal();
+      }
+    });
+  }
+
+void checkGoal() async{
+    if (hours < goalTime) {
+      await updateCompletion();
+    }
+    else {
+      Utils.showSnackBar(context, 'Goal has failed');
+    }
+}
+
+
+
   //refresh database when ever updated
   @override
   void initState() {
@@ -85,7 +119,6 @@ class _ContentPageState extends State<ContentPage> {
     //refresh future content per update (Useful fo updating goals)
     refreshGoals();
     refreshScreenTime();
-    refreshGoal();
   }
 
   //closing database when app is down
@@ -114,7 +147,6 @@ class _ContentPageState extends State<ContentPage> {
       setState(() => isLoading = false);
       final avg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
       setState(() => averageSec = avg.round());
-      print ('The average seconds: $averageSec');
       calculate();
     }
   }
@@ -129,25 +161,33 @@ class _ContentPageState extends State<ContentPage> {
   }
 
 
-  void addOrUpdateGoal() async {
-    final isUpdateGoal = goal != null;
-    if (isUpdateGoal) {
-      await updateGoal();
-    }
-    else {
-      await addGoal();
-    }
+  Future updateCompletion() async {
+    setState(() {
+      currentGoalId = UserDatabase.goalID;
+    });
+    print('the updateCompletion id = $currentGoalId');
+    await refreshGoal();
+
+    final currentGoal = goal!.copy(
+    isCompleted: true
+  );
+    await UserDatabase.instance.update(currentGoal);
+    Utils.showSnackBar(context, 'the goal of $goalTime has been competed!');
   }
 
   Future updateGoal() async {
-    currentGoalId = UserDatabase.goalID;
+    _timer.cancel();
+    this.currentGoalId = UserDatabase.goalID;
+    print('the updateGoal id = $currentGoalId');
     await refreshGoal();
-    isCompleted = true;
-  final currentGoal = goal!.copy(
-    isCompleted: isCompleted
-  );
+
+    final currentGoal = goal!.copy(
+      isCompleted: false,
+      goalTime: this.goalTime
+    );
     await UserDatabase.instance.update(currentGoal);
-    print('Goal is update');
+    startTimer();
+    Utils.showSnackBar(context, 'Goal has been updated!');
   }
 
 
@@ -159,16 +199,27 @@ class _ContentPageState extends State<ContentPage> {
       createdTime: DateTime.now(),
     );
     await UserDatabase.instance.create(goalA);
-    Timer(Duration(seconds: 10), () {
-
-      updateGoal();
-      numOfCompleted();
-    });
+    print('new goal have been added goalTime = $goalTime');
+    startTimer();
+    numOfCompleted();
   }
 
+  //add or update
+  void addOrUpdate() async{
+    if (secCounter > 0 ) {
+      if (goals.isNotEmpty){
+      await updateGoal();
+      }
+      else {
+        print('goals is empty');
+        await addGoal();
+      }
+    }else {
+      print('sec is 0');
+      await addGoal();
+    }
+  }
 
-  void isGoalComplete() {
-}
 
   void numOfCompleted() async {
     int? countC = await UserDatabase.instance.countCompletedGoals();
@@ -178,6 +229,9 @@ class _ContentPageState extends State<ContentPage> {
       unCompletedNum = countUC;
     });
   }
+
+
+
 
 
 
@@ -202,13 +256,13 @@ class _ContentPageState extends State<ContentPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
 
               children: <Widget>[
-              ElevatedButton(onPressed: () async {
-                //parseDuration();
+              ElevatedButton(onPressed:() async {
                    await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => ScreenTimePage()));
                    //Once created refresh goals display page
                   refreshScreenTime();
-                  refreshGoals();},
+                  refreshGoals();
+                  },
                   child: Icon(Icons.atm),
               ),
 
@@ -233,15 +287,21 @@ class _ContentPageState extends State<ContentPage> {
                       onPressed: () async {
                         Utils.showSheet(context,
                           child: buildPicker(),
-                          onClicked: () {final goalValue = goalValues[goalIndex];
+                          onClicked: () {
+                          final goalValue = goalValues[goalIndex];
                           Utils.showSnackBar(context, '"$goalValue" has been selected, Survive the day without using your phone over $goalIndex hours');
-                          Navigator.pop(context);});
-                        setState(() {
-                          goalTime = goalIndex;
-                          this.createdTime = DateTime.now();
-                        });
-                        addOrUpdateGoal();
-                      },
+                          Navigator.pop(context);
+                          setState(() {
+                            goalTime = goalIndex;
+                            this.createdTime = DateTime.now();
+                          });
+                          addOrUpdate();
+                          refreshGoals();
+
+                          });
+
+
+                        },
 
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),

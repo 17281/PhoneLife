@@ -72,9 +72,9 @@ class UserDatabase {
       ///adding values [id, values] then add = '? ?' etc
       whereArgs: [id],
     );
-
     //if maps exists, run map
     if (maps.isNotEmpty) {
+      print(maps);
       //converts note into Json object for the first item
       return UserContent.fromJson(maps.first);
     }//If item can't be found
