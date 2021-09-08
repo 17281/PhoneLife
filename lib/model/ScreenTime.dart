@@ -5,7 +5,7 @@ final String screenTimeTable = 'Screen_Time';
 
 class STFields {
   static final List<String> values = [
-    ST_id, startTime, stopTime, diffTime, createdTime
+    ST_id, startTime, stopTime, diffTime, createdTime,
   ];
   ///TODO:Add Bool of IsScreenON?
   static final String ST_id = '_STid';
@@ -13,7 +13,6 @@ class STFields {
   static final String stopTime = 'stopTime';
   static final String diffTime = 'diffTime';
   static final String createdTime = 'createdTime';
-
 }
 
 class ScreenContents {
@@ -29,7 +28,7 @@ class ScreenContents {
     required this.diffTime,
     required this.stopTime,
     required this.startTime,
-    required this.createdTime
+    required this.createdTime,
 });
 
 

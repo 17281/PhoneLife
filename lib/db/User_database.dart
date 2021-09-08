@@ -166,7 +166,7 @@ class ScreenTimeDatabase {
    ///TODO: REMOVE THE CODE BELOW FOR FINAL PRODUCTION
     await deleteDatabase(path);
   //version of database
-  return await openDatabase(path, version: 2, onCreate: _createScreenTimeDB);
+  return await openDatabase(path, version: 3, onCreate: _createScreenTimeDB);
   }
 
   Future _createScreenTimeDB(Database db, int version) async {
@@ -180,7 +180,8 @@ class ScreenTimeDatabase {
       ${STFields.ST_id} $idType, 
       ${STFields.startTime} $textType,
       ${STFields.stopTime} $textType,
-      ${STFields.diffTime} $stringType
+      ${STFields.diffTime} $stringType,
+      ${STFields.createdTime} $textType
       )'''
     );
   }
@@ -199,11 +200,12 @@ class ScreenTimeDatabase {
     final db = await instance.database;
     final orderBy1 = '${STFields.ST_id} ASC';
     final orderBy2 = '${STFields.ST_id} DESC';
-    final dateToday = DateFormat.yMd().format(DateTime.now());
-    print(dateToday);
-    final startTimeResults = await db.rawQuery('SELECT startTime FROM $screenTimeTable WHERE startTime == $dateToday ORDER BY $orderBy1 LIMIT 1');
-    final stopTimeResults = await db.rawQuery('SELECT stopTime FROM $screenTimeTable ORDER BY $orderBy2 LIMIT 1');
+    String dateToday = DateFormat.yMd().format(DateTime.now()).toString();
 
+    final startTimeResults = await db.rawQuery('SELECT startTime FROM $screenTimeTable WHERE createdTime = "$dateToday" ORDER BY $orderBy1 LIMIT 1');
+    final stopTimeResults = await db.rawQuery('SELECT stopTime FROM $screenTimeTable WHERE createdTime = "$dateToday" ORDER BY $orderBy2 LIMIT 1');
+
+    print(startTimeResults);
     //converting string to datetime variables
     final startTimeResult = DateTime.parse(startTimeResults[0]['startTime'].toString());
     final stopTimeResult = DateTime.parse(stopTimeResults[0]['stopTime'].toString());

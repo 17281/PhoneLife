@@ -16,7 +16,7 @@ class ScreenTimePage extends StatefulWidget {
 }
 
 class _TimeDetailPageState extends State <ScreenTimePage> {
-  late String diffTime;
+  late String createdTime;
   late DateTime stopTime;
   late DateTime startTime;
   bool isLoading = false;
@@ -66,8 +66,7 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     Duration difference = stopTime.difference(startTime);
     final diffTime = difference.inSeconds;
     print(diffTime);
-    final createdTime = DateFormat.yMd().format(DateTime.now());
-
+    createdTime = DateFormat.yMd().format(DateTime.now());
     final finalTime = ScreenContents(
       stopTime: stopTime,
       startTime: startTime,
