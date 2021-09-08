@@ -1,4 +1,5 @@
 
+
 //User table 
 final String diffGoal = 'diffGoal';
 //contents created in SQL

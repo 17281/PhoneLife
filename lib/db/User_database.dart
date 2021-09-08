@@ -49,7 +49,7 @@ class DiffTimeDatabase {
   }
 
   //Users adding things to 'User' table
-  Future<GoalContent> create(GoalContent content) async {
+  Future<GoalContent> createDiffGoal(GoalContent content) async {
     //reference to database
     final db = await instance.database;
     //passing sql statements
@@ -59,7 +59,7 @@ class DiffTimeDatabase {
   }
 
   //adding data into sql with statements
-  Future<GoalContent> readGoal(int id) async{
+  Future<GoalContent> readDiffGoal(int id) async{
     final db = await instance.database;
     final maps = await db.query(
       diffGoal,
@@ -80,6 +80,63 @@ class DiffTimeDatabase {
       throw Exception('ID $id not found');
     }
   }
+
+
+  //Reading multiple data at a time
+  Future<List<GoalContent>> readAllDiffGoals() async {
+    final db = await instance.database;
+    final orderBy = '${GoalFields.id} DESC';
+    ///await db.query(userTable, orderBy: orderBy);
+    final results = await db.rawQuery('SELECT * FROM $diffGoal ORDER BY $orderBy');
+    //Convert json string to sql
+    print (results);
+    return results.map((json)=> GoalContent.fromJson(json)).toList();
+  }
+
+  Future<int?>countDiffGoalsC() async {
+    final db = await database;
+    final count = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $diffGoal WHERE isDiffComplete = TRUE'));
+    return count;
+  }
+
+  Future<int?>countDiffGoalsUC() async {
+    final db = await database;
+    final count = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $diffGoal WHERE isDiffComplete = False')
+    );
+    return count;
+  }
+
+  //updates our data
+  Future<int> update(UserContent content) async {
+    final db = await database;
+    ///if you want to use raw sql statements; use db.rawUpdate
+    return db.update(
+      diffGoal,
+      content.toJson(),
+      //defining which data you want to update
+      where: '${GoalFields.id} = ?', whereArgs: [content.id],
+    );
+  }
+
+  //Deleting data
+  Future<int> deleteDiffGoal(int id) async {
+    final db = await instance.database;
+    //finding which data to delete from a defined id
+    return await db.delete(
+      userTable,
+      where: '${GoalFields.id} = ?',
+      whereArgs: [id],
+    );
+  }
+  //Closing database
+  Future closeDB() async{
+    final db = await instance.database;
+    //Finds the database then closes it
+    db.close();
+  }
+
 }
 
 
@@ -90,7 +147,6 @@ class DiffTimeDatabase {
 
   static late int goalID;
   UserDatabase._init();
-
 
   Future<Database> get database async{
     //the database will ONLY (if _initDB != exist) be created if the database return is null (which will always be null upon download
