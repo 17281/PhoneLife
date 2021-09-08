@@ -8,9 +8,9 @@ import 'package:sqflite/sqflite.dart';
 class DiffTimeDatabase {
   static final DiffTimeDatabase instance = DiffTimeDatabase._init();
   static Database? _diffGoalDatabase;
+  static late int diffGoalId;
 
   DiffTimeDatabase._init();
-
 
   Future<Database> get database async{
     //the database will ONLY (if _initDB != exist) be created if the database return is null (which will always be null upon download
@@ -55,6 +55,7 @@ class DiffTimeDatabase {
     //passing sql statements
     //insert into selected      table           data-selected
     final goalId = await db.insert(diffGoal, content.toJson());
+    diffGoalId = goalId;
     return content.copy(id: goalId);
   }
 
@@ -109,7 +110,7 @@ class DiffTimeDatabase {
   }
 
   //updates our data
-  Future<int> update(UserContent content) async {
+  Future<int> updateDiffGoal(GoalContent content) async {
     final db = await database;
     ///if you want to use raw sql statements; use db.rawUpdate
     return db.update(
@@ -138,8 +139,6 @@ class DiffTimeDatabase {
   }
 
 }
-
-
 
   class UserDatabase {
   static final UserDatabase instance = UserDatabase._init();

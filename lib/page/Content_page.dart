@@ -7,7 +7,7 @@ import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
+import 'package:phoneapp/model/DiffTime.dart';
 
 class ContentPage extends StatefulWidget {
   @override
@@ -101,23 +101,48 @@ class _ContentPageState extends State<ContentPage> {
 
 
 
+  late GoalContent? diffGoal;
   late UserContent? goal;
   //Initiation of Goal Table variables
   late DateTime createdTime;
   late int goalTime;
-  late bool isCompleted;
-  late bool isNotCompleted;
+  late int diffGoalTime;
+
 
   //finds all 'goals' from userTable
   late List<UserContent> goals;
+  //finds all diffGoals from diffTimeTable
+  late List<GoalContent> diffGoals;
   //finds all screen time value
   late List<ScreenContents> screenContent;
   bool isLoading = false;
+
+  //goalID
   late int currentGoalId;
+  late int currentDiffGoalId;
   late int finalTime;
   //stop time function
   late Timer _timer;
+  late Timer _diffTimer;
+
   int secCounter = 30;
+  int counter = 30;
+
+  void diffTimer() {
+    counter = 30;
+    _diffTimer = Timer.periodic(Duration(seconds: 1),(timer) {
+      if (counter > 0) {
+        setState(() {
+          counter --;
+        });
+        print(counter);
+        refreshGoals();
+      }else {
+        timer.cancel();
+        checkDiffGoal();
+      }
+    });
+  }
 
   void startTimer() {
     secCounter = 30;
@@ -144,7 +169,14 @@ void checkGoal() async{
     }
 }
 
-
+void checkDiffGoal() async{
+    if (diffMin < diffGoalTime) {
+      await updateDiffCompletion();
+    }
+    else {
+      Utils.showSnackBar(context, 'Goal has failed');
+    }
+}
 
   //refresh database when ever updated
   @override
@@ -160,10 +192,14 @@ void checkGoal() async{
   void dispose() {
     //closes db
     UserDatabase.instance.closeDB();
+    DiffTimeDatabase.instance.closeDB();
     ScreenTimeDatabase.instance.closeSTDB();
     super.dispose();
   }
 
+  Future refreshDiffGoal() async {
+    this.diffGoal = await DiffTimeDatabase.instance.readDiffGoal(currentDiffGoalId);
+  }
   //Updating goal
   Future refreshGoal() async {
     setState(() => isLoading = true);
@@ -196,6 +232,7 @@ void checkGoal() async{
     setState(() => isLoading = true);
     //refreshes all goals when new data added
     this.goals = await UserDatabase.instance.readAllGoals();
+    this.diffGoals = await DiffTimeDatabase.instance.readAllDiffGoals();
     setState(() => isLoading = false);
   }
 
@@ -214,6 +251,19 @@ void checkGoal() async{
     Utils.showSnackBar(context, 'the goal of $goalTime has been competed!');
   }
 
+  Future updateDiffCompletion() async {
+    setState(() {
+      currentDiffGoalId = DiffTimeDatabase.diffGoalId;
+    });
+    print('id of diffTIme $currentDiffGoalId');
+    await refreshDiffGoal();
+
+    final currentDiffGoal = diffGoal!.copy(
+      isDiffComplete: true
+    );
+    await DiffTimeDatabase.instance.updateDiffGoal(currentDiffGoal);
+    Utils.showSnackBar(context, 'The difference goal of $diffGoalTime is completed!');
+  }
 
   Future updateGoal() async {
     _timer.cancel();
@@ -227,9 +277,23 @@ void checkGoal() async{
     );
     await UserDatabase.instance.update(currentGoal);
     startTimer();
-    Utils.showSnackBar(context, 'Goal has been updated!');
+    Utils.showSnackBar(context, 'Goal has been updated! Timer set to 24 hours');
   }
 
+  Future updateDiffGoal() async {
+    _diffTimer.cancel();
+    this.currentDiffGoalId = DiffTimeDatabase.diffGoalId;
+    print ('the diffGoal id = $currentDiffGoalId');
+    await refreshDiffGoal();
+
+    final currentGoal = diffGoal!.copy(
+      isDiffComplete : false,
+      goalDiff: this.diffGoalTime
+    );
+    await DiffTimeDatabase.instance.updateDiffGoal(currentGoal);
+    diffTimer();
+    Utils.showSnackBar(context, 'Goal has been updated! Timer set to 1 hour');
+  }
 
   Future addGoal() async {
     //add all the content from the fields into a single statement
@@ -241,6 +305,25 @@ void checkGoal() async{
     await UserDatabase.instance.create(goalA);
     startTimer();
     numOfCompleted();
+  }
+
+  Future addDiffGoal() async {
+    final goalC = GoalContent(
+        isDiffComplete: false,
+        goalDiff: diffGoalTime,
+        createdTime: DateTime.now()
+    );
+    await DiffTimeDatabase.instance.createDiffGoal(goalC);
+    diffTimer();
+  }
+
+  void addOrUpdateDiffTime() async {
+    if (counter > 0 && diffGoals.isNotEmpty){
+      await updateDiffGoal();
+    }
+    else {
+      await addDiffGoal();
+    }
   }
 
   //add or update
@@ -257,9 +340,11 @@ void checkGoal() async{
   void numOfCompleted() async {
     int? countC = await UserDatabase.instance.countCompletedGoals();
     int? countUC = await UserDatabase.instance.countUnCompletedGoals();
+    int? countDC = await DiffTimeDatabase.instance.countDiffGoalsC();
+    int? countDUC = await DiffTimeDatabase.instance.countDiffGoalsUC();
     setState(() {
-      completedNum = countC;
-      unCompletedNum = countUC;
+      completedNum = (countC! + countDC!);
+      unCompletedNum = (countUC! + countDUC!);
     });
   }
 
@@ -405,6 +490,7 @@ void checkGoal() async{
       ),
     ),
   );
+
 
   List<GoalCompletionData> getChartData() {
     final List<GoalCompletionData> chartData = [
