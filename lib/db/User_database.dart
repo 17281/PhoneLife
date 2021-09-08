@@ -2,10 +2,89 @@ import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:phoneapp/model/Goals.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
+import 'package:phoneapp/model/DiffTime.dart';
 import 'package:sqflite/sqflite.dart';
 
+class DiffTimeDatabase {
+  static final DiffTimeDatabase instance = DiffTimeDatabase._init();
+  static Database? _diffGoalDatabase;
 
-class UserDatabase {
+  DiffTimeDatabase._init();
+
+
+  Future<Database> get database async{
+    //the database will ONLY (if _initDB != exist) be created if the database return is null (which will always be null upon download
+    if (_diffGoalDatabase != null) return _diffGoalDatabase!;
+    _diffGoalDatabase = await _initDB('diffGoal.db');
+    return _diffGoalDatabase!;
+  }
+
+
+  //finds the path for the database on Android and IOS
+  Future<Database> _initDB(String filepath) async {
+    //if database is stored in different location, then use "path_provider"
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, filepath);
+    //TODO: Remove for final development
+    await deleteDatabase(path);
+    //opens database file with its pathway
+    return await openDatabase(path, version: 1, onCreate: _createDB);
+  }
+
+  //create database table
+  Future _createDB(Database db, int version) async {
+    //Type of field in sql
+    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    final boolType = 'BOOLEAN NOT NULL';
+    final textType = 'TEXT NOT NULL';
+    final intType = 'INT NOT NULL';
+
+    //creates the table based on the model table listed before
+    await db.execute(''' CREATE TABLE $diffGoal (
+    ${GoalFields.id} $idType, 
+    ${GoalFields.isDiffComplete} $boolType, 
+    ${GoalFields.goalDiff} $intType,
+    ${GoalFields.time} $textType
+    )''');
+  }
+
+  //Users adding things to 'User' table
+  Future<GoalContent> create(GoalContent content) async {
+    //reference to database
+    final db = await instance.database;
+    //passing sql statements
+    //insert into selected      table           data-selected
+    final goalId = await db.insert(diffGoal, content.toJson());
+    return content.copy(id: goalId);
+  }
+
+  //adding data into sql with statements
+  Future<GoalContent> readGoal(int id) async{
+    final db = await instance.database;
+    final maps = await db.query(
+      diffGoal,
+      columns: GoalFields.values,
+      ///using ? instead of $id as it stops sql injections
+      where: '${GoalFields.id} = ?',
+      ///adding values [id, values] then add = '? ?' etc
+      whereArgs: [id],
+    );
+
+    //if maps exists, run map
+    if (maps.isNotEmpty) {
+      print(maps);
+      //converts note into Json object for the first item
+      return GoalContent.fromJson(maps.first);
+    }//If item can't be found
+    else {
+      throw Exception('ID $id not found');
+    }
+  }
+}
+
+
+
+  class UserDatabase {
   static final UserDatabase instance = UserDatabase._init();
   static Database? _database;
 
@@ -48,8 +127,6 @@ class UserDatabase {
     ${UserFields.time} $textType
     )''');
   }
-
-
 
   //Users adding things to 'User' table
   Future<UserContent> create(UserContent content) async {
@@ -149,7 +226,6 @@ class ScreenTimeDatabase {
   static Database? _STDatabase;
   static late int finalTime;
   ScreenTimeDatabase._int();
-
   Future<Database> get database async{
     //the database will ONLY be created if the database return is null (which will always be null upon download)
     if (_STDatabase != null) return _STDatabase!;
