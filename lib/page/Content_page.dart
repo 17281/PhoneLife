@@ -62,6 +62,7 @@ class _ContentPageState extends State<ContentPage> {
     }
     print ('diffSeconds = $diffSec diffMinutes = $diffMin diffHours = $diffH');
   }
+
   void calculateTotalTime() async {
     var x = finalTime/60;
     if (x <= 1) {
@@ -184,7 +185,8 @@ void checkGoal() async{
       calculateDiffTime();
       await ScreenTimeDatabase.instance.findTotalTime();
       this.finalTime = ScreenTimeDatabase.finalTime;
-      print('final time = $finalTime');
+      calculateTotalTime();
+
     }
   }
 
@@ -237,21 +239,14 @@ void checkGoal() async{
       createdTime: DateTime.now(),
     );
     await UserDatabase.instance.create(goalA);
-    print('new goal have been added goalTime = $goalTime');
     startTimer();
     numOfCompleted();
   }
 
   //add or update
-  void addOrUpdate() async{
-    if (secCounter > 0 ) {
-      if (goals.isNotEmpty){
+  void addOrUpdateTotalTime() async{
+    if (secCounter > 0 && goals.isNotEmpty) {
       await updateGoal();
-      }
-      else {
-        print('goals is empty');
-        await addGoal();
-      }
     }else {
       print('sec is 0');
       await addGoal();
@@ -308,6 +303,10 @@ void checkGoal() async{
                   child: Text('$hours : $min : $sec'),
                 ),
 
+                Container(
+                  child: Text('$diffH : $diffMin : $diffSec'),
+                ),
+
         ]
     ),
       alignment: Alignment.centerRight,
@@ -333,7 +332,7 @@ void checkGoal() async{
                             goalTime = goalIndex;
                             this.createdTime = DateTime.now();
                           });
-                          addOrUpdate();
+                          addOrUpdateTotalTime();
                           refreshGoals();
 
                           });
