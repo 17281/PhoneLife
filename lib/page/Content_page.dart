@@ -108,7 +108,6 @@ class _ContentPageState extends State<ContentPage> {
   late int goalTime;
   late int diffGoalTime;
 
-
   //finds all 'goals' from userTable
   late List<UserContent> goals;
   //finds all diffGoals from diffTimeTable
@@ -124,6 +123,14 @@ class _ContentPageState extends State<ContentPage> {
   //stop time function
   late Timer _timer;
   late Timer _diffTimer;
+
+  Duration timerDuration = Duration(minutes: 0, seconds: 0);
+
+  String formatDuration(Duration timerDuration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(timerDuration.inMinutes.remainder(60));
+    final seconds = twoDigits(timerDuration.inSeconds.remainder(60));
+    return'$minutes:$seconds';}
 
   int secCounter = 30;
   int counter = 30;
@@ -367,6 +374,7 @@ void checkDiffGoal() async{
       crossAxisAlignment: CrossAxisAlignment.stretch,
 
         children: <Widget>[
+
           Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -391,80 +399,112 @@ void checkDiffGoal() async{
                 Container(
                   child: Text('$diffH : $diffMin : $diffSec'),
                 ),
-
-        ]
-    ),
-      alignment: Alignment.centerRight,
-    ),
-
-          Container(
-            height: 200,
-            width: 250,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget> [
-                  ElevatedButton(
-                      onPressed: () async {
-                        Utils.showSheet(context,
-                          child: buildPicker(),
-                          onClicked: () {
-                          final goalValue = goalValues[goalIndex];
-                          Utils.showSnackBar(context, '"$goalValue" has been selected, Survive the day without using your phone over $goalIndex hours');
-                          Navigator.pop(context);
-                          setState(() {
-                            goalTime = goalIndex;
-                            this.createdTime = DateTime.now();
-                          });
-                          addOrUpdateTotalTime();
-                          refreshGoals();
-
-                          });
-
-
-                        },
-
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-                      padding: EdgeInsets.all(0.0),
-                    ),
-                    child:Ink (
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: [Color(0xff64B6FF), Color(0xff374ABE)],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
-                          borderRadius: BorderRadius.circular(30.0)
-                      ),
-                      child: Container(
-                        constraints: BoxConstraints(maxWidth: 300.0, maxHeight: 40),
-                        alignment: Alignment.center,
-                        child: Text('Use your phone under $goalIndex hours', style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                    ),
-                  ),
-                  ),
-                  // SizedBox(height: 20),
-                ]
+              ]
             ),
+            alignment: Alignment.centerRight,
           ),
           Container(
             height: 200,
             child: SfCircularChart(
               series: <CircularSeries>[
                 DoughnutSeries<GoalCompletionData, String>(
-                  dataSource: getChartData(),
-                  xValueMapper: (GoalCompletionData data, _) => data.name,
-                  yValueMapper: (GoalCompletionData data, _) => data.isComplete,
-                  dataLabelSettings: DataLabelSettings (isVisible: true)
+                    dataSource: getChartData(),
+                    xValueMapper: (GoalCompletionData data, _) => data.name,
+                    yValueMapper: (GoalCompletionData data, _) => data.isComplete,
+                    dataLabelSettings: DataLabelSettings (isVisible: true)
                 )
               ],
             ),
-
           ),
-        ]
-    ),
+
+          Container(
+            width: 250,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                children: <Widget> [
+                  Container(
+                    child: Column (
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            Utils.showSheet(context,
+                                child: buildPicker(),
+                                onClicked: () {
+                                  final goalValue = goalValues[goalIndex];
+                                  Utils.showSnackBar(context, '"$goalValue" has been selected, Survive the day without using your phone over $goalIndex hours');
+                                  Navigator.pop(context);
+                                  setState(() {
+                                    goalTime = goalIndex;
+                                    this.createdTime = DateTime.now();
+                                  });
+                                  addOrUpdateTotalTime();
+                                  refreshGoals();
+                                });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                            padding: EdgeInsets.all(0.0),
+                          ),
+                          child:Ink (
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(colors: [Color(0xff64B6FF), Color(0xff374ABE)],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                borderRadius: BorderRadius.circular(30.0)
+                            ),
+                            child: Container(
+                              constraints: BoxConstraints(maxWidth: 350.0, maxHeight: 40),
+                              alignment: Alignment.center,
+                              child: Text('Use your phone under $goalIndex hours',
+                                style: TextStyle(color: Colors.white, fontSize: 20),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        ElevatedButton (
+                            onPressed: () => Utils.showSheet(context,
+                                child: buildTimerPicker(),
+                                onClicked: () {
+                                  final timeValue = formatDuration(timerDuration);
+                                  Utils.showSnackBar(context, '$timeValue has been selected');
+                                  Navigator.pop(context);
+                                }),
+                            style: ElevatedButton.styleFrom(
+                              shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                              padding: EdgeInsets.all(0.0),
+                            ),
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: [Color(0xff64B6FF), Color(0xff374ABE)],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30.0)
+                              ),
+                              child: Container (
+                                constraints: BoxConstraints(maxWidth: 350.0, maxHeight: 40),
+                                alignment: Alignment.center,
+                                child: Text('Use pone less than per use',
+                                  style: TextStyle(color: Colors.white, fontSize: 20)
+                                ),
+                              ),
+                            ),
+                          ),
+
+
+                      ],),
+                  ),
+                ]),
+          ),
+
+        ]),
     );
   }
 
@@ -491,6 +531,17 @@ void checkDiffGoal() async{
     ),
   );
 
+  Widget buildTimerPicker() => SizedBox(
+    height: 180,
+    child: CupertinoTimerPicker(
+      initialTimerDuration: timerDuration,
+      mode: CupertinoTimerPickerMode.ms,
+      secondInterval: 10,
+      minuteInterval: 1,
+      onTimerDurationChanged: (duration) =>
+      setState(() => this.timerDuration = duration),
+    ),
+  );
 
   List<GoalCompletionData> getChartData() {
     final List<GoalCompletionData> chartData = [
