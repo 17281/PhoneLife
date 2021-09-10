@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/Goals.dart';
 import '../Utils.dart';
@@ -119,6 +120,8 @@ static List<String> values = [
   late List<GoalContent> diffGoals;
   //finds all screen time value
   late List<ScreenContents> screenContent;
+  //final all 'time data' from screen time table
+  late final ScreenContents? screenContents;
   bool isLoading = false;
 
   //goalID
@@ -129,6 +132,10 @@ static List<String> values = [
   late Timer _timer;
   late Timer _diffTimer;
 
+  //Screen time variables
+  late DateTime startTime;
+  late String timeStamp;
+  late DateTime stopTime;
 
   String formatDuration(Duration timerDuration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -209,15 +216,37 @@ void checkDiffGoal() async{
 
   }
 
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.inactive) {
+      setState(() {
+        stopTime = DateTime.now();
+      });
+      await submit();
       print('app inactive, is lock screen: ${await isLockScreen()}');
     } else if (state == AppLifecycleState.resumed) {
+      setState(() {
+        startTime = DateTime.now();
+      });
+      refreshScreenTime();
       print('app resumed');
     }
+  }
+
+  Future submit()async {
+    //Duration between initial time to final time
+    Duration difference = stopTime.difference(startTime);
+    final diffTime = difference.inSeconds;
+    print(diffTime);
+    timeStamp = DateFormat.yMd().format(DateTime.now());
+    final finalTime = ScreenContents(
+        stopTime: DateTime.now(),
+        startTime: startTime,
+        diffTime: diffTime,
+        createdTime: timeStamp
+    );
+    await ScreenTimeDatabase.instance.createST(finalTime);
   }
 
   Future refreshDiffGoal() async {
@@ -243,7 +272,11 @@ void checkDiffGoal() async{
 
       calculateDiffTime();
       await ScreenTimeDatabase.instance.findTotalTime();
+
       this.finalTime = ScreenTimeDatabase.finalTime;
+      final a = finalTime/screenContent.length;
+      print (a);
+
       calculateTotalTime();
 
     }

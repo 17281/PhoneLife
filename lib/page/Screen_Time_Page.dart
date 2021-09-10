@@ -68,7 +68,7 @@ class _TimeDetailPageState extends State <ScreenTimePage> {
     print(diffTime);
     createdTime = DateFormat.yMd().format(DateTime.now());
     final finalTime = ScreenContents(
-      stopTime: stopTime,
+      stopTime: DateTime.now(),
       startTime: startTime,
       diffTime: diffTime,
       createdTime: createdTime

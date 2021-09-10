@@ -333,19 +333,20 @@ class ScreenTimeDatabase {
     final orderBy2 = '${STFields.ST_id} DESC';
     String dateToday = DateFormat.yMd().format(DateTime.now()).toString();
 
-    final startTimeResults = await db.rawQuery('SELECT startTime FROM $screenTimeTable WHERE createdTime = "$dateToday" ORDER BY $orderBy1 LIMIT 1');
-    final stopTimeResults = await db.rawQuery('SELECT stopTime FROM $screenTimeTable WHERE createdTime = "$dateToday" ORDER BY $orderBy2 LIMIT 1');
+    final totalTimerResults = await db.rawQuery('SELECT SUM(diffTime) FROM $screenTimeTable WHERE createdTime = "$dateToday" ORDER BY $orderBy1 ');
+    // final stopTimeResults = await db.rawQuery('SELECT stopTime FROM $screenTimeTable WHERE createdTime = "$dateToday" ORDER BY $orderBy2 ');
 
-    print(startTimeResults);
     //converting string to datetime variables
-    final startTimeResult = DateTime.parse(startTimeResults[0]['startTime'].toString());
-    final stopTimeResult = DateTime.parse(stopTimeResults[0]['stopTime'].toString());
-
-    print ('$stopTimeResult and $startTimeResult');
+    final timeResult = int.parse(totalTimerResults[0]['SUM(diffTime)'].toString());
+    print(timeResult);
+    // final stopTimeResult = DateTime.parse(stopTimeResults[0]['stopTime'].toString());
+    //
+    // print ('$stopTimeResult and $startTimeResult');
     //calculates the difference between start and stop
-    Duration totalTime = stopTimeResult.difference(startTimeResult);
-    finalTime = totalTime.inSeconds.round();
-    return totalTime;
+    // Duration totalTime = stopTimeResult.difference(startTimeResult);
+    // finalTime = totalTime.inSeconds.round();
+    finalTime = timeResult;
+    return totalTimerResults;
   }
 
   //adding data into sql with statements
