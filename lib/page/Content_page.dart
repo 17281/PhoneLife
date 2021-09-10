@@ -20,8 +20,11 @@ class _ContentPageState extends State<ContentPage> {
 
   // final int currentGoalID;
   int goalIndex = 2;
+  int index = 0;
   int? completedNum = 0;
   int? unCompletedNum = 0;
+  int? percentageC = 0;
+  int? percentageUC= 0;
 
   //Calculate the total time per day
   num hours = 0;
@@ -99,7 +102,8 @@ class _ContentPageState extends State<ContentPage> {
     'Baby Mode',
   ];
 
-
+static List<String> values = [
+  '1','2','3','4','5','6','7','8','9','10','11','12','13','14','15'];
 
   late GoalContent? diffGoal;
   late UserContent? goal;
@@ -124,26 +128,23 @@ class _ContentPageState extends State<ContentPage> {
   late Timer _timer;
   late Timer _diffTimer;
 
-  Duration timerDuration = Duration(minutes: 0, seconds: 0);
 
   String formatDuration(Duration timerDuration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(timerDuration.inMinutes.remainder(60));
-    final seconds = twoDigits(timerDuration.inSeconds.remainder(60));
-    return'$minutes:$seconds';}
+    final minutes = (timerDuration.inMinutes.remainder(60));
+    final seconds = (timerDuration.inSeconds.remainder(60));
+    return'$minutes minutes and $seconds seconds';}
 
   int secCounter = 30;
   int counter = 30;
 
   void diffTimer() {
-    counter = 30;
+    counter = 10;
     _diffTimer = Timer.periodic(Duration(seconds: 1),(timer) {
       if (counter > 0) {
         setState(() {
           counter --;
         });
-        print(counter);
-        refreshGoals();
       }else {
         timer.cancel();
         checkDiffGoal();
@@ -152,14 +153,12 @@ class _ContentPageState extends State<ContentPage> {
   }
 
   void startTimer() {
-    secCounter = 30;
+    secCounter = 10;
     _timer = Timer.periodic(Duration(seconds: 1),(timer) {
       if (secCounter > 0) {
         setState(() {
           secCounter --;
         });
-        print(secCounter);
-        refreshGoals();
       }else {
         timer.cancel();
         checkGoal();
@@ -171,8 +170,11 @@ void checkGoal() async{
     if (hours < goalTime) {
       await updateCompletion();
     }
+    if (goalTime == 0 && min < 60){
+      await updateCompletion();
+    }
     else {
-      Utils.showSnackBar(context, 'Goal has failed');
+      Utils.showSnackBar(context, 'Goal has not been completed');
     }
 }
 
@@ -181,7 +183,7 @@ void checkDiffGoal() async{
       await updateDiffCompletion();
     }
     else {
-      Utils.showSnackBar(context, 'Goal has failed');
+      Utils.showSnackBar(context, 'Goal has not been completed');
     }
 }
 
@@ -349,9 +351,16 @@ void checkDiffGoal() async{
     int? countUC = await UserDatabase.instance.countUnCompletedGoals();
     int? countDC = await DiffTimeDatabase.instance.countDiffGoalsC();
     int? countDUC = await DiffTimeDatabase.instance.countDiffGoalsUC();
+
+
+    final totalNum = (countC! + countDC! + countUC! + countDUC!);
+    final percentageCNum = (((countC + countDC) / totalNum)*100).round();
+    final percentageUCNum = (((countUC + countDUC )/totalNum)*100).round();
     setState(() {
-      completedNum = (countC! + countDC!);
-      unCompletedNum = (countUC! + countDUC!);
+      completedNum = (countC + countDC);
+      unCompletedNum = (countUC + countDUC);
+      percentageUC = percentageUCNum;
+      percentageC = percentageCNum;
     });
   }
 
@@ -393,25 +402,34 @@ void checkDiffGoal() async{
               ),
 
                 Container(
-                  child: Text('$hours : $min : $sec'),
+                  child: Text('$hours : $min : $sec',
+                  style: TextStyle(color:Colors.white, fontSize: 30),
+                  ),
                 ),
 
                 Container(
-                  child: Text('$diffH : $diffMin : $diffSec'),
+                  child: Text('$diffH : $diffMin : $diffSec',
+                    style: TextStyle(color: Colors.white, fontSize: 30,),
+                  ),
                 ),
               ]
             ),
             alignment: Alignment.centerRight,
           ),
           Container(
-            height: 200,
+            height: 300,
             child: SfCircularChart(
-              series: <CircularSeries>[
-                DoughnutSeries<GoalCompletionData, String>(
+              title: ChartTitle(text:'Goal Chart'),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <CircularSeries>[DoughnutSeries<GoalCompletionData, String>(
                     dataSource: getChartData(),
+                    explode: true,
+                    explodeOffset: '8%',
                     xValueMapper: (GoalCompletionData data, _) => data.name,
                     yValueMapper: (GoalCompletionData data, _) => data.isComplete,
-                    dataLabelSettings: DataLabelSettings (isVisible: true)
+                    dataLabelMapper: (GoalCompletionData data, _) => data.numPercent,
+                    pointColorMapper: (GoalCompletionData data, _) => data.pointColor,
+                    dataLabelSettings: DataLabelSettings (isVisible: true),
                 )
               ],
             ),
@@ -426,9 +444,11 @@ void checkDiffGoal() async{
 
                 children: <Widget> [
                   Container(
+
                     child: Column (
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       mainAxisSize: MainAxisSize.max,
+
                       children: [
                         ElevatedButton(
                           onPressed: () async {
@@ -444,6 +464,7 @@ void checkDiffGoal() async{
                                   });
                                   addOrUpdateTotalTime();
                                   refreshGoals();
+                                  numOfCompleted();
                                 });
                           },
                           style: ElevatedButton.styleFrom(
@@ -472,8 +493,16 @@ void checkDiffGoal() async{
                             onPressed: () => Utils.showSheet(context,
                                 child: buildTimerPicker(),
                                 onClicked: () {
-                                  final timeValue = formatDuration(timerDuration);
-                                  Utils.showSnackBar(context, '$timeValue has been selected');
+                                  final timeValues = values[index];
+                                  final timeValue = int.parse(timeValues);
+                                  setState(() {
+                                    diffGoalTime = timeValue;
+                                    this.createdTime = DateTime.now();
+                                  });
+                                  addOrUpdateDiffTime();
+                                  refreshGoals();
+
+                                  Utils.showSnackBar(context, '$timeValues minutes has been selected');
                                   Navigator.pop(context);
                                 }),
                             style: ElevatedButton.styleFrom(
@@ -491,7 +520,7 @@ void checkDiffGoal() async{
                               child: Container (
                                 constraints: BoxConstraints(maxWidth: 350.0, maxHeight: 40),
                                 alignment: Alignment.center,
-                                child: Text('Use pone less than per use',
+                                child: Text('Use phone less $index than per use',
                                   style: TextStyle(color: Colors.white, fontSize: 20)
                                 ),
                               ),
@@ -517,6 +546,7 @@ void checkDiffGoal() async{
       selectionOverlay: CupertinoPickerDefaultSelectionOverlay (
         background: Colors.pink.withOpacity(0.1),
       ),
+
       children: Utils.modelBuilder<String> (
         goalValues, (goalIndex, goalValues) {
           final selValue = this.goalIndex == goalIndex;
@@ -533,31 +563,43 @@ void checkDiffGoal() async{
 
   Widget buildTimerPicker() => SizedBox(
     height: 180,
-    child: CupertinoTimerPicker(
-      initialTimerDuration: timerDuration,
-      mode: CupertinoTimerPickerMode.ms,
-      secondInterval: 10,
-      minuteInterval: 1,
-      onTimerDurationChanged: (duration) =>
-      setState(() => this.timerDuration = duration),
+    child: CupertinoPicker(
+      itemExtent: 64,
+      diameterRatio: 0.7,
+      looping: true,
+      onSelectedItemChanged: (index) => setState(() => this.index = index),
+      selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+          background: Colors.pink.withOpacity(0.12),
+        ),
+      children: Utils.modelBuilder<String>(
+          values, (index, values) {
+        final isSelected = this.index == index;
+        final color = isSelected ? Colors.pink : Colors.black;
+        return Center (
+          child: Text(
+            values,
+            style: TextStyle(color: color, fontSize: 24),
+          ),
+        );})
     ),
   );
 
   List<GoalCompletionData> getChartData() {
-    final List<GoalCompletionData> chartData = [
-      GoalCompletionData(completedNum, 'Completed'),
-      GoalCompletionData(unCompletedNum, 'Not Completed')
+    final finalPercentC = ('$percentageC%').toString();
+    final finalPercentUC = ('$percentageUC%').toString();
+    final List<GoalCompletionData> chartData = <GoalCompletionData>[
+      GoalCompletionData(completedNum, 'Completed', finalPercentC, Colors.indigoAccent),
+      GoalCompletionData(unCompletedNum, 'Not Completed', finalPercentUC, Colors.redAccent)
     ];
     return chartData;
   }
 }
 
-
 class GoalCompletionData {
-  GoalCompletionData (this.isComplete, this.name);
+  GoalCompletionData (this.isComplete, this.name, this.numPercent, this.pointColor);
   //the data of if a goal is completed or not
   final int? isComplete;
   final String name;
+  final String numPercent;
+  final Color pointColor;
 }
-
-
