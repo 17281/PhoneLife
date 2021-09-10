@@ -8,6 +8,8 @@ import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:phoneapp/model/DiffTime.dart';
+import 'package:is_lock_screen/is_lock_screen.dart';
+
 
 class ContentPage extends StatefulWidget {
   @override
@@ -15,8 +17,7 @@ class ContentPage extends StatefulWidget {
 }
 
 //the state of content page remains as a stateful widget
-class _ContentPageState extends State<ContentPage> {
-
+class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
 
   // final int currentGoalID;
   int goalIndex = 2;
@@ -167,13 +168,12 @@ static List<String> values = [
   }
 
 void checkGoal() async{
-    if (hours < goalTime) {
-      await updateCompletion();
-    }
     if (goalTime == 0 && min < 60){
       await updateCompletion();
     }
-    else {
+    else if (hours < goalTime) {
+      await updateCompletion();
+    } else {
       Utils.showSnackBar(context, 'Goal has not been completed');
     }
 }
@@ -194,6 +194,7 @@ void checkDiffGoal() async{
     //refresh future content per update (Useful fo updating goals)
     refreshGoals();
     refreshScreenTime();
+    WidgetsBinding.instance?.addObserver(this);
   }
 
   //closing database when app is down
@@ -203,7 +204,20 @@ void checkDiffGoal() async{
     UserDatabase.instance.closeDB();
     DiffTimeDatabase.instance.closeDB();
     ScreenTimeDatabase.instance.closeSTDB();
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
+
+  }
+
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.inactive) {
+      print('app inactive, is lock screen: ${await isLockScreen()}');
+    } else if (state == AppLifecycleState.resumed) {
+      print('app resumed');
+    }
   }
 
   Future refreshDiffGoal() async {
@@ -252,7 +266,6 @@ void checkDiffGoal() async{
     });
     print('the updateCompletion id = $currentGoalId');
     await refreshGoal();
-
     final currentGoal = goal!.copy(
     isCompleted: true
   );
