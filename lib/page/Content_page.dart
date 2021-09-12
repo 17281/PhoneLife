@@ -41,6 +41,7 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   num diffMin = 0;
   num diffSec = 0;
   int averageSec = 0;
+  int totalSec = 0;
 
 
   void calculateDiffTime() async {
@@ -277,14 +278,18 @@ void checkDiffGoal() async{
       setState(() => isLoading = false);
       final totalAvg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
       await ScreenTimeDatabase.instance.totalDiffTime();
-      final avg = screenContent.map((m) => (m.diffTime)).reduce((a,b) => a + b) /(ScreenTimeDatabase.countToday);
-      setState(() => averageSec = avg.round());
-
-      calculateDiffTime();
       await ScreenTimeDatabase.instance.findTotalTime();
       this.finalTime = ScreenTimeDatabase.finalTime;
-      calculateTotalTime();
 
+      final avg = this.finalTime/(ScreenTimeDatabase.countToday);
+      setState(() {
+        averageSec = avg.round();
+        totalSec = totalAvg.round();
+      });
+
+
+      calculateTotalTime();
+      calculateDiffTime();
     }
   }
 
