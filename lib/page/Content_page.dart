@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:phoneapp/model/DiffTime.dart';
 import 'package:is_lock_screen/is_lock_screen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 
 
 class ContentPage extends StatefulWidget {
@@ -107,8 +109,7 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
     'Easy Life',
     'Baby Mode',
   ];
-
-static List<String> values = [
+  static List<String> values = [
   '1','2','3','4','5','6','7','8','9','10','11','12','13','14','15'];
 
   late GoalContent? diffGoal;
@@ -206,6 +207,11 @@ void checkDiffGoal() async{
     refreshGoals();
     refreshScreenTime();
     WidgetsBinding.instance?.addObserver(this);
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = IOSInitializationSettings(onDidReceiveLocalNotification: );
+    var initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: );
   }
 
   //closing database when app is down
@@ -546,6 +552,7 @@ void checkDiffGoal() async{
                             ),
                           ),
                         ),
+                        const SizedBox(height: 24,),
 
                         ElevatedButton (
                             onPressed: () => Utils.showSheet(context,
@@ -559,7 +566,6 @@ void checkDiffGoal() async{
                                   });
                                   addOrUpdateDiffTime();
                                   refreshGoals();
-
                                   Utils.showSnackBar(context, '$timeValues minutes has been selected');
                                   Navigator.pop(context);
                                 }),
@@ -578,22 +584,31 @@ void checkDiffGoal() async{
                               child: Container (
                                 constraints: BoxConstraints(maxWidth: 350.0, maxHeight: 40),
                                 alignment: Alignment.center,
-                                child: Text('Use phone less $index than per use',
+                                child: Text('Get less than an average of $index per hour',
                                   style: TextStyle(color: Colors.white, fontSize: 20)
                                 ),
                               ),
                             ),
                           ),
-
-
                       ],),
                   ),
                 ]),
           ),
+         TextButton(onPressed: () => NotificationAPI.displayNotification(
+               title:'hehe',
+               body:'HEHEEHEHEHEHEHHEHE',
+               payload: 'HEHEman',),
+             child:Text('Notification', style: TextStyle(fontSize: 24), ),
+             style: TextButton.styleFrom(
+               backgroundColor: Colors.white,
+             ),
+         ),
 
         ]),
     );
   }
+
+
 
   Widget buildPicker() => SizedBox(
     height: 200,
@@ -660,4 +675,27 @@ class GoalCompletionData {
   final String name;
   final String numPercent;
   final Color pointColor;
+}
+
+class NotificationAPI {
+  static final _notifications = FlutterLocalNotificationsPlugin();
+
+  static Future _notificationDetails() async {
+    return NotificationDetails(
+      android: AndroidNotificationDetails(
+        'channel id',
+        'channel name',
+        'channel description',
+        importance: Importance.max
+      ),
+      iOS: IOSNotificationDetails(),
+    );
+}
+  static Future displayNotification ({
+  int id = 0,
+  String? title,
+  String? body,
+  String? payload,
+}) async => _notifications.show(id, title, body, await _notificationDetails(), payload: payload);
+
 }

@@ -31,6 +31,8 @@ dependencies:
   path_provider:
   syncfusion_flutter_charts: ^19.2.57
   is_lock_screen: ^2.0.0
+  flutter_local_notifications: ^8.2.0
+  rxdart: ^0.27.2
 
 
   #display todos in grid
