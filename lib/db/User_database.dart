@@ -16,8 +16,10 @@ class DiffTimeDatabase {
     //the database will ONLY (if _initDB != exist) be created if the database return is null (which will always be null upon download
     if (_diffGoalDatabase != null) return _diffGoalDatabase!;
     _diffGoalDatabase = await _initDB('diffGoal.db');
+
     return _diffGoalDatabase!;
   }
+
 
 
   //finds the path for the database on Android and IOS
@@ -25,9 +27,8 @@ class DiffTimeDatabase {
     //if database is stored in different location, then use "path_provider"
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
-    //TODO: Remove for final development
-    await deleteDatabase(path);
     //opens database file with its pathway
+    await deleteDatabase(path);
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
@@ -160,9 +161,8 @@ class DiffTimeDatabase {
     //if database is stored in different location, then use "path_provider"
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
-    //TODO: Remove for final development
-    await deleteDatabase(path);
     //opens database file with its pathway
+    await deleteDatabase(path);
     return await openDatabase(path, version: 3, onCreate: _createDB);
   }
 
@@ -280,6 +280,7 @@ class ScreenTimeDatabase {
   static final ScreenTimeDatabase instance = ScreenTimeDatabase._int();
   static Database? _STDatabase;
   static late int finalTime;
+  static late int countToday;
   ScreenTimeDatabase._int();
   Future<Database> get database async{
     //the database will ONLY be created if the database return is null (which will always be null upon download)
@@ -294,9 +295,8 @@ class ScreenTimeDatabase {
   Future<Database> _initScreenTimeDB(String filepath ) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
-   ///TODO: REMOVE THE CODE BELOW FOR FINAL PRODUCTION
-    await deleteDatabase(path);
   //version of database
+    await deleteDatabase(path);
   return await openDatabase(path, version: 3, onCreate: _createScreenTimeDB);
   }
 
@@ -330,23 +330,21 @@ class ScreenTimeDatabase {
   Future findTotalTime() async {
     final db = await instance.database;
     final orderBy1 = '${STFields.ST_id} ASC';
-    final orderBy2 = '${STFields.ST_id} DESC';
     String dateToday = DateFormat.yMd().format(DateTime.now()).toString();
-
     final totalTimerResults = await db.rawQuery('SELECT SUM(diffTime) FROM $screenTimeTable WHERE createdTime = "$dateToday" ORDER BY $orderBy1 ');
-    // final stopTimeResults = await db.rawQuery('SELECT stopTime FROM $screenTimeTable WHERE createdTime = "$dateToday" ORDER BY $orderBy2 ');
-
     //converting string to datetime variables
     final timeResult = int.parse(totalTimerResults[0]['SUM(diffTime)'].toString());
-    print(timeResult);
-    // final stopTimeResult = DateTime.parse(stopTimeResults[0]['stopTime'].toString());
-    //
-    // print ('$stopTimeResult and $startTimeResult');
-    //calculates the difference between start and stop
-    // Duration totalTime = stopTimeResult.difference(startTimeResult);
-    // finalTime = totalTime.inSeconds.round();
+
     finalTime = timeResult;
-    return totalTimerResults;
+  }
+
+  Future totalDiffTime() async {
+    final db = await instance.database;
+    String dateToday = DateFormat.yMd().format(DateTime.now()).toString();
+    final totalDiffTime = await db.rawQuery('SELECT COUNT(diffTime) FROM $screenTimeTable WHERE createdTime ="$dateToday"');
+    print('totalDiffTIme = $totalDiffTime');
+    final result = int.parse(totalDiffTime[0]['COUNT(diffTime)'].toString());
+    countToday = result;
   }
 
   //adding data into sql with statements

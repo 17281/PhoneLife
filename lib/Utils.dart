@@ -29,6 +29,7 @@ class Utils {
   static void showSnackBar(BuildContext context, String text) {
     final snackBar = SnackBar(
       content: Text(text, style: TextStyle(fontSize: 30)),
+      backgroundColor: Colors.green,
     );
 
     //Sends a text box styled notification on the bottom to tell user what is added

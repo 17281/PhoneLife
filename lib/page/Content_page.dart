@@ -20,6 +20,9 @@ class ContentPage extends StatefulWidget {
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
 
+  //counting the amount of time phone is opened
+  int screenCounter = 0;
+
   // final int currentGoalID;
   int goalIndex = 2;
   int index = 0;
@@ -143,8 +146,8 @@ static List<String> values = [
     final seconds = (timerDuration.inSeconds.remainder(60));
     return'$minutes minutes and $seconds seconds';}
 
-  int secCounter = 30;
-  int counter = 30;
+  int secCounter = 10;
+  int counter = 10;
 
   void diffTimer() {
     counter = 10;
@@ -220,11 +223,16 @@ void checkDiffGoal() async{
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.inactive) {
-      setState(() {
-        stopTime = DateTime.now();
-      });
-      await submit();
       print('app inactive, is lock screen: ${await isLockScreen()}');
+      bool? isScreenLocked = await isLockScreen();
+      if (isScreenLocked == true){
+        setState(() {
+          stopTime = DateTime.now();
+          screenCounter ++;
+        });
+        await submit();
+        print('screenCounter = $screenCounter');
+      }
     } else if (state == AppLifecycleState.resumed) {
       setState(() {
         startTime = DateTime.now();
@@ -267,16 +275,14 @@ void checkDiffGoal() async{
       this.screenContent = await ScreenTimeDatabase.instance.readAllTime();
       //after database loads, change the loading symbol to off
       setState(() => isLoading = false);
-      final avg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
+      final totalAvg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
+      await ScreenTimeDatabase.instance.totalDiffTime();
+      final avg = screenContent.map((m) => (m.diffTime)).reduce((a,b) => a + b) /(ScreenTimeDatabase.countToday);
       setState(() => averageSec = avg.round());
 
       calculateDiffTime();
       await ScreenTimeDatabase.instance.findTotalTime();
-
       this.finalTime = ScreenTimeDatabase.finalTime;
-      final a = finalTime/screenContent.length;
-      print (a);
-
       calculateTotalTime();
 
     }
@@ -321,6 +327,7 @@ void checkDiffGoal() async{
   }
 
   Future updateGoal() async {
+    print(_timer);
     _timer.cancel();
     this.currentGoalId = UserDatabase.goalID;
     print('the updateGoal id = $currentGoalId');
