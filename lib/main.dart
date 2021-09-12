@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:phoneapp/page/content_page.dart';
 
-///UI of my database
 Future main() async {
   //initiates widget
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,5 +35,6 @@ class MyApp extends StatelessWidget {
     ),
     //place in data from content page
     home: ContentPage(),
+
   );
 }

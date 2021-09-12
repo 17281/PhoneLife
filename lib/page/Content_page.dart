@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/model/Goals.dart';
+import 'package:rxdart/rxdart.dart';
 import '../Utils.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
 import 'package:phoneapp/page/Screen_Time_Page.dart';
@@ -13,6 +14,17 @@ import 'package:is_lock_screen/is_lock_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
+class NotificationService {
+  static final NotificationService _notificationService =
+  NotificationService._internal();
+
+  factory NotificationService() {
+    return _notificationService;
+  }
+
+  NotificationService._internal();
+
+}
 
 class ContentPage extends StatefulWidget {
   @override
@@ -207,12 +219,11 @@ void checkDiffGoal() async{
     refreshGoals();
     refreshScreenTime();
     WidgetsBinding.instance?.addObserver(this);
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettingsIOS = IOSInitializationSettings(onDidReceiveLocalNotification: );
-    var initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: );
+    NotificationAPI.init();
+    listenNotify();
   }
+
+  void listenNotify() => NotificationAPI.onNotification;
 
   //closing database when app is down
   @override
@@ -679,6 +690,8 @@ class GoalCompletionData {
 
 class NotificationAPI {
   static final _notifications = FlutterLocalNotificationsPlugin();
+  static final onNotification = BehaviorSubject<String?>();
+
 
   static Future _notificationDetails() async {
     return NotificationDetails(
@@ -691,7 +704,17 @@ class NotificationAPI {
       iOS: IOSNotificationDetails(),
     );
 }
-  static Future displayNotification ({
+
+static Future init({bool initScheduled = false}) async {
+    final iOS  = IOSInitializationSettings();
+    final android = AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final settings = InitializationSettings(android: android, iOS: iOS);
+    await _notifications.initialize(settings, onSelectNotification: (payload) async {
+      onNotification.add(payload);
+    });
+}
+static Future displayNotification ({
   int id = 0,
   String? title,
   String? body,
