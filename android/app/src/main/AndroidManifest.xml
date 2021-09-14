@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.phoneapp">
    <application
-        android:name=".MyApplication"
+        android:name=".App"
         android:label="phoneapp"
         android:icon="@mipmap/ic_launcher"
        >
-       <service android:name=".MyService" android:exported="true" android:enabled="true"/>
+       <service android:name=".AppService" android:exported="true" android:enabled="true"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

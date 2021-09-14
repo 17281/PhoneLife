@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -14,7 +16,16 @@ Future main() async {
   runApp(MyApp());
 }
 
+Future startService()
+async {
+  if(Platform.isAndroid)
+  {
+    var methodChannel=MethodChannel("com.example.messages");
+    String data=await methodChannel.invokeMethod("startService");
+    debugPrint(data);
 
+  }
+}
 
 class MyApp extends StatelessWidget {
   static final String title = 'User';
