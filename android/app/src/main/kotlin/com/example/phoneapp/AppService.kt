@@ -29,7 +29,22 @@ class AppService: Service() {
         }
     }
 
-    override fun onBind(p0: Intent?): IBinder? {
-        TODO("Not yet implemented")
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startService()
+        return START_NOT_STICKY
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+
+    private fun startService()
+    {
+        Thread {
+            for (num in 0..50) {
+                Log.v("OnCalling", ""+num)
+                Thread.sleep(1000)
+            }
+        }.start()
     }
 }
