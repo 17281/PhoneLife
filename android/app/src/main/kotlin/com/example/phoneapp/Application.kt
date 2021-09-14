@@ -10,7 +10,8 @@ class App: Application() {
         super.onCreate()
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
         {
-            val notificationChannel=NotificationChannel("message","message",NotificationManager.IMPORTANCE_LOW)
+            val notificationChannel=NotificationChannel("message","message",
+                NotificationManager.IMPORTANCE_LOW)
             val notificationManager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(notificationChannel)
         }
