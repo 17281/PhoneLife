@@ -5,6 +5,7 @@
         android:label="phoneapp"
         android:icon="@mipmap/ic_launcher"
        >
+       <service android:name=".MyService" android:exported="true" android:enabled="true"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
