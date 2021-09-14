@@ -10,7 +10,7 @@ import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:phoneapp/model/DiffTime.dart';
-import 'package:is_lock_screen/is_lock_screen.dart';
+// import 'package:is_lock_screen/is_lock_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
@@ -232,7 +232,6 @@ void checkDiffGoal() async{
     UserDatabase.instance.closeDB();
     DiffTimeDatabase.instance.closeDB();
     ScreenTimeDatabase.instance.closeSTDB();
-    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
 
   }
@@ -241,16 +240,17 @@ void checkDiffGoal() async{
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.inactive) {
-      print('app inactive, is lock screen: ${await isLockScreen()}');
-      bool? isScreenLocked = await isLockScreen();
-      if (isScreenLocked == true){
+      // print('app inactive, is lock screen: ${await isLockScreen()}');
+      // bool? isScreenLocked = await isLockScreen();
+      // if (isScreenLocked == true)
+
         setState(() {
           stopTime = DateTime.now();
           screenCounter ++;
         });
         await submit();
         print('screenCounter = $screenCounter');
-      }
+
     } else if (state == AppLifecycleState.resumed) {
       setState(() {
         startTime = DateTime.now();
