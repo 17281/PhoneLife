@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +13,7 @@ import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:phoneapp/model/DiffTime.dart';
 // import 'package:is_lock_screen/is_lock_screen.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
@@ -33,9 +36,9 @@ class ContentPage extends StatefulWidget {
 
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
-
   //counting the amount of time phone is opened
   int screenCounter = 0;
+  int isStartService = 0;
 
   // final int currentGoalID;
   int goalIndex = 2;
@@ -207,7 +210,7 @@ void checkDiffGoal() async{
       await updateDiffCompletion();
     }
     else {
-      Utils.showSnackBar(context, 'Goal has not been completed');
+      Utils.showSnackBar(context, 'Goal has not been completed',);
     }
 }
 
@@ -222,8 +225,16 @@ void checkDiffGoal() async{
     NotificationAPI.init();
     listenNotify();
   }
-
   void listenNotify() => NotificationAPI.onNotification;
+
+  Future<void> startService() async{
+    if(Platform.isAndroid) {
+      final methodChannel=MethodChannel("com.example.phoneapp");
+      String data = await methodChannel.invokeMethod("startService");
+      debugPrint(data);
+    }
+  }
+
 
   //closing database when app is down
   @override
