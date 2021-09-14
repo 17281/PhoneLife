@@ -16,14 +16,14 @@ class AppService: Service() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationBuilder = NotificationCompat.Builder(this, "message")
-                .setContentText("Notification from background Service - Flutter")
+                .setContentText("app is running in background")
                 .setContentTitle("Background Service")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_andriod_black_24dp)
                 .build()
 
             Log.v("OnService", "OnService")
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.notify((System.currentTimeMillis() % 10000).toInt(), notificationBuilder)
+//            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//            manager.notify((System.currentTimeMillis() % 10000).toInt(), notificationBuilder)
             startForeground((System.currentTimeMillis() % 10000).toInt(), notificationBuilder)
             Log.v("OnService", "OnService")
         }
