@@ -331,7 +331,7 @@ class ScreenTimeDatabase {
     final db = await instance.database;
     final orderBy1 = '${STFields.ST_id} ASC';
     String dateToday = DateFormat.yMd().format(DateTime.now()).toString();
-    final totalTimerResults = await db.rawQuery('SELECT SUM(diffTime) FROM $screenTimeTable WHERE createdTime = "$dateToday" ORDER BY $orderBy1 ');
+    final totalTimerResults = await db.rawQuery('SELECT SUM(diffTime) FROM $screenTimeTable WHERE createdTime = ? ORDER BY $orderBy1 ', ["$dateToday"]);
     //converting string to datetime variables
     final timeResult = int.parse(totalTimerResults[0]['SUM(diffTime)'].toString());
 
@@ -341,7 +341,7 @@ class ScreenTimeDatabase {
   Future totalDiffTime() async {
     final db = await instance.database;
     String dateToday = DateFormat.yMd().format(DateTime.now()).toString();
-    final totalDiffTime = await db.rawQuery('SELECT COUNT(diffTime) FROM $screenTimeTable WHERE createdTime ="$dateToday"');
+    final totalDiffTime = await db.rawQuery('SELECT COUNT(diffTime) FROM $screenTimeTable WHERE createdTime = ?', ["$dateToday"]);
     print('totalDiffTIme = $totalDiffTime');
     final result = int.parse(totalDiffTime[0]['COUNT(diffTime)'].toString());
     countToday = result;

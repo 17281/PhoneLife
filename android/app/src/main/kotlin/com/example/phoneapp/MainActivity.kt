@@ -21,6 +21,7 @@ class MainActivity: FlutterActivity() {
 
     }
     private lateinit var intent:Any
+
     private fun startService()
     {
         intent=Intent(this,AppService::class.java)
@@ -31,6 +32,7 @@ class MainActivity: FlutterActivity() {
             startService(intent as Intent)
         }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

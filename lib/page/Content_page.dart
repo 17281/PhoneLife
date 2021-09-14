@@ -38,7 +38,7 @@ class ContentPage extends StatefulWidget {
 class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   //counting the amount of time phone is opened
   int screenCounter = 0;
-  int isStartService = 0;
+  bool isStartService = true;
 
   // final int currentGoalID;
   int goalIndex = 2;
@@ -224,14 +224,23 @@ void checkDiffGoal() async{
     WidgetsBinding.instance?.addObserver(this);
     NotificationAPI.init();
     listenNotify();
+    startService();
   }
   void listenNotify() => NotificationAPI.onNotification;
 
   Future<void> startService() async{
     if(Platform.isAndroid) {
-      final methodChannel=MethodChannel("com.example.phoneapp");
+      final methodChannel = MethodChannel("com.example.phoneapp");
       String data = await methodChannel.invokeMethod("startService");
-      debugPrint(data);
+      debugPrint('startService: $data');
+    }
+  }
+
+  Future <void> stopService() async {
+    if(Platform.isAndroid) {
+      var methodChannel = MethodChannel("com.example.phoneapp");
+      String data = await methodChannel.invokeMethod("stopService");
+      debugPrint('stopService: $data');
     }
   }
 
