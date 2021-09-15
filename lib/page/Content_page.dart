@@ -213,20 +213,6 @@ void checkDiffGoal() async{
       Utils.showSnackBar(context, 'Goal has not been completed',);
     }
 }
-
-  //refresh database when ever updated
-  @override
-  void initState() {
-    super.initState();
-    //refresh future content per update (Useful fo updating goals)
-    refreshGoals();
-    refreshScreenTime();
-    WidgetsBinding.instance?.addObserver(this);
-    NotificationAPI.init();
-    listenNotify();
-  }
-  void listenNotify() => NotificationAPI.onNotification;
-
   Future<void> startService() async{
     if(Platform.isAndroid) {
       final methodChannel = MethodChannel("com.example.phoneapp");
@@ -243,6 +229,18 @@ void checkDiffGoal() async{
     }
   }
 
+  //refresh database when ever updated
+  @override
+  void initState() {
+    super.initState();
+    //refresh future content per update (Useful fo updating goals)
+    refreshGoals();
+    refreshScreenTime();
+    WidgetsBinding.instance?.addObserver(this);
+    NotificationAPI.init();
+    listenNotify();
+  }
+  void listenNotify() => NotificationAPI.onNotification;
 
   //closing database when app is down
   @override
@@ -259,9 +257,11 @@ void checkDiffGoal() async{
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.inactive) {
-      print('app inactive, is lock screen: ${await isLockScreen()}');
       bool? isScreenLocked = await isLockScreen();
-
+      if(isStartService == false) {
+        startService();
+        setState(()=> isStartService = true);
+      }
       if (isScreenLocked == true) {
         setState(() {
           stopTime = DateTime.now();
@@ -274,10 +274,7 @@ void checkDiffGoal() async{
           body:'TIME HAS STOPPED',
           payload: 'HaHaMan',);
 
-        if(isStartService == false) {
-          startService();
-          setState(()=> isStartService = true);
-        }
+
       }
     } else
       if (state == AppLifecycleState.resumed ) {
