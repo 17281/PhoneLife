@@ -1,7 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.phoneapp">
-   <application
-        android:name=".App"
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <application
+        android:name=".MyApplication"
         android:label="phoneapp"
         android:icon="@mipmap/ic_launcher"
        >

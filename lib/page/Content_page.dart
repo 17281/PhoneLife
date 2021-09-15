@@ -635,6 +635,16 @@ void checkDiffGoal() async{
              ),
          ),
 
+          MaterialButton(onPressed: () {
+            if (isStartService == true) {
+              startService();
+              setState(()=> isStartService = false);
+            } else {
+              stopService();
+              setState(()=> isStartService = true);
+            }
+          }, color: Colors.orange, child: Text((isStartService == true)? "startService" : "stopService"),
+          )
         ]),
     );
   }
