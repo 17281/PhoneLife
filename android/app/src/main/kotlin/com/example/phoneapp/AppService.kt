@@ -22,10 +22,9 @@ class AppService: Service() {
                 .build()
 
             Log.v("OnService", "OnService")
-//            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//            manager.notify((System.currentTimeMillis() % 10000).toInt(), notificationBuilder)
             startForeground((System.currentTimeMillis() % 10000).toInt(), notificationBuilder)
             Log.v("OnService", "OnService")
+
         }
     }
 

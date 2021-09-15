@@ -12,7 +12,7 @@ import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:phoneapp/model/DiffTime.dart';
-// import 'package:is_lock_screen/is_lock_screen.dart';
+import 'package:is_lock_screen/is_lock_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -38,7 +38,7 @@ class ContentPage extends StatefulWidget {
 class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   //counting the amount of time phone is opened
   int screenCounter = 0;
-  bool isStartService = true;
+  bool isStartService = false;
 
   // final int currentGoalID;
   int goalIndex = 2;
@@ -224,7 +224,6 @@ void checkDiffGoal() async{
     WidgetsBinding.instance?.addObserver(this);
     NotificationAPI.init();
     listenNotify();
-    startService();
   }
   void listenNotify() => NotificationAPI.onNotification;
 
@@ -260,24 +259,39 @@ void checkDiffGoal() async{
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.inactive) {
-      // print('app inactive, is lock screen: ${await isLockScreen()}');
-      // bool? isScreenLocked = await isLockScreen();
-      // if (isScreenLocked == true)
+      print('app inactive, is lock screen: ${await isLockScreen()}');
+      bool? isScreenLocked = await isLockScreen();
 
+      if (isScreenLocked == true) {
         setState(() {
           stopTime = DateTime.now();
           screenCounter ++;
         });
         await submit();
         print('screenCounter = $screenCounter');
+        NotificationAPI.displayNotification(
+          title:'The time has stopped',
+          body:'TIME HAS STOPPED',
+          payload: 'HaHaMan',);
 
-    } else if (state == AppLifecycleState.resumed) {
+        if(isStartService == false) {
+          startService();
+          setState(()=> isStartService = true);
+        }
+      }
+    } else
+      if (state == AppLifecycleState.resumed ) {
       setState(() {
         startTime = DateTime.now();
       });
       refreshScreenTime();
       print('app resumed');
+      NotificationAPI.displayNotification(
+        title:'The timer has started',
+        body:'TIME HAS START',
+        payload: 'HoHoMan',);
     }
+
   }
 
   Future submit()async {
@@ -636,14 +650,14 @@ void checkDiffGoal() async{
          ),
 
           MaterialButton(onPressed: () {
-            if (isStartService == true) {
+            if (isStartService == false) {
               startService();
-              setState(()=> isStartService = false);
+              setState(()=> isStartService = true);
             } else {
               stopService();
-              setState(()=> isStartService = true);
+              setState(()=> isStartService = false);
             }
-          }, color: Colors.orange, child: Text((isStartService == true)? "startService" : "stopService"),
+          }, color: Colors.orange, child: Text((isStartService == false)? "startService" : "stopService"),
           )
         ]),
     );

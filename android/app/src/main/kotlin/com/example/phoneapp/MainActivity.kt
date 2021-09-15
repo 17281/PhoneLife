@@ -33,7 +33,6 @@ class MainActivity: FlutterActivity() {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         stopService(intent as Intent)
