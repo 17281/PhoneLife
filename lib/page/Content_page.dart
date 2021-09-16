@@ -213,7 +213,7 @@ void checkDiffGoal() async{
       await updateDiffCompletion();
     }
     else {
-      Utils.showSnackBar(context, 'Goal has not been completed',);
+      Utils.snackBar(context, 'Goal has not been completed',);
     }
 }
   Future<void> startService() async{

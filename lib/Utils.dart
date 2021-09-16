@@ -38,8 +38,7 @@ class Utils {
       ..showSnackBar(snackBar);
   }
 
-
-  static void _snackBar(BuildContext context, String text) {
+  static void snackBar (BuildContext context, String text) {
     final snackBar = SnackBar(
       content: Text(text, style: TextStyle(fontSize: 25)),
       backgroundColor: Colors.red,
