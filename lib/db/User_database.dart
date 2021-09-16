@@ -20,8 +20,6 @@ class DiffTimeDatabase {
     return _diffGoalDatabase!;
   }
 
-
-
   //finds the path for the database on Android and IOS
   Future<Database> _initDB(String filepath) async {
     //if database is stored in different location, then use "path_provider"
