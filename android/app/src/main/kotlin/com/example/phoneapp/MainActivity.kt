@@ -4,15 +4,27 @@ import io.flutter.embedding.android.FlutterActivity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import io.flutter.embedding.engine.FlutterEngine
+
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger,"com.example.phoneapp")
-            .setMethodCallHandler{call,_)->
+        MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, "com.example/retainApp")
+            .setMethodCallHandler { call , result ->
+                if (call.method == "SendToBackground") {
+                    moveTaskToBack(true)
+                    //debug
+                    result.success(null)
+                } else {
+                    result.notImplemented()
+                }
+            }
+
+        MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger,"com.example/background_services")
+            .setMethodCallHandler{ call,_ ->
                 if(call.method=="startService")
                 {
                     startService()
@@ -20,6 +32,8 @@ class MainActivity: FlutterActivity() {
             }
 
     }
+
+
     private lateinit var intent:Any
 
     private fun startService()
