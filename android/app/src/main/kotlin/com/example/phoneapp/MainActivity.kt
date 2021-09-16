@@ -25,7 +25,7 @@ class MainActivity: FlutterActivity() {
 
         MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger,"com.example/background_services")
             .setMethodCallHandler{ call,_ ->
-                if(call.method=="startService")
+                if(call.method == "startService")
                 {
                     startService()
                 }

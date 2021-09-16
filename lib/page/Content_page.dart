@@ -214,7 +214,7 @@ void checkDiffGoal() async{
 }
   Future<void> startService() async{
     if(Platform.isAndroid) {
-      final methodChannel = MethodChannel("com.example.phoneapp");
+      final methodChannel = MethodChannel("com.example/background_services");
       String data = await methodChannel.invokeMethod("startService");
       debugPrint('startService: $data');
     }
@@ -222,7 +222,7 @@ void checkDiffGoal() async{
 
   Future <void> stopService() async {
     if(Platform.isAndroid) {
-      var methodChannel = MethodChannel("com.example.phoneapp");
+      var methodChannel = MethodChannel("com.example/background_services");
       String data = await methodChannel.invokeMethod("stopService");
       debugPrint('stopService: $data');
     }

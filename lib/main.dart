@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:phoneapp/page/content_page.dart';
 
+
 Future main() async {
   //initiates widget
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,17 +15,6 @@ Future main() async {
     DeviceOrientation.portraitDown,
   ]);
   runApp(MyApp());
-}
-
-Future startService()
-async {
-  if(Platform.isAndroid)
-  {
-    var methodChannel=MethodChannel("com.example.messages");
-    String data=await methodChannel.invokeMethod("startService");
-    debugPrint(data);
-
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -46,6 +36,28 @@ class MyApp extends StatelessWidget {
     ),
     //place in data from content page
     home: ContentPage(),
-
   );
+}
+
+class AppRetainingWidget extends StatelessWidget {
+  const AppRetainingWidget({Key? key,  required this.child}) : super(key: key);
+
+  final Widget child;
+  final retainChannel = const MethodChannel("com.example/retainApp");
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(child: child, onWillPop: () async {
+        if (Platform.isAndroid) {
+          if (Navigator.of(context).canPop()) {
+            return true;
+          } else {
+            retainChannel.invokeMethod("sendToBackground");
+            return false;
+          }
+        }else {return true; }
+
+      }
+    );
+  }
 }
