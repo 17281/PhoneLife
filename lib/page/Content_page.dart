@@ -204,7 +204,7 @@ void checkGoal() async{
     else if (hours < goalTime) {
       await updateCompletion();
     } else {
-      Utils.showSnackBar(context, 'Goal has not been completed');
+      Utils.snackBar(context, 'Goal has not been completed');
     }
 }
 
@@ -240,7 +240,7 @@ void checkDiffGoal() async{
     refreshGoals();
     refreshScreenTime();
     WidgetsBinding.instance?.addObserver(this);
-    NotificationAPI.init();
+    NotificationAPI.init(initScheduled: true);
     listenNotify();
     tz.initializeTimeZones();
   }
@@ -254,7 +254,6 @@ void checkDiffGoal() async{
     DiffTimeDatabase.instance.closeDB();
     ScreenTimeDatabase.instance.closeSTDB();
     super.dispose();
-
   }
 
   @override
@@ -286,7 +285,6 @@ void checkDiffGoal() async{
         startTime = DateTime.now();
       });
       refreshScreenTime();
-      print('app resumed');
       NotificationAPI.displayNotification(
         title:'The timer has started',
         body:'TIME HAS START',
@@ -338,7 +336,6 @@ void checkDiffGoal() async{
         averageSec = avg.round();
         totalSec = totalAvg.round();
       });
-
 
       calculateTotalTime();
       calculateDiffTime();
@@ -650,7 +647,8 @@ void checkDiffGoal() async{
              ),
          ),
 
-          TextButton(onPressed: () => NotificationAPI.displayTimedNotification(
+          TextButton(
+            onPressed: () => NotificationAPI.displayTimedNotification(
               title: 'Scheduled Date',
               body: 'TODO: ADD SCHEDULED MESSAGE',
               payload: 'DO YOUR GOALS',
@@ -659,9 +657,8 @@ void checkDiffGoal() async{
             child: Text('Scheduled Notification',
             style: TextStyle(fontSize: 24),),
               style: TextButton.styleFrom(
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.white,),
             ),
-          ),
 
           MaterialButton(onPressed: () {
             if (isStartService == false) {
@@ -751,52 +748,83 @@ class NotificationAPI {
   static final onNotification = BehaviorSubject<String?>();
 
 
-
   static Future _notificationDetails() async {
     return NotificationDetails(
       android: AndroidNotificationDetails(
-        'channel id',
-        'channel name',
-        'channel description',
-        importance: Importance.max
+          'channel id',
+          'channel name',
+          'channel description',
+          importance: Importance.max
       ),
       iOS: IOSNotificationDetails(),
     );
-}
+  }
 
-static Future init({bool initScheduled = false}) async {
-    final iOS  = IOSInitializationSettings();
+  static Future init({bool initScheduled = false}) async {
+    final iOS = IOSInitializationSettings();
     final android = AndroidInitializationSettings('@mipmap/ic_launcher');
 
     final settings = InitializationSettings(android: android, iOS: iOS);
-    await _notifications.initialize(settings, onSelectNotification: (payload) async {
+    await _notifications.initialize(
+        settings, onSelectNotification: (payload) async {
       onNotification.add(payload);
     });
-}
+  }
 
-static Future displayNotification ({
-  int id = 0,
-  String? title,
-  String? body,
-  String? payload,
-}) async => _notifications.show(id, title, body, await _notificationDetails(), payload: payload);
+  static Future displayNotification({
+    int id = 0,
+    String? title,
+    String? body,
+    String? payload,
+  }) async =>
+      _notifications.show(
+          id, title, body, await _notificationDetails(), payload: payload);
 
-static Future displayTimedNotification ({
-  int id = 0,
-  String? title,
-  String? body,
-  String? payload,
-  required DateTime scheduledDate,
-}) async => _notifications.zonedSchedule(
-    id,
-    title,
-    body,
-    tz.TZDateTime.from (scheduledDate, tz.local),
-    await _notificationDetails(),
-    payload: payload,
-    androidAllowWhileIdle: true,
-    uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.absoluteTime
-);
+  static Future displayTimedNotification({
+    int id = 0,
+    String? title,
+    String? body,
+    String? payload,
+    required DateTime scheduledDate,
+  }) async =>
+      _notifications.zonedSchedule(
+          id,
+          title,
+          body,
+          tz.TZDateTime.from(scheduledDate, tz.local),
+          await _notificationDetails(),
+          payload: payload,
+          androidAllowWhileIdle: true,
+          uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime
 
+      );
+
+  static void dailyNotification({
+    int id = 0,
+    String? title,
+    String? body,
+    String? payload,
+    required DateTime scheduledDate,
+  }) async =>
+      _notifications.zonedSchedule(
+          id,
+          title,
+          body,
+          _scheduleDaily(Time(9)),
+          await _notificationDetails(),
+          payload: payload,
+          androidAllowWhileIdle: true,
+          uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+          matchDateTimeComponents: DateTimeComponents.time,
+      );
+
+  static tz.TZDateTime _scheduleDaily(Time time) {
+    final now = tz.TZDateTime.now(tz.local );
+    final date = tz.TZDateTime(tz.local, now.year, now.month, now.day,
+        time.hour,time.minute, time.second);
+
+    return date.isBefore(now) ? date.add(Duration(days: 1)): date;
+  }
 }
