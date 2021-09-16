@@ -12,7 +12,7 @@ import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:phoneapp/model/DiffTime.dart';
-import 'package:is_lock_screen/is_lock_screen.dart';
+// import 'package:is_lock_screen/is_lock_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -24,7 +24,6 @@ class NotificationService {
   factory NotificationService() {
     return _notificationService;
   }
-
   NotificationService._internal();
 
 }
@@ -257,7 +256,8 @@ void checkDiffGoal() async{
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.inactive) {
-      bool? isScreenLocked = await isLockScreen();
+      // bool? isScreenLocked = await isLockScreen();
+      bool isScreenLocked = false;
       if(isStartService == false) {
         startService();
         setState(()=> isStartService = true);

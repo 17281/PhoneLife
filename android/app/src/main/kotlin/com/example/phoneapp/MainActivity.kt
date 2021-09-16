@@ -12,7 +12,7 @@ class MainActivity: FlutterActivity() {
         super.onCreate(savedInstanceState)
 
         MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger,"com.example.phoneapp")
-            .setMethodCallHandler{call,_->
+            .setMethodCallHandler{call,_)->
                 if(call.method=="startService")
                 {
                     startService()
