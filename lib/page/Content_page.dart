@@ -15,6 +15,8 @@ import 'package:phoneapp/model/DiffTime.dart';
 import 'package:is_lock_screen/is_lock_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 
 class NotificationService {
@@ -733,6 +735,7 @@ class NotificationAPI {
   static final onNotification = BehaviorSubject<String?>();
 
 
+
   static Future _notificationDetails() async {
     return NotificationDetails(
       android: AndroidNotificationDetails(
@@ -754,11 +757,31 @@ static Future init({bool initScheduled = false}) async {
       onNotification.add(payload);
     });
 }
+
 static Future displayNotification ({
   int id = 0,
   String? title,
   String? body,
   String? payload,
 }) async => _notifications.show(id, title, body, await _notificationDetails(), payload: payload);
+
+static void displayTimedNotification ({
+  int id = 0,
+  String? title,
+  String? body,
+  String? payload,
+  required DateTime scheduledDate,
+}) async => _notifications.zonedSchedule(
+    id,
+    title,
+    body,
+    tz.TZDateTime.from (scheduledDate, tz.local),
+    await _notificationDetails(),
+    payload: payload,
+    androidAllowWhileIdle: true,
+    uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime
+);
+
 
 }
