@@ -16,6 +16,7 @@ import 'package:is_lock_screen/is_lock_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 
@@ -58,6 +59,7 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   num diffH = 0;
   num diffMin = 0;
   num diffSec = 0;
+
   int averageSec = 0;
   int totalSec = 0;
 
@@ -240,6 +242,7 @@ void checkDiffGoal() async{
     WidgetsBinding.instance?.addObserver(this);
     NotificationAPI.init();
     listenNotify();
+    tz.initializeTimeZones();
   }
   void listenNotify() => NotificationAPI.onNotification;
 
@@ -647,6 +650,19 @@ void checkDiffGoal() async{
              ),
          ),
 
+          TextButton(onPressed: () => NotificationAPI.displayTimedNotification(
+              title: 'Scheduled Date',
+              body: 'TODO: ADD SCHEDULED MESSAGE',
+              payload: 'DO YOUR GOALS',
+              scheduledDate: DateTime.now().add(Duration(seconds: 15))
+          ),
+            child: Text('Scheduled Notification',
+            style: TextStyle(fontSize: 24),),
+              style: TextButton.styleFrom(
+              backgroundColor: Colors.white,
+            ),
+          ),
+
           MaterialButton(onPressed: () {
             if (isStartService == false) {
               startService();
@@ -765,7 +781,7 @@ static Future displayNotification ({
   String? payload,
 }) async => _notifications.show(id, title, body, await _notificationDetails(), payload: payload);
 
-static void displayTimedNotification ({
+static Future displayTimedNotification ({
   int id = 0,
   String? title,
   String? body,
@@ -782,6 +798,5 @@ static void displayTimedNotification ({
     uiLocalNotificationDateInterpretation:
       UILocalNotificationDateInterpretation.absoluteTime
 );
-
 
 }
