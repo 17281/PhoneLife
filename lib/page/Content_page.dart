@@ -243,9 +243,14 @@ void checkDiffGoal() async{
     NotificationAPI.init(initScheduled: true);
     listenNotify();
     tz.initializeTimeZones();
+
+    NotificationAPI.dailyNotification(
+        title: 'GOOD MORNING',
+        body: 'New day, New you. Are you ready to beat your past!?',
+        payload: 'Phone Champion',
+        scheduledDate: DateTime.now(),);
   }
   void listenNotify() => NotificationAPI.onNotification;
-
   //closing database when app is down
   @override
   void dispose() {
@@ -532,6 +537,8 @@ void checkDiffGoal() async{
                     dataSource: getChartData(),
                     explode: true,
                     explodeOffset: '8%',
+                    startAngle: 270,
+                    endAngle: 90,
                     xValueMapper: (GoalCompletionData data, _) => data.name,
                     yValueMapper: (GoalCompletionData data, _) => data.isComplete,
                     dataLabelMapper: (GoalCompletionData data, _) => data.numPercent,
@@ -811,7 +818,7 @@ class NotificationAPI {
           id,
           title,
           body,
-          _scheduleDaily(Time(9)),
+          _scheduleDaily(Time(9,)),
           await _notificationDetails(),
           payload: payload,
           androidAllowWhileIdle: true,
