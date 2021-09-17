@@ -12,13 +12,12 @@ import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:phoneapp/model/DiffTime.dart';
-import 'package:is_lock_screen/is_lock_screen.dart';
+// import 'package:is_lock_screen/is_lock_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
-
+import 'package:flutter_foreground_plugin/flutter_foreground_plugin.dart';
 
 class NotificationService {
   static final NotificationService _notificationService =
@@ -38,6 +37,10 @@ class ContentPage extends StatefulWidget {
 
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
+
+  static bool goalChosen = false;
+  static bool diffGoalChosen = false;
+
   //counting the amount of time phone is opened
   int screenCounter = 0;
   bool isStartService = false;
@@ -198,6 +201,7 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   }
 
 void checkGoal() async{
+    setState(() => goalChosen = false);
     if (goalTime == 0 && min < 60){
       await updateCompletion();
     }
@@ -209,6 +213,7 @@ void checkGoal() async{
 }
 
 void checkDiffGoal() async{
+    setState(() => diffGoalChosen = false);
     if (diffMin < diffGoalTime) {
       await updateDiffCompletion();
     }
@@ -265,7 +270,8 @@ void checkDiffGoal() async{
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.inactive) {
-      bool? isScreenLocked = await isLockScreen();
+      bool? isScreenLocked = false;
+      // await isLockScreen();
       if(isStartService == false) {
         startService();
         setState(()=> isStartService = true);
@@ -277,12 +283,6 @@ void checkDiffGoal() async{
         });
         await submit();
         print('screenCounter = $screenCounter');
-        NotificationAPI.displayNotification(
-          title:'The time has stopped',
-          body:'TIME HAS STOPPED',
-          payload: 'HaHaMan',);
-
-
       }
     } else
       if (state == AppLifecycleState.resumed ) {
@@ -290,10 +290,6 @@ void checkDiffGoal() async{
         startTime = DateTime.now();
       });
       refreshScreenTime();
-      NotificationAPI.displayNotification(
-        title:'The timer has started',
-        body:'TIME HAS START',
-        payload: 'HoHoMan',);
     }
 
   }
@@ -386,7 +382,6 @@ void checkDiffGoal() async{
   }
 
   Future updateGoal() async {
-    print(_timer);
     _timer.cancel();
     this.currentGoalId = UserDatabase.goalID;
     print('the updateGoal id = $currentGoalId');
@@ -424,6 +419,7 @@ void checkDiffGoal() async{
       createdTime: DateTime.now(),
     );
     await UserDatabase.instance.create(goalA);
+    setState(() => goalChosen = true);
     startTimer();
     numOfCompleted();
   }
@@ -435,6 +431,7 @@ void checkDiffGoal() async{
         createdTime: DateTime.now()
     );
     await DiffTimeDatabase.instance.createDiffGoal(goalC);
+    setState(() => diffGoalChosen = true);
     diffTimer();
   }
 

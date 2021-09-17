@@ -25,8 +25,9 @@ dependencies:
     sdk: flutter
   #slq database storage
   sqflite: ^2.0.0+3
-  is_lock_screen:
+#  is_lock_screen:
   flutter_native_timezone:
+  flutter_foreground_plugin: ^0.8.0
 
 
   intl: ^0.17.0

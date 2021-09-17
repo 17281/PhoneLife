@@ -1,13 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.phoneapp">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-sdk
+        android:minSdkVersion="23"
+        tools:overrideLibrary="changjoopark.com.flutter_foreground_plugin" />
+
     <application
         android:name=".MyApplication"
         android:label="phoneapp"
         android:icon="@mipmap/ic_launcher"
        >
-       <service android:name=".AppService" android:exported="true" android:enabled="true"/>
+
+   <service android:name=".AppService" android:enabled="true"/>
+        <service android:name="changjoopark.com.flutter_foreground_plugin.FlutterForegroundService"/>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -42,5 +50,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
     </application>
+
 </manifest>
