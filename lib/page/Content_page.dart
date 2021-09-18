@@ -30,6 +30,28 @@ class NotificationService {
 
 }
 
+void startForegroundService() async {
+  await FlutterForegroundPlugin.setServiceMethodInterval(seconds: 5);
+  await FlutterForegroundPlugin.setServiceMethod(globalForegroundService);
+  await FlutterForegroundPlugin.startForegroundService(
+    holdWakeLock: false,
+    onStarted: () {
+
+      print("Foreground on Started");
+    },
+    onStopped: () {
+      print("Foreground on Stopped");
+    },
+    title: "Flutter Foreground Service",
+    content: "running in background",
+    iconName: "ic_android_black_24dp",
+  );
+}
+
+void globalForegroundService() {
+  debugPrint("current datetime is ${DateTime.now()}");
+}
+
 class ContentPage extends StatefulWidget {
   @override
   _ContentPageState createState() => _ContentPageState();
