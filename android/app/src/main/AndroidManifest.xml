@@ -13,7 +13,6 @@
         android:icon="@mipmap/ic_launcher"
        >
 
-   <service android:name=".AppService" android:enabled="true"/>
         <service android:name="changjoopark.com.flutter_foreground_plugin.FlutterForegroundService"/>
 
         <activity

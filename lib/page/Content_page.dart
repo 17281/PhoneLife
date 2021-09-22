@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +11,7 @@ import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:phoneapp/model/DiffTime.dart';
-// import 'package:is_lock_screen/is_lock_screen.dart';
+import 'package:is_lock_screen/is_lock_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -36,11 +35,9 @@ void startForegroundService() async {
   await FlutterForegroundPlugin.startForegroundService(
     holdWakeLock: false,
     onStarted: () {
-
-      print("Foreground on Started");
+      _ContentPageState();
     },
     onStopped: () {
-      print("Foreground on Stopped");
     },
     title: "Flutter Foreground Service",
     content: "running in background",
@@ -62,7 +59,6 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
 
   static bool goalChosen = false;
   static bool diffGoalChosen = false;
-
   //counting the amount of time phone is opened
   int screenCounter = 0;
   bool isStartService = false;
@@ -270,12 +266,13 @@ void checkDiffGoal() async{
     NotificationAPI.init(initScheduled: true);
     listenNotify();
     tz.initializeTimeZones();
-
     NotificationAPI.dailyNotification(
         title: 'GOOD MORNING',
         body: 'New day, New you. Are you ready to beat your past!?',
         payload: 'Phone Champion',
         scheduledDate: DateTime.now(),);
+    startForegroundService();
+    goalNotification();
   }
   void listenNotify() => NotificationAPI.onNotification;
   //closing database when app is down
@@ -288,17 +285,41 @@ void checkDiffGoal() async{
     super.dispose();
   }
 
+  void goalNotification () async {
+    Timer.periodic(Duration(seconds: 10), (timer) {
+      if (hours > goalTime) {
+        NotificationAPI.displayNotification(
+          title: 'MISSION FAILED...',
+          body: 'Your screen time has exceeded your goal "$goalTime hours of phone usage"',
+          payload: 'CLICK ME TO TRY AGAIN!'
+        );
+        setState(() => goalChosen = false );
+      }
+
+      if (diffMin > diffGoalTime) {
+        NotificationAPI.displayNotification(
+            title: 'MISSION FAILED...',
+            body: 'Your screen time has exceeded your goal "$diffGoalTime average minutes of phone usage"',
+            payload: 'CLICK ME TO TRY AGAIN!'
+        );
+        setState (() => diffGoalChosen = false);
+      }
+    });
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
+    bool? isScreenLocked = await isLockScreen();
     if (state == AppLifecycleState.inactive) {
-      bool? isScreenLocked = false;
-      // await isLockScreen();
-      if(isStartService == false) {
-        startService();
-        setState(()=> isStartService = true);
-      }
+      NotificationAPI.displayTimedNotification(
+          title: 'REMINDER',
+          body: 'Remember, Winners never quit and quitters never win!',
+          payload: 'Change your life',
+          scheduledDate: DateTime.now().add(Duration(minutes: 15)));
+
       if (isScreenLocked == true) {
+        screenCounter = 0;
         setState(() {
           stopTime = DateTime.now();
           screenCounter ++;
@@ -307,14 +328,17 @@ void checkDiffGoal() async{
         print('screenCounter = $screenCounter');
       }
     } else
-      if (state == AppLifecycleState.resumed ) {
+    if (state == AppLifecycleState.resumed) {
       setState(() {
         startTime = DateTime.now();
       });
       refreshScreenTime();
     }
+    if (state == AppLifecycleState.paused) {
 
+    }
   }
+
 
   Future submit()async {
     //Duration between initial time to final time
@@ -686,12 +710,12 @@ void checkDiffGoal() async{
               backgroundColor: Colors.white,),
             ),
 
-          MaterialButton(onPressed: () {
+          MaterialButton(onPressed: () async {
             if (isStartService == false) {
-              startService();
+              startForegroundService();
               setState(()=> isStartService = true);
             } else {
-              stopService();
+              await FlutterForegroundPlugin.stopForegroundService();
               setState(()=> isStartService = false);
             }
           }, color: Colors.orange, child: Text((isStartService == false)? "startService" : "stopService"),
