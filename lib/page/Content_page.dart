@@ -229,7 +229,7 @@ void checkGoal() async{
       NotificationAPI.displayNotification(
           title: 'MISSION FAILED...',
           body: 'Your screen time has exceeded your goal "$goalTime hours of phone usage"',
-          payload: 'CLICK ME TO TRY AGAIN!'
+          payload: 'When plan A fails you still got 25 letters left'
       );
       Utils.snackBar(context, 'Goal has not been completed');
     }
@@ -244,7 +244,7 @@ void checkDiffGoal() async{
       NotificationAPI.displayNotification(
           title: 'MISSION FAILED...',
           body: 'Your screen time has exceeded your goal "$diffGoalTime average minutes of phone usage"',
-          payload: 'CLICK ME TO TRY AGAIN!'
+          payload: 'Sometimes you gotta JUST DO IT!!'
       );
       Utils.snackBar(context, 'Goal has not been completed',);
     }
@@ -309,6 +309,43 @@ void checkDiffGoal() async{
   void goalNotification () async {
     Timer.periodic(Duration(seconds: 10), (timer) {
       if (hours > 1) {
+        NotificationAPI.displayNotification(
+          title: 'Heads Up',
+          body: 'Your screen time is over 1 Hour',
+          payload: 'Remember your training'
+      );
+      }
+
+      if (hours > 2) {
+        NotificationAPI.displayNotification(
+            title: 'Healthy Tip',
+            body: 'Your screen time is over 2 hours',
+            payload: 'I suggest taking a 10 Min break'
+        );
+      }
+
+      if (hours > 3) {
+        NotificationAPI.displayNotification(
+            title: 'Caution Advised',
+            body: 'Your screen time has just passed 3 Hours, RECOMMEND: Water on cereal :p',
+            payload: 'Welcome to the average zone'
+        );
+      }
+
+      if (hours > 4) {
+        NotificationAPI.displayNotification(
+            title: 'WARNING',
+            body: 'Screen time exceeding 4 Hours! ',
+            payload: 'Taking a 30 Min screen break is highly advised'
+        );
+      }
+
+      if (hours > 5) {
+        NotificationAPI.displayNotification(
+            title: 'DANGER!!',
+            body: 'Screen time EXCEEDING 5 Hours!!',
+            payload: 'ANY LONGER SCREEN TIME WILL RESULT IN @#@^&#*&#%^@!'
+        );
       }
 
       if (diffMin > 5) {
@@ -322,15 +359,31 @@ void checkDiffGoal() async{
         NotificationAPI.displayNotification(
             title: 'CAUTION',
             body: 'Your average screen viewing passed 10 Minutes',
-            payload: 'Best to take a break'
+            payload: 'Best to take a 20 min screen break ;P'
         );
       }
 
       if (diffMin > 15) {
         NotificationAPI.displayNotification(
             title: 'WARNING!!',
-            body: 'Average screen time is over 15 Minutes',
-            payload: ''
+            body: 'Average screen time is over 15 Minutes. I am always watching',
+            payload: 'Silly Baka! You better take a 40 min screen break!'
+        );
+      }
+
+      if (goalChosen == false) {
+        NotificationAPI.displayNotification(
+            title: 'NANI!?, GOAL NOT CHOSEN >:(',
+            body: 'Even if completing a goal is hard, attempting it is harder',
+            payload: 'Select your daily goal'
+        );
+      }
+
+      if (diffGoalChosen == false) {
+        NotificationAPI.displayNotification(
+            title: 'First steps are always the hardest',
+            body: 'Commitment is key to every success',
+            payload: 'Select your hourly goal'
         );
       }
     });
@@ -430,6 +483,10 @@ void checkDiffGoal() async{
 
 
   Future updateCompletion() async {
+    NotificationAPI.displayNotification(
+      title: 'HOO-RAAY, Goal completed!!',
+      body: 'Your dream goal of $goalTime hours has been completed...',
+      payload: 'Do you have what it takes to ASCEND to greater goodness');
     setState(() {
       currentGoalId = UserDatabase.goalID;
     });
@@ -440,14 +497,14 @@ void checkDiffGoal() async{
   );
     await UserDatabase.instance.update(currentGoal);
     Utils.showSnackBar(context, 'the goal of $goalTime has been competed!');
-    NotificationAPI.displayNotification(
-        title: 'HOO-RAAY, Goal completed!!',
-        body: 'Your dream goal of $goalTime hours has been completed...',
-        payload: 'Do you have what it takes to ASCEND to greater goodness'
-    );
+
   }
 
   Future updateDiffCompletion() async {
+    NotificationAPI.displayNotification(
+      title: 'Talented or Luck',
+      body: 'The average of $diffGoalTime minutes goal has been completed...',
+      payload: 'Are you ready to change your LIFE');
     setState(() {
       currentDiffGoalId = DiffTimeDatabase.diffGoalId;
     });
@@ -458,11 +515,7 @@ void checkDiffGoal() async{
       isDiffComplete: true
     );
     await DiffTimeDatabase.instance.updateDiffGoal(currentDiffGoal);
-    NotificationAPI.displayNotification(
-        title: 'Talented or Luck',
-        body: 'The average of $diffGoalTime minutes goal has been completed...',
-        payload: 'Are you ready to change your LIFE'
-    );
+
     Utils.showSnackBar(context, 'The difference goal of $diffGoalTime is completed!');
   }
 
