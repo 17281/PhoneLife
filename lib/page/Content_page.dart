@@ -287,6 +287,14 @@ void checkDiffGoal() async{
 
   void goalNotification () async {
     Timer.periodic(Duration(seconds: 10), (timer) {
+      if (hours > 1) {
+        NotificationAPI.displayNotification(
+          title: 'Heads Up',
+          body: 'Your screen time has passed 1 hour',
+          payload: 'Remember your training'
+        );
+      }
+
       if (hours > goalTime) {
         NotificationAPI.displayNotification(
           title: 'MISSION FAILED...',
@@ -296,6 +304,13 @@ void checkDiffGoal() async{
         setState(() => goalChosen = false );
       }
 
+      if (diffMin > 5) {
+        NotificationAPI.displayNotification(
+            title: 'Heads Up',
+            body: 'Your average screen viewing passed 5 minutes',
+            payload: 'Remember your training'
+        );
+      }
       if (diffMin > diffGoalTime) {
         NotificationAPI.displayNotification(
             title: 'MISSION FAILED...',
