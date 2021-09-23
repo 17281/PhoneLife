@@ -30,7 +30,6 @@ class NotificationService {
 }
 
 void startForegroundService() async {
-  await FlutterForegroundPlugin.setServiceMethodInterval(seconds: 5);
   await FlutterForegroundPlugin.setServiceMethod(globalForegroundService);
   await FlutterForegroundPlugin.startForegroundService(
     holdWakeLock: false,
@@ -38,6 +37,11 @@ void startForegroundService() async {
       _ContentPageState();
     },
     onStopped: () {
+      NotificationAPI.displayTimedNotification(
+        title: 'Friendly Reminder',
+          body: "I'm always watching...",
+          payload: "HEHEMAN",
+          scheduledDate: DateTime.now().add(Duration(minutes: 30)));
     },
     title: "Flutter Foreground Service",
     content: "running in background",
@@ -283,7 +287,7 @@ void checkDiffGoal() async{
         scheduledDate: DateTime.now(),);
     startForegroundService();
     goalNotification();
-    notifyEveryTwentyMin();
+    notifyEveryHour();
   }
   void listenNotify() => NotificationAPI.onNotification;
   //closing database when app is down
@@ -296,7 +300,7 @@ void checkDiffGoal() async{
     super.dispose();
   }
 
-  void notifyEveryTwentyMin() {
+  void notifyEveryHour() {
     Timer.periodic(Duration(hours: 1), (timer) {
       NotificationAPI.displayNotification(
           title: 'Look Out',
@@ -340,7 +344,7 @@ void checkDiffGoal() async{
         );
       }
 
-      if (hours > 5) {
+      if (hours < 5) {
         NotificationAPI.displayNotification(
             title: 'DANGER!!',
             body: 'Screen time EXCEEDING 5 Hours!!',
@@ -363,7 +367,7 @@ void checkDiffGoal() async{
         );
       }
 
-      if (diffMin > 15) {
+      if (diffMin < 15) {
         NotificationAPI.displayNotification(
             title: 'WARNING!!',
             body: 'Average screen time is over 15 Minutes. I am always watching',
@@ -396,7 +400,7 @@ void checkDiffGoal() async{
     if (state == AppLifecycleState.inactive) {
       NotificationAPI.displayTimedNotification(
           title: 'REMINDER',
-          body: 'Remember, Winners never quit and quitters never win!',
+          body: 'Winners never quit and quitters never win!',
           payload: 'Change your life',
           scheduledDate: DateTime.now().add(Duration(minutes: 15)));
 
