@@ -7,7 +7,6 @@ import 'package:phoneapp/model/Goals.dart';
 import 'package:rxdart/rxdart.dart';
 import '../Utils.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
-import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:phoneapp/model/DiffTime.dart';
@@ -76,14 +75,14 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   int? percentageUC= 0;
 
   //Calculate the total time per day
-  num hours = 0;
-  num min = 0;
-  num sec = 0;
+  int hours = 0;
+  int min = 0;
+  int sec = 0;
 
   //average difference
-  num diffH = 0;
-  num diffMin = 0;
-  num diffSec = 0;
+  int diffH = 0;
+  int diffMin = 0;
+  int diffSec = 0;
 
   int averageSec = 0;
   int totalSec = 0;
@@ -114,7 +113,6 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
         setState(() => diffH = y%60);
       }
     }
-    print ('diffSeconds = $diffSec diffMinutes = $diffMin diffHours = $diffH');
   }
 
   void calculateTotalTime() async {
@@ -184,12 +182,6 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   late DateTime startTime;
   late String timeStamp;
   late DateTime stopTime;
-
-  String formatDuration(Duration timerDuration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = (timerDuration.inMinutes.remainder(60));
-    final seconds = (timerDuration.inSeconds.remainder(60));
-    return'$minutes minutes and $seconds seconds';}
 
   int secCounter = 10;
   int counter = 10;
@@ -344,7 +336,7 @@ void checkDiffGoal() async{
         );
       }
 
-      if (hours < 5) {
+      if (hours > 5) {
         NotificationAPI.displayNotification(
             title: 'DANGER!!',
             body: 'Screen time EXCEEDING 5 Hours!!',
@@ -367,7 +359,7 @@ void checkDiffGoal() async{
         );
       }
 
-      if (diffMin < 15) {
+      if (diffMin > 15) {
         NotificationAPI.displayNotification(
             title: 'WARNING!!',
             body: 'Average screen time is over 15 Minutes. I am always watching',
@@ -376,18 +368,20 @@ void checkDiffGoal() async{
       }
 
       if (goalChosen == false) {
-        NotificationAPI.displayNotification(
+        NotificationAPI.displayTimedNotification(
             title: 'NANI!?, GOAL NOT CHOSEN >:(',
             body: 'Even if completing a goal is hard, attempting it is harder',
-            payload: 'Select your daily goal'
+            payload: 'Select your daily goal',
+            scheduledDate: DateTime.now().add(Duration(minutes: 5))
         );
       }
 
       if (diffGoalChosen == false) {
-        NotificationAPI.displayNotification(
+        NotificationAPI.displayTimedNotification(
             title: 'First steps are always the hardest',
             body: 'Commitment is key to every success',
-            payload: 'Select your hourly goal'
+            payload: 'Select your hourly goal',
+          scheduledDate: DateTime.now().add(Duration(minutes: 5))
         );
       }
     });
@@ -624,6 +618,13 @@ void checkDiffGoal() async{
   @override
   ///Main Page display
   Widget build(BuildContext context) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final _hours = twoDigits(hours);
+    final _min = twoDigits(min);
+    final _sec = twoDigits(sec);
+    final _diffHours = twoDigits(diffH);
+    final _diffMin = twoDigits(diffMin);
+    final _diffSec = twoDigits(diffSec);
     return Scaffold(
         appBar: AppBar(
           title: Text('Number of completed goals: $completedNum'),
@@ -642,24 +643,16 @@ void checkDiffGoal() async{
               crossAxisAlignment: CrossAxisAlignment.center,
 
               children: <Widget>[
-              ElevatedButton(onPressed:() async {
-                   await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ScreenTimePage()));
-                   //Once created refresh goals display page
-                  refreshScreenTime();
-                  refreshGoals();
-                  },
-                  child: Icon(Icons.atm),
-              ),
 
                 Container(
-                  child: Text('$hours : $min : $sec',
+
+                  child: Text('$_hours : $_min : $_sec',
                   style: TextStyle(color:Colors.white, fontSize: 30),
                   ),
                 ),
 
                 Container(
-                  child: Text('$diffH : $diffMin : $diffSec',
+                  child: Text('$_diffHours : $_diffMin : $_diffSec',
                     style: TextStyle(color: Colors.white, fontSize: 30,),
                   ),
                 ),
