@@ -16,6 +16,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_foreground_plugin/flutter_foreground_plugin.dart';
+import 'package:phoneapp/page/NavBar.dart';
 
 class NotificationService {
   static final NotificationService _notificationService =
@@ -627,7 +628,7 @@ void checkDiffGoal() async{
     final _diffSec = twoDigits(diffSec);
     return Scaffold(
         appBar: AppBar(
-          title: Text('Number of completed goals: $completedNum'),
+          // title: Text('Number of completed goals: $completedNum'),
         ),
     body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
