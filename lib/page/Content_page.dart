@@ -627,6 +627,7 @@ void checkDiffGoal() async{
     final _diffMin = twoDigits(diffMin);
     final _diffSec = twoDigits(diffSec);
     return Scaffold(
+      drawer: NavBar(),
         appBar: AppBar(
           // title: Text('Number of completed goals: $completedNum'),
         ),
