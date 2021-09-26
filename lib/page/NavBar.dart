@@ -18,43 +18,52 @@ class NavBar extends StatelessWidget {
             ),
             subtitle: Column(
               children: [
-                SizedBox(height: 30,),
+                SizedBox(height: 15,),
                 ListTile(
-                  leading: Icon(Icons.timelapse_outlined),
-                  trailing: Text('X-Time', style: TextStyle(fontSize: 15, color: Colors.white) ,),
+                  leading: Icon(Icons.add_alarm_outlined),
+                  trailing: Text('X', style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
-                    child: Text('Time', style: TextStyle(fontSize: 20, color: Colors.white),),
+                    child: Text(' Screen Time', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
                 ),
+                SizedBox(height:25,),
                 ListTile(
-                  leading: Icon(Icons.timelapse_outlined),
-                  trailing: Text('X-Time', style: TextStyle(fontSize: 15, color: Colors.white) ,),
+                  leading: Icon(Icons.add_to_home_screen),
+                  trailing: Text('X-Time', style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
-                    child: Text('Time', style: TextStyle(fontSize: 20, color: Colors.white),),
+                    child: Text('Average Screen Time', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
-                ),ListTile(
-                  leading: Icon(Icons.timelapse_outlined),
-                  trailing: Text('X-Time', style: TextStyle(fontSize: 15, color: Colors.white) ,),
+                ),
+                SizedBox(height:25,),
+                ListTile(
+                  leading: Icon(Icons.check_circle_outline),
+                  trailing: Text('X-Time', style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
-                    child: Text('Time', style: TextStyle(fontSize: 20, color: Colors.white),),
+                    child: Text(' Completed Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
-                ),ListTile(
-                  leading: Icon(Icons.timelapse_outlined),
-                  trailing: Text('X-Time', style: TextStyle(fontSize: 15, color: Colors.white) ,),
+                ),
+                SizedBox(height:25,),
+                ListTile(
+                  leading: Icon(Icons.remove_circle_outline),
+                  trailing: Text('X-Time', style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
-                    child: Text('Time', style: TextStyle(fontSize: 20, color: Colors.white),),
+                    child: Text(' Uncompleted Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
-                ),ListTile(
-                  leading: Icon(Icons.timelapse_outlined),
-                  trailing: Text('X-Time', style: TextStyle(fontSize: 15, color: Colors.white) ,),
+                ),
+                SizedBox(height:25,),
+                ListTile(
+                  leading: Icon(Icons.plus_one_rounded),
+                  trailing: Text('X-Time', style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
-                    child: Text('Time', style: TextStyle(fontSize: 20, color: Colors.white),),
+                    child: Text('Current screen count', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
                 ),
               ],
             ),
           ),
           Divider(),
+
+          
         ],
       ),
     );
