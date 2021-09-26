@@ -7,41 +7,54 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
-        padding: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
         children: [
-          Divider(),
           ListTile(
-            leading: Icon(Icons.timelapse_outlined),
+            tileColor: Colors.grey,
             title: Container(
-              child: Text('text12',
-                style: TextStyle(fontSize: 20),
+              child: Text('User Stats',
+                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
             subtitle: Column(
               children: [
-                Container(
-                  child: Text('Hehehhee'),
+                SizedBox(height: 30,),
+                ListTile(
+                  leading: Icon(Icons.timelapse_outlined),
+                  trailing: Text('X-Time', style: TextStyle(fontSize: 15, color: Colors.white) ,),
+                  title: Container(
+                    child: Text('Time', style: TextStyle(fontSize: 20, color: Colors.white),),
+                  ),
                 ),
-                SizedBox(height: 24,),
-
-                Container(
-                  child: Text('Hehehhee'),
-                ), Container(
-                  child: Text('Hehehhee'),
-                ), Container(
-                  child: Text('Hehehhee'),
-                ), Container(
-                  child: Text('Hehehhee'),
-                ), Container(
-                  child: Text('Hehehhee'),
+                ListTile(
+                  leading: Icon(Icons.timelapse_outlined),
+                  trailing: Text('X-Time', style: TextStyle(fontSize: 15, color: Colors.white) ,),
+                  title: Container(
+                    child: Text('Time', style: TextStyle(fontSize: 20, color: Colors.white),),
+                  ),
+                ),ListTile(
+                  leading: Icon(Icons.timelapse_outlined),
+                  trailing: Text('X-Time', style: TextStyle(fontSize: 15, color: Colors.white) ,),
+                  title: Container(
+                    child: Text('Time', style: TextStyle(fontSize: 20, color: Colors.white),),
+                  ),
+                ),ListTile(
+                  leading: Icon(Icons.timelapse_outlined),
+                  trailing: Text('X-Time', style: TextStyle(fontSize: 15, color: Colors.white) ,),
+                  title: Container(
+                    child: Text('Time', style: TextStyle(fontSize: 20, color: Colors.white),),
+                  ),
+                ),ListTile(
+                  leading: Icon(Icons.timelapse_outlined),
+                  trailing: Text('X-Time', style: TextStyle(fontSize: 15, color: Colors.white) ,),
+                  title: Container(
+                    child: Text('Time', style: TextStyle(fontSize: 20, color: Colors.white),),
+                  ),
                 ),
               ],
             ),
-            trailing: Text('Text2'),
-            tileColor: Colors.indigoAccent,
           ),
           Divider(),
-
         ],
       ),
     );
