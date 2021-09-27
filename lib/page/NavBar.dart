@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:phoneapp/page/Content_page.dart';
 
 class NavBar extends StatelessWidget {
-  const NavBar({Key? key}) : super(key: key);
+  int totalTime;
+  NavBar({Key? key, required this.totalTime}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class NavBar extends StatelessWidget {
                 SizedBox(height: 15,),
                 ListTile(
                   leading: Icon(Icons.add_alarm_outlined),
-                  trailing: Text('X', style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                  trailing: Text(totalTime.toString(), style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
                     child: Text(' Screen Time', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
@@ -39,7 +41,7 @@ class NavBar extends StatelessWidget {
                   leading: Icon(Icons.check_circle_outline),
                   trailing: Text('X-Time', style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
-                    child: Text(' Completed Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
+                    child: Text('Completed Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
                 ),
                 SizedBox(height:25,),
@@ -47,7 +49,7 @@ class NavBar extends StatelessWidget {
                   leading: Icon(Icons.remove_circle_outline),
                   trailing: Text('X-Time', style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
-                    child: Text(' Uncompleted Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
+                    child: Text('Uncompleted Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
                 ),
                 SizedBox(height:25,),
@@ -55,7 +57,7 @@ class NavBar extends StatelessWidget {
                   leading: Icon(Icons.plus_one_rounded),
                   trailing: Text('X-Time', style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
-                    child: Text('Current screen count', style: TextStyle(fontSize: 17, color: Colors.white),),
+                    child: Text('Current Screen Count', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
                 ),
               ],
@@ -63,7 +65,7 @@ class NavBar extends StatelessWidget {
           ),
           Divider(),
 
-          
+
         ],
       ),
     );

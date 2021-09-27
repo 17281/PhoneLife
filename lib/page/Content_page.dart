@@ -608,6 +608,7 @@ void checkDiffGoal() async{
       percentageUC = percentageUCNum;
       percentageC = percentageCNum;
     });
+
   }
 
 
@@ -627,7 +628,7 @@ void checkDiffGoal() async{
     final _diffMin = twoDigits(diffMin);
     final _diffSec = twoDigits(diffSec);
     return Scaffold(
-      drawer: NavBar(),
+      drawer: NavBar(totalTime: diffSec ,),
         appBar: AppBar(
           // title: Text('Number of completed goals: $completedNum'),
         ),
@@ -654,7 +655,7 @@ void checkDiffGoal() async{
                 ),
 
                 Container(
-                  child: Text('$_diffHours : $_diffMin : $_diffSec',
+                  child: Text('$diffH : $diffMin : $diffSec',
                     style: TextStyle(color: Colors.white, fontSize: 30,),
                   ),
                 ),
@@ -778,28 +779,6 @@ void checkDiffGoal() async{
                   ),
                 ]),
           ),
-         TextButton(onPressed: () => NotificationAPI.displayNotification(
-               title:'hehe',
-               body:'HEHEEHEHEHEHEHHEHE',
-               payload: 'HEHEman',),
-             child:Text('Notification', style: TextStyle(fontSize: 24), ),
-             style: TextButton.styleFrom(
-               backgroundColor: Colors.white,
-             ),
-         ),
-
-          TextButton(
-            onPressed: () => NotificationAPI.displayTimedNotification(
-              title: 'Scheduled Date',
-              body: 'TODO: ADD SCHEDULED MESSAGE',
-              payload: 'DO YOUR GOALS',
-              scheduledDate: DateTime.now().add(Duration(seconds: 15))
-          ),
-            child: Text('Scheduled Notification',
-            style: TextStyle(fontSize: 24),),
-              style: TextButton.styleFrom(
-              backgroundColor: Colors.white,),
-            ),
 
           MaterialButton(onPressed: () async {
             if (isStartService == false) {
