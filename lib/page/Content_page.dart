@@ -7,6 +7,7 @@ import 'package:phoneapp/model/Goals.dart';
 import 'package:rxdart/rxdart.dart';
 import '../Utils.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
+import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:phoneapp/model/DiffTime.dart';
@@ -86,7 +87,8 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   int diffSec = 0;
 
   int averageSec = 0;
-  int totalSec = 0;
+  int totalAverageSec = 0;
+  int totalTime = 0;
 
 
   void calculateDiffTime() async {
@@ -174,7 +176,7 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   //goalID
   late int currentGoalId;
   late int currentDiffGoalId;
-  late int finalTime;
+  int finalTime = 0;
   //stop time function
   late Timer _timer;
   late Timer _diffTimer;
@@ -455,14 +457,17 @@ void checkDiffGoal() async{
       //after database loads, change the loading symbol to off
       setState(() => isLoading = false);
       final totalAvg = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a + b)/screenContent.length;
+      int totalTimeValue = screenContent.map((m) => (m.diffTime)).reduce((a, b) => a+b);
       await ScreenTimeDatabase.instance.totalDiffTime();
       await ScreenTimeDatabase.instance.findTotalTime();
-      this.finalTime = ScreenTimeDatabase.finalTime;
 
+      this.finalTime = ScreenTimeDatabase.finalTime;
       final avg = this.finalTime/(ScreenTimeDatabase.countToday);
+
       setState(() {
         averageSec = avg.round();
-        totalSec = totalAvg.round();
+        totalAverageSec = totalAvg.round();
+        totalTime = totalTimeValue;
       });
 
       calculateTotalTime();
@@ -628,7 +633,12 @@ void checkDiffGoal() async{
     final _diffMin = twoDigits(diffMin);
     final _diffSec = twoDigits(diffSec);
     return Scaffold(
-      drawer: NavBar(totalTime: diffSec ,),
+      drawer: NavBar(
+        totalTime: totalTime,
+        totalAverageTime: totalAverageSec,
+        countOfCompletedGoals: completedNum,
+        countOfUncompletedGoals: unCompletedNum,
+      ),
         appBar: AppBar(
           // title: Text('Number of completed goals: $completedNum'),
         ),
@@ -636,19 +646,14 @@ void checkDiffGoal() async{
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-
         children: <Widget>[
-
           Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
-
               children: <Widget>[
-
                 Container(
-
                   child: Text('$_hours : $_min : $_sec',
                   style: TextStyle(color:Colors.white, fontSize: 30),
                   ),
@@ -738,6 +743,15 @@ void checkDiffGoal() async{
                           ),
                         ),
                         const SizedBox(height: 24,),
+                        ElevatedButton(onPressed:() async {
+                          await Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => ScreenTimePage()));
+                          //Once created refresh goals display page
+                          refreshScreenTime();
+                          refreshGoals();
+                        },
+                          child: Icon(Icons.atm),
+                        ),
 
                         ElevatedButton (
                             onPressed: () => Utils.showSheet(context,

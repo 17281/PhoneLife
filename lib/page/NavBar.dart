@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:phoneapp/page/Content_page.dart';
 
 class NavBar extends StatelessWidget {
   int totalTime;
-  NavBar({Key? key, required this.totalTime}) : super(key: key);
+  int totalAverageTime;
+  int? countOfCompletedGoals;
+  int? countOfUncompletedGoals;
+
+  NavBar({Key? key,
+    required this.totalTime,
+    required this.totalAverageTime,
+    required this.countOfCompletedGoals,
+    required this.countOfUncompletedGoals,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +39,7 @@ class NavBar extends StatelessWidget {
                 SizedBox(height:25,),
                 ListTile(
                   leading: Icon(Icons.add_to_home_screen),
-                  trailing: Text('X-Time', style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                  trailing: Text(totalAverageTime.toString(), style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
                     child: Text('Average Screen Time', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
@@ -39,7 +47,7 @@ class NavBar extends StatelessWidget {
                 SizedBox(height:25,),
                 ListTile(
                   leading: Icon(Icons.check_circle_outline),
-                  trailing: Text('X-Time', style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                  trailing: Text(countOfCompletedGoals.toString(), style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
                     child: Text('Completed Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
@@ -47,7 +55,7 @@ class NavBar extends StatelessWidget {
                 SizedBox(height:25,),
                 ListTile(
                   leading: Icon(Icons.remove_circle_outline),
-                  trailing: Text('X-Time', style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                  trailing: Text(countOfUncompletedGoals.toString(), style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
                     child: Text('Uncompleted Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
