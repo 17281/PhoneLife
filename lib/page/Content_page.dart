@@ -143,7 +143,6 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
         setState(() => hours = y%60);
       }
     }
-    print ('Sec = $sec Min = $min Hours = $hours');
   }
 
   static List<String> goalValues = [
