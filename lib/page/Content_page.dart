@@ -408,7 +408,6 @@ void checkDiffGoal() async{
           screenCounter ++;
         });
         await submit();
-        print('screenCounter = $screenCounter');
       }
     } else
     if (state == AppLifecycleState.resumed) {
@@ -638,6 +637,7 @@ void checkDiffGoal() async{
         totalAverageTime: totalAverageSec,
         countOfCompletedGoals: completedNum,
         countOfUncompletedGoals: unCompletedNum,
+        screenCount: screenCounter,
       ),
         appBar: AppBar(
           // title: Text('Number of completed goals: $completedNum'),

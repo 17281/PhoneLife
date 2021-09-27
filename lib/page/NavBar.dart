@@ -5,12 +5,14 @@ class NavBar extends StatelessWidget {
   int totalAverageTime;
   int? countOfCompletedGoals;
   int? countOfUncompletedGoals;
-
+  int screenCount;
   NavBar({Key? key,
     required this.totalTime,
     required this.totalAverageTime,
     required this.countOfCompletedGoals,
     required this.countOfUncompletedGoals,
+    required this.screenCount,
+
   }) : super(key: key);
 
   @override
@@ -27,6 +29,8 @@ class NavBar extends StatelessWidget {
               ),
             ),
             subtitle: Column(
+              mainAxisSize: MainAxisSize.max ,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 15,),
                 ListTile(
@@ -63,7 +67,7 @@ class NavBar extends StatelessWidget {
                 SizedBox(height:25,),
                 ListTile(
                   leading: Icon(Icons.plus_one_rounded),
-                  trailing: Text('X-Time', style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                  trailing: Text(screenCount.toString(), style: TextStyle(fontSize: 12, color: Colors.white) ,),
                   title: Container(
                     child: Text('Current Screen Count', style: TextStyle(fontSize: 17, color: Colors.white),),
                   ),
