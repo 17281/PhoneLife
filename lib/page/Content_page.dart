@@ -55,6 +55,9 @@ void globalForegroundService() {
 }
 
 class ContentPage extends StatefulWidget {
+  static bool goalChosen = false;
+  static bool diffGoalChosen = false;
+
   @override
   _ContentPageState createState() => _ContentPageState();
 }
@@ -62,8 +65,7 @@ class ContentPage extends StatefulWidget {
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
 
-  static bool goalChosen = false;
-  static bool diffGoalChosen = false;
+
   //counting the amount of time phone is opened
   int screenCounter = 0;
   bool isStartService = false;
@@ -217,7 +219,7 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   }
 
 void checkGoal() async{
-    setState(() => goalChosen = false);
+    setState(() => ContentPage.goalChosen = false);
     if (goalTime == 0 && min < 60){
       await updateCompletion();
     }
@@ -234,7 +236,7 @@ void checkGoal() async{
 }
 
 void checkDiffGoal() async{
-    setState(() => diffGoalChosen = false);
+    setState(() => ContentPage.diffGoalChosen = false);
     if (diffMin < diffGoalTime) {
       await updateDiffCompletion();
     }
@@ -279,7 +281,6 @@ void checkDiffGoal() async{
         body: 'New day, New you. Are you ready to beat your past!?',
         payload: 'Phone Champion',
         scheduledDate: DateTime.now(),);
-    startForegroundService();
     goalNotification();
     notifyEveryHour();
   }
@@ -369,7 +370,7 @@ void checkDiffGoal() async{
         );
       }
 
-      if (goalChosen == false) {
+      if (ContentPage.goalChosen == false) {
         NotificationAPI.displayTimedNotification(
             title: 'NANI!?, GOAL NOT CHOSEN >:(',
             body: 'Even if completing a goal is hard, attempting it is harder',
@@ -378,7 +379,7 @@ void checkDiffGoal() async{
         );
       }
 
-      if (diffGoalChosen == false) {
+      if (ContentPage.diffGoalChosen == false) {
         NotificationAPI.displayTimedNotification(
             title: 'First steps are always the hardest',
             body: 'Commitment is key to every success',
@@ -559,7 +560,7 @@ void checkDiffGoal() async{
       createdTime: DateTime.now(),
     );
     await UserDatabase.instance.create(goalA);
-    setState(() => goalChosen = true);
+    setState(() => ContentPage.goalChosen = true);
     startTimer();
     numOfCompleted();
   }
@@ -571,7 +572,8 @@ void checkDiffGoal() async{
         createdTime: DateTime.now()
     );
     await DiffTimeDatabase.instance.createDiffGoal(goalC);
-    setState(() => diffGoalChosen = true);
+    setState(() => ContentPage.diffGoalChosen = true);
+    print(ContentPage.diffGoalChosen);
     diffTimer();
   }
 
@@ -697,7 +699,6 @@ void checkDiffGoal() async{
 
                 children: <Widget> [
                   Container(
-
                     child: Column (
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       mainAxisSize: MainAxisSize.max,

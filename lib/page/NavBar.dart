@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phoneapp/db/User_database.dart';
 import 'package:phoneapp/page/Content_page.dart';
+import 'package:phoneapp/Utils.dart';
 
 class NavBar extends StatefulWidget {
   int totalTime;
@@ -179,7 +180,7 @@ class _NavBarState extends State<NavBar> {
         actions: <Widget>[
           MaterialButton(child: Text('No', style: TextStyle(color: Colors.white),),
             onPressed: () {
-
+            Navigator.of(context).pop();
             },
               color: Colors.red,
               elevation: 5.0,
@@ -189,7 +190,10 @@ class _NavBarState extends State<NavBar> {
             onPressed: () {
             ScreenTimeDatabase.instance.deleteDB();
             UserDatabase.instance.deleteDB();
-            DiffTimeDatabase.instance.deleteDB();},
+            DiffTimeDatabase.instance.deleteDB();
+            Navigator.of(context).pop();
+            Utils.alertSnackBar(context, 'Stats has been reset, restart app to begin');
+            },
             color: Colors.green,
             elevation: 5.0,
             ),

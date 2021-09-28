@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:phoneapp/page/Content_page.dart';
 class Utils {
   //Links the index with the respective model
   static List<Widget> modelBuilder<M>(
@@ -23,6 +24,24 @@ class Utils {
             onPressed: onClicked,
           ),
         ),
+      );  //UI of the bottom box
+
+  static void showDiffSheet(
+      BuildContext context, {
+        required Widget child,
+        required VoidCallback onClicked,
+      }) =>
+      showCupertinoModalPopup(
+        context: context,
+        builder: (context) => CupertinoActionSheet(
+          actions: [
+            child,
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            child: Text('Done'),
+            onPressed: onClicked,
+          ),
+        ),
       );
 
   //Bottom Notification
@@ -31,8 +50,6 @@ class Utils {
       content: Text(text, style: TextStyle(fontSize: 30)),
       backgroundColor: Colors.green,
     );
-
-    //Sends a text box styled notification on the bottom to tell user what is added
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(snackBar);
@@ -47,4 +64,15 @@ class Utils {
       ..removeCurrentSnackBar()
       ..showSnackBar(snackBar);
   }
+
+  static void alertSnackBar (BuildContext context, String text) {
+    final snackBar = SnackBar(
+      content: Text(text, style: TextStyle(fontSize: 20),),
+      backgroundColor: Colors.orange,
+    );
+    ScaffoldMessenger.of(context)
+    ..removeCurrentSnackBar()
+    ..showSnackBar(snackBar);
+  }
+
 }
