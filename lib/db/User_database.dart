@@ -26,8 +26,15 @@ class DiffTimeDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
     //opens database file with its pathway
+    return await openDatabase(path, version: 3, onCreate: _createDB);
+  }
+
+  Future deleteDB() async {
+    //finds path of database
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'ScreenTime.db');
+    //remove db
     await deleteDatabase(path);
-    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   //create database table
@@ -51,7 +58,6 @@ class DiffTimeDatabase {
   Future<GoalContent> createDiffGoal(GoalContent content) async {
     //reference to database
     final db = await instance.database;
-    //passing sql statements
     //insert into selected      table           data-selected
     final goalId = await db.insert(diffGoal, content.toJson());
     diffGoalId = goalId;
@@ -153,14 +159,19 @@ class DiffTimeDatabase {
     return _database!;
   }
 
-
+  Future deleteDB() async {
+    //finds path of database
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'Goal.db');
+    //remove db
+    await deleteDatabase(path);
+  }
   //finds the path for the database on Android and IOS
   Future<Database> _initDB(String filepath) async {
     //if database is stored in different location, then use "path_provider"
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
     //opens database file with its pathway
-    await deleteDatabase(path);
     return await openDatabase(path, version: 3, onCreate: _createDB);
   }
 
@@ -280,6 +291,7 @@ class ScreenTimeDatabase {
   static late int finalTime;
   static late int countToday;
   ScreenTimeDatabase._int();
+
   Future<Database> get database async{
     //the database will ONLY be created if the database return is null (which will always be null upon download)
     if (_STDatabase != null) return _STDatabase!;
@@ -294,8 +306,15 @@ class ScreenTimeDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
   //version of database
-    await deleteDatabase(path);
   return await openDatabase(path, version: 3, onCreate: _createScreenTimeDB);
+  }
+
+  Future deleteDB() async {
+    //finds path of database
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'ScreenTime.db');
+    //remove db
+    await deleteDatabase(path);
   }
 
   Future _createScreenTimeDB(Database db, int version) async {

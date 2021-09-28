@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:phoneapp/db/User_database.dart';
+import 'package:phoneapp/page/Content_page.dart';
 
 class NavBar extends StatefulWidget {
   int totalTime;
@@ -154,10 +156,45 @@ class _NavBarState extends State<NavBar> {
             ),
           ),
           Divider(),
+          MaterialButton(child: Text('Reset Stats',
+            style: TextStyle(color: Colors.white),
+          ),
+            onPressed: () {
+            createAlertDialog(context);
+            },
+
+            color: Colors.deepOrange,),
 
 
         ],
       ),
     );
+  }
+
+  createAlertDialog(BuildContext context) {
+    return showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: Text('THIS WILL RESET ALL STATS'),
+        content: Text('Do you still want to continue?'),
+        actions: <Widget>[
+          MaterialButton(child: Text('No', style: TextStyle(color: Colors.white),),
+            onPressed: () {
+
+            },
+              color: Colors.red,
+              elevation: 5.0,
+          ),
+
+          MaterialButton(child: Text('Yes', style: TextStyle(color: Colors.white),),
+            onPressed: () {
+            ScreenTimeDatabase.instance.deleteDB();
+            UserDatabase.instance.deleteDB();
+            DiffTimeDatabase.instance.deleteDB();},
+            color: Colors.green,
+            elevation: 5.0,
+            ),
+        ],
+      );
+    });
   }
 }
