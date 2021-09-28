@@ -26,6 +26,8 @@ class DiffTimeDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
     //opens database file with its pathway
+    //TODO:REMEBER TO DELETE
+    await deleteDatabase(path);
     return await openDatabase(path, version: 3, onCreate: _createDB);
   }
 
@@ -172,6 +174,8 @@ class DiffTimeDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
     //opens database file with its pathway
+    //TODO:REMEBER TO DELETE
+    await deleteDatabase(path);
     return await openDatabase(path, version: 3, onCreate: _createDB);
   }
 
@@ -306,6 +310,8 @@ class ScreenTimeDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
   //version of database
+    //TODO:REMEBER TO DELETE
+    await deleteDatabase(path);
   return await openDatabase(path, version: 3, onCreate: _createScreenTimeDB);
   }
 

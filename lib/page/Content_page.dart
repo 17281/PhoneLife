@@ -481,6 +481,8 @@ void checkDiffGoal() async{
     //refreshes all goals when new data added
     this.goals = await UserDatabase.instance.readAllGoals();
     this.diffGoals = await DiffTimeDatabase.instance.readAllDiffGoals();
+    Utils.goalChosen = ContentPage.goalChosen;
+    Utils.diffGoalChosen = ContentPage.diffGoalChosen;
     setState(() => isLoading = false);
   }
 
@@ -743,6 +745,7 @@ void checkDiffGoal() async{
                           ),
                         ),
                         const SizedBox(height: 24,),
+
                         ElevatedButton(onPressed:() async {
                           await Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) => ScreenTimePage()));
@@ -754,10 +757,14 @@ void checkDiffGoal() async{
                         ),
 
                         ElevatedButton (
-                            onPressed: () => Utils.showSheet(context,
+                            onPressed: () async {
+                              Utils.showDiffSheet(context,
                                 child: buildTimerPicker(),
                                 onClicked: () {
-                                  final timeValues = values[index];
+                                final timeValues = values[index];
+                                  Utils.showSnackBar(context, '$timeValues minutes has been selected');
+                                  Navigator.pop(context);
+
                                   final timeValue = int.parse(timeValues);
                                   setState(() {
                                     diffGoalTime = timeValue;
@@ -765,9 +772,8 @@ void checkDiffGoal() async{
                                   });
                                   addOrUpdateDiffTime();
                                   refreshGoals();
-                                  Utils.showSnackBar(context, '$timeValues minutes has been selected');
-                                  Navigator.pop(context);
-                                }),
+                                });
+                            },
                             style: ElevatedButton.styleFrom(
                               shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
                               padding: EdgeInsets.all(0.0),

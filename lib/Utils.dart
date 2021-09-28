@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phoneapp/page/Content_page.dart';
 class Utils {
+
+  static bool goalChosen = true;
+  static bool diffGoalChosen = true;
+
   //Links the index with the respective model
   static List<Widget> modelBuilder<M>(
       List<M> models, Widget Function(int index, M model) builder) =>
@@ -20,7 +24,7 @@ class Utils {
             child,
           ],
           cancelButton: CupertinoActionSheetAction(
-            child: Text('Done'),
+            child: Text((goalChosen == false)? 'Done':'Update'),
             onPressed: onClicked,
           ),
         ),
@@ -38,7 +42,7 @@ class Utils {
             child,
           ],
           cancelButton: CupertinoActionSheetAction(
-            child: Text('Done'),
+            child: Text((diffGoalChosen == false) ? 'Done' : 'Update'),
             onPressed: onClicked,
           ),
         ),
