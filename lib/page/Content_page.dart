@@ -283,6 +283,7 @@ void checkDiffGoal() async{
         scheduledDate: DateTime.now(),);
     goalNotification();
     notifyEveryHour();
+    startForegroundService();
   }
   void listenNotify() => NotificationAPI.onNotification;
   //closing database when app is down
@@ -651,9 +652,8 @@ void checkDiffGoal() async{
       crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
@@ -662,26 +662,30 @@ void checkDiffGoal() async{
                   ),
                 ),
 
+                SizedBox(height: 50,),
                 Container(
-                  child: Text('$diffH : $diffMin : $diffSec',
+                  child: Text('$_diffHours : $_diffMin : $_diffSec',
                     style: TextStyle(color: Colors.white, fontSize: 30,),
                   ),
                 ),
               ]
             ),
-            alignment: Alignment.centerRight,
+            alignment: Alignment.center,
           ),
           Container(
-            height: 300,
-            child: SfCircularChart(
+            height: 250,
+            child: (goals.isEmpty && diffGoals.isEmpty) ? CircularProgressIndicator(
+              value: 0.7,
+            ) :
+            SfCircularChart(
               title: ChartTitle(text:'Goal Chart'),
               tooltipBehavior: TooltipBehavior(enable: true),
               series: <CircularSeries>[DoughnutSeries<GoalCompletionData, String>(
                     dataSource: getChartData(),
                     explode: true,
                     explodeOffset: '8%',
-                    startAngle: 270,
-                    endAngle: 90,
+                    startAngle: 0,
+                    endAngle:0,
                     xValueMapper: (GoalCompletionData data, _) => data.name,
                     yValueMapper: (GoalCompletionData data, _) => data.isComplete,
                     dataLabelMapper: (GoalCompletionData data, _) => data.numPercent,
@@ -689,22 +693,20 @@ void checkDiffGoal() async{
                     dataLabelSettings: DataLabelSettings (isVisible: true),
                 )
               ],
-            ),
+            )
           ),
 
           Container(
             width: 250,
             child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget> [
                   Container(
                     child: Column (
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       mainAxisSize: MainAxisSize.max,
-
                       children: [
                         ElevatedButton(
                           onPressed: () async {
@@ -738,7 +740,7 @@ void checkDiffGoal() async{
                             child: Container(
                               constraints: BoxConstraints(maxWidth: 350.0, maxHeight: 40),
                               alignment: Alignment.center,
-                              child: Text('Use your phone under $goalIndex hours',
+                              child: Text('Within $goalIndex hours',
                                 style: TextStyle(color: Colors.white, fontSize: 20),
                               ),
                             ),
@@ -789,13 +791,14 @@ void checkDiffGoal() async{
                               child: Container (
                                 constraints: BoxConstraints(maxWidth: 350.0, maxHeight: 40),
                                 alignment: Alignment.center,
-                                child: Text('Get less than an average of $index per hour',
+                                child: Text('Under $index Minutes',
                                   style: TextStyle(color: Colors.white, fontSize: 20)
                                 ),
                               ),
                             ),
                           ),
                       ],),
+                    alignment: Alignment.topCenter,
                   ),
                 ]),
           ),
@@ -867,8 +870,9 @@ void checkDiffGoal() async{
     final finalPercentC = ('$percentageC%').toString();
     final finalPercentUC = ('$percentageUC%').toString();
     final List<GoalCompletionData> chartData = <GoalCompletionData>[
-      GoalCompletionData(completedNum, 'Completed', finalPercentC, Colors.indigoAccent),
-      GoalCompletionData(unCompletedNum, 'Not Completed', finalPercentUC, Colors.redAccent)
+      GoalCompletionData(unCompletedNum, 'Not Completed', finalPercentUC, Colors.redAccent),
+      GoalCompletionData(completedNum, 'Completed', finalPercentC, Colors.indigoAccent)
+
     ];
     return chartData;
   }

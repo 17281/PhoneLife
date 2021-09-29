@@ -99,76 +99,81 @@ class _NavBarState extends State<NavBar> {
     calculateTotalTime();
     calculateDiffTime();
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-        children: [
-          ListTile(
-            tileColor: Colors.grey,
-            title: Container(
-              child: Text('User Stats',
-                style: TextStyle(fontSize: 20, color: Colors.white),
+      child: Container (
+        color: Colors.grey,
+        child:
+        ListView(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          children: [
+            ListTile(
+              title: Container(
+                child: Text('User Stats', textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              ),
+              subtitle: Column(
+                mainAxisSize: MainAxisSize.max ,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+
+                  SizedBox(height: 20,),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.add_alarm_outlined),
+                    trailing: Text("$hours : $min : $sec", style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                    title: Container(
+                      child: Text(' Screen Time', style: TextStyle(fontSize: 17, color: Colors.white),),
+                    ),
+                  ),
+                  SizedBox(height:50,),
+                  ListTile(
+                    leading: Icon(Icons.add_to_home_screen),
+                    trailing: Text("$diffH: $diffMin : $diffSec", style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                    title: Container(
+                      child: Text('Average Screen Time', style: TextStyle(fontSize: 17, color: Colors.white),),
+                    ),
+                  ),
+                  SizedBox(height:50,),
+                  ListTile(
+                    leading: Icon(Icons.check_circle_outline),
+                    trailing: Text(widget.countOfCompletedGoals.toString(), style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                    title: Container(
+                      child: Text('Completed Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
+                    ),
+                  ),
+                  SizedBox(height:50,),
+                  ListTile(
+                    leading: Icon(Icons.remove_circle_outline),
+                    trailing: Text(widget.countOfUncompletedGoals.toString(), style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                    title: Container(
+                      child: Text('Uncompleted Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
+                    ),
+                  ),
+                  SizedBox(height:50,),
+                  ListTile(
+                    leading: Icon(Icons.plus_one_rounded),
+                    trailing: Text(widget.screenCount.toString(), style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                    title: Container(
+                      child: Text('Current Screen Count', style: TextStyle(fontSize: 17, color: Colors.white),),
+                    ),
+                  ),
+                ],
               ),
             ),
-            subtitle: Column(
-              mainAxisSize: MainAxisSize.max ,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 15,),
-                ListTile(
-                  leading: Icon(Icons.add_alarm_outlined),
-                  trailing: Text("$hours : $min : $sec", style: TextStyle(fontSize: 12, color: Colors.white) ,),
-                  title: Container(
-                    child: Text(' Screen Time', style: TextStyle(fontSize: 17, color: Colors.white),),
-                  ),
-                ),
-                SizedBox(height:25,),
-                ListTile(
-                  leading: Icon(Icons.add_to_home_screen),
-                  trailing: Text("$diffH: $diffMin : $diffSec", style: TextStyle(fontSize: 12, color: Colors.white) ,),
-                  title: Container(
-                    child: Text('Average Screen Time', style: TextStyle(fontSize: 17, color: Colors.white),),
-                  ),
-                ),
-                SizedBox(height:25,),
-                ListTile(
-                  leading: Icon(Icons.check_circle_outline),
-                  trailing: Text(widget.countOfCompletedGoals.toString(), style: TextStyle(fontSize: 12, color: Colors.white) ,),
-                  title: Container(
-                    child: Text('Completed Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
-                  ),
-                ),
-                SizedBox(height:25,),
-                ListTile(
-                  leading: Icon(Icons.remove_circle_outline),
-                  trailing: Text(widget.countOfUncompletedGoals.toString(), style: TextStyle(fontSize: 12, color: Colors.white) ,),
-                  title: Container(
-                    child: Text('Uncompleted Goals', style: TextStyle(fontSize: 17, color: Colors.white),),
-                  ),
-                ),
-                SizedBox(height:25,),
-                ListTile(
-                  leading: Icon(Icons.plus_one_rounded),
-                  trailing: Text(widget.screenCount.toString(), style: TextStyle(fontSize: 12, color: Colors.white) ,),
-                  title: Container(
-                    child: Text('Current Screen Count', style: TextStyle(fontSize: 17, color: Colors.white),),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          SizedBox(height: 30,),
           Divider(),
+          SizedBox(height: 20,),
           MaterialButton(child: Text('Reset Stats',
             style: TextStyle(color: Colors.white),
           ),
             onPressed: () {
             createAlertDialog(context);
             },
-
             color: Colors.deepOrange,),
-
-
         ],
       ),
+    ),
     );
   }
 
@@ -178,25 +183,30 @@ class _NavBarState extends State<NavBar> {
         title: Text('THIS WILL RESET ALL STATS'),
         content: Text('Do you still want to continue?'),
         actions: <Widget>[
-          MaterialButton(child: Text('No', style: TextStyle(color: Colors.white),),
-            onPressed: () {
-            Navigator.of(context).pop();
-            },
+          Row (
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+            MaterialButton(child: Text('No', style: TextStyle(color: Colors.white),),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
               color: Colors.red,
               elevation: 5.0,
-          ),
-
-          MaterialButton(child: Text('Yes', style: TextStyle(color: Colors.white),),
-            onPressed: () {
-            ScreenTimeDatabase.instance.deleteDB();
-            UserDatabase.instance.deleteDB();
-            DiffTimeDatabase.instance.deleteDB();
-            Navigator.of(context).pop();
-            Utils.alertSnackBar(context, 'Stats has been reset, restart app to begin');
-            },
-            color: Colors.green,
-            elevation: 5.0,
             ),
+
+            MaterialButton(child: Text('Yes', style: TextStyle(color: Colors.white),),
+              onPressed: () {
+                ScreenTimeDatabase.instance.deleteDB();
+                UserDatabase.instance.deleteDB();
+                DiffTimeDatabase.instance.deleteDB();
+                Navigator.of(context).pop();
+                Utils.alertSnackBar(context, 'Stats has been reset, restart app to begin');
+              },
+              color: Colors.green,
+              elevation: 5.0,
+            ),
+          ],
+      ),
         ],
       );
     });
