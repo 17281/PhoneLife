@@ -191,6 +191,7 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   int counter = 10;
 
   void diffTimer() {
+    counter = 10;
     _diffTimer = Timer.periodic(Duration(seconds: 1),(timer) {
       if (counter > 0) {
         setState(() {
@@ -198,15 +199,13 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
         });
       }else {
         timer.cancel();
-        setState(() {
-          counter = 10;
-        });
         checkDiffGoal();
       }
     });
   }
 
   void startTimer() {
+    secCounter = 10;
     _timer = Timer.periodic(Duration(seconds: 1),(timer) {
       if (secCounter > 0) {
         setState(() {
@@ -214,21 +213,19 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
         });
       }else {
         timer.cancel();
-        setState(() {
-          secCounter = 10;
-        });
         checkGoal();
       }
     });
   }
 
 void checkGoal() async{
-    setState(() => ContentPage.goalChosen = false);
-    numOfCompleted();
-    if (goalTime == 0 && min < 60){
+    if (ContentPage.goalChosen == true) {
+      setState (() => ContentPage.goalChosen = false);
+    }
+    if (goalTime == 0 && min < 60) {
       await updateCompletion();
     }
-    else if (hours < goalTime) {
+    if (hours < goalTime) {
       await updateCompletion();
     } else {
       NotificationAPI.displayNotification(
@@ -241,8 +238,10 @@ void checkGoal() async{
 }
 
 void checkDiffGoal() async{
-    setState(() => ContentPage.diffGoalChosen = false);
-    numOfCompleted();
+    if (ContentPage.diffGoalChosen == true) {
+      setState(() => ContentPage.diffGoalChosen = false);
+    }
+
     if (diffMin < diffGoalTime) {
       await updateDiffCompletion();
     }
@@ -255,6 +254,7 @@ void checkDiffGoal() async{
       Utils.snackBar(context, 'Goal has not been completed',);
     }
 }
+
   Future<void> startService() async{
     if(Platform.isAndroid) {
       final methodChannel = MethodChannel("com.example/background_services");
@@ -500,7 +500,6 @@ void checkDiffGoal() async{
     setState(() {
       currentGoalId = UserDatabase.goalID;
     });
-    print('the updateCompletion id = $currentGoalId');
     await refreshGoal();
     final currentGoal = goal!.copy(
     isCompleted: true
@@ -518,9 +517,10 @@ void checkDiffGoal() async{
     setState(() {
       currentDiffGoalId = DiffTimeDatabase.diffGoalId;
     });
-    print('id of diffTIme $currentDiffGoalId');
     await refreshDiffGoal();
-
+    if( ContentPage.diffGoalChosen == true) {
+      setState(() => ContentPage.diffGoalChosen = false);
+    }
     final currentDiffGoal = diffGoal!.copy(
       isDiffComplete: true
     );
@@ -530,7 +530,6 @@ void checkDiffGoal() async{
   }
 
   Future updateGoal() async {
-
     _timer.cancel();
     this.currentGoalId = UserDatabase.goalID;
     print('the updateGoal id = $currentGoalId');
@@ -548,7 +547,6 @@ void checkDiffGoal() async{
   Future updateDiffGoal() async {
     _diffTimer.cancel();
     this.currentDiffGoalId = DiffTimeDatabase.diffGoalId;
-    print ('the diffGoal id = $currentDiffGoalId');
     await refreshDiffGoal();
 
     final currentGoal = diffGoal!.copy(
@@ -561,6 +559,7 @@ void checkDiffGoal() async{
   }
 
   Future addGoal() async {
+    setState(() => ContentPage.goalChosen = true);
     //add all the content from the fields into a single statement
     final goalA = UserContent(
       goalTime: goalTime,
@@ -568,42 +567,55 @@ void checkDiffGoal() async{
       createdTime: DateTime.now(),
     );
     await UserDatabase.instance.create(goalA);
-    setState(() => ContentPage.goalChosen = true);
     startTimer();
     numOfCompleted();
   }
 
   Future addDiffGoal() async {
+    setState(() => ContentPage.diffGoalChosen = true);
     final goalC = GoalContent(
         isDiffComplete: false,
         goalDiff: diffGoalTime,
         createdTime: DateTime.now()
     );
     await DiffTimeDatabase.instance.createDiffGoal(goalC);
-    setState(() => ContentPage.diffGoalChosen = true);
-    print(ContentPage.diffGoalChosen);
     diffTimer();
     numOfCompleted();
   }
 
   void addOrUpdateDiffTime() async {
-    if (counter > 0 && diffGoals.isNotEmpty){
-      await updateDiffGoal();
-    }
-    else {
+    if (diffGoals.isEmpty){
+      print('goal added');
       await addDiffGoal();
+      }
+    else {
+      if (counter > 0 ){
+        print('goal 2 updated');
+        await updateDiffGoal();
+      } else {
+        print('goal 2 added');
+        await addDiffGoal();
+      }
     }
   }
 
   //add or update
   void addOrUpdateTotalTime() async{
-    if (secCounter > 0 && goals.isNotEmpty) {
-      await updateGoal();
-    }else {
-      print('sec is 0');
+    if (goals.isEmpty){
+      print('goal added');
       await addGoal();
     }
+    else {
+      if (secCounter > 0 ){
+        print('goal 2 updated');
+        await updateGoal();
+      } else {
+        print('goal 2 added');
+        await addGoal();
+      }
+    }
   }
+
 
 
   void numOfCompleted() async {
@@ -739,20 +751,23 @@ void checkDiffGoal() async{
                       children: [
                         ElevatedButton(
                           onPressed: () async {
+                            Utils.goalChosen = ContentPage.goalChosen;
                             Utils.showSheet(context,
                                 child: buildPicker(),
                                 onClicked: () {
                                   final goalValue = goalValues[goalIndex];
                                   Utils.showSnackBar(context, '"$goalValue" has been selected, Survive the day without using your phone over $goalIndex hours');
                                   Navigator.pop(context);
+
                                   setState(() {
                                     goalTime = goalIndex;
                                     this.createdTime = DateTime.now();
                                   });
                                   addOrUpdateTotalTime();
-                                  refreshGoals();
-                                  numOfCompleted();
+
                                 });
+                            await refreshGoals();
+                            numOfCompleted();
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
@@ -789,6 +804,7 @@ void checkDiffGoal() async{
 
                         ElevatedButton (
                             onPressed: () async {
+                              Utils.diffGoalChosen = ContentPage.diffGoalChosen;
                               Utils.showDiffSheet(context,
                                 child: buildTimerPicker(),
                                 onClicked: () {
