@@ -220,6 +220,7 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
 
 void checkGoal() async{
     setState(() => ContentPage.goalChosen = false);
+    numOfCompleted();
     if (goalTime == 0 && min < 60){
       await updateCompletion();
     }
@@ -237,6 +238,7 @@ void checkGoal() async{
 
 void checkDiffGoal() async{
     setState(() => ContentPage.diffGoalChosen = false);
+    numOfCompleted();
     if (diffMin < diffGoalTime) {
       await updateDiffCompletion();
     }
@@ -443,9 +445,7 @@ void checkDiffGoal() async{
   }
   //Updating goal
   Future refreshGoal() async {
-    setState(() => isLoading = true);
     this.goal = await UserDatabase.instance.readGoal(currentGoalId);
-    setState(() => isLoading = false);
   }
 
 //Updating screen time data displayed
@@ -526,6 +526,7 @@ void checkDiffGoal() async{
   }
 
   Future updateGoal() async {
+
     _timer.cancel();
     this.currentGoalId = UserDatabase.goalID;
     print('the updateGoal id = $currentGoalId');
@@ -578,6 +579,7 @@ void checkDiffGoal() async{
     setState(() => ContentPage.diffGoalChosen = true);
     print(ContentPage.diffGoalChosen);
     diffTimer();
+    numOfCompleted();
   }
 
   void addOrUpdateDiffTime() async {
@@ -657,45 +659,68 @@ void checkDiffGoal() async{
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  child: Text('$_hours : $_min : $_sec',
-                  style: TextStyle(color:Colors.white, fontSize: 30),
+                  child: Text('Current Usage',
+                    style: TextStyle(
+                      color: Color (0xffffaa00),
+                      fontSize: 25
+                    ),
                   ),
                 ),
 
-                SizedBox(height: 50,),
+                Container(
+                  child: Text('$_hours : $_min : $_sec',
+                  style: TextStyle(color:Colors.white, fontSize: 60),
+                  ),
+                ),
+                Divider(),
+                Container(
+                    height: 250,
+                    child: (completedNum == 0 && unCompletedNum == 0) ? Center(
+                      child: LinearProgressIndicator(
+                        color: Colors.white,
+                        backgroundColor: Colors.grey,
+                      ),
+                    ) :
+                    SfCircularChart(
+                      title: ChartTitle(
+                          text:'Goal Chart',
+                      ),
+                      tooltipBehavior: TooltipBehavior(enable: true),
+                      series: <CircularSeries>[DoughnutSeries<GoalCompletionData, String>(
+                        dataSource: getChartData(),
+                        explode: true,
+                        explodeOffset: '8%',
+                        startAngle: 0,
+                        endAngle:0,
+                        xValueMapper: (GoalCompletionData data, _) => data.name,
+                        yValueMapper: (GoalCompletionData data, _) => data.isComplete,
+                        dataLabelMapper: (GoalCompletionData data, _) => data.numPercent,
+                        pointColorMapper: (GoalCompletionData data, _) => data.pointColor,
+                        dataLabelSettings: DataLabelSettings (isVisible: true),
+                      )
+                      ],
+                    )
+                ),
+                Divider(),
+                SizedBox(height: 30, ),
+                Container(
+                  child: Text('Average Time',
+                    style: TextStyle(
+                        color:Color(0xffffaa00),
+                        fontSize: 25),
+                  ),
+                ),
                 Container(
                   child: Text('$_diffHours : $_diffMin : $_diffSec',
-                    style: TextStyle(color: Colors.white, fontSize: 30,),
+                    style: TextStyle(color: Colors.white, fontSize: 60,),
                   ),
                 ),
               ]
             ),
             alignment: Alignment.center,
           ),
-          Container(
-            height: 250,
-            child: (goals.isEmpty && diffGoals.isEmpty) ? CircularProgressIndicator(
-              value: 0.7,
-            ) :
-            SfCircularChart(
-              title: ChartTitle(text:'Goal Chart'),
-              tooltipBehavior: TooltipBehavior(enable: true),
-              series: <CircularSeries>[DoughnutSeries<GoalCompletionData, String>(
-                    dataSource: getChartData(),
-                    explode: true,
-                    explodeOffset: '8%',
-                    startAngle: 0,
-                    endAngle:0,
-                    xValueMapper: (GoalCompletionData data, _) => data.name,
-                    yValueMapper: (GoalCompletionData data, _) => data.isComplete,
-                    dataLabelMapper: (GoalCompletionData data, _) => data.numPercent,
-                    pointColorMapper: (GoalCompletionData data, _) => data.pointColor,
-                    dataLabelSettings: DataLabelSettings (isVisible: true),
-                )
-              ],
-            )
-          ),
 
+          SizedBox(height: 30,),
           Container(
             width: 250,
             child: Row(
@@ -740,23 +765,23 @@ void checkDiffGoal() async{
                             child: Container(
                               constraints: BoxConstraints(maxWidth: 350.0, maxHeight: 40),
                               alignment: Alignment.center,
-                              child: Text('Within $goalIndex hours',
+                              child: Text('Under $goalIndex hours',
                                 style: TextStyle(color: Colors.white, fontSize: 20),
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 24,),
+                         SizedBox(height: 24,),
 
-                        ElevatedButton(onPressed:() async {
-                          await Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => ScreenTimePage()));
-                          //Once created refresh goals display page
-                          refreshScreenTime();
-                          refreshGoals();
-                        },
-                          child: Icon(Icons.atm),
-                        ),
+                        // ElevatedButton(onPressed:() async {
+                        //   await Navigator.of(context).push(
+                        //       MaterialPageRoute(builder: (context) => ScreenTimePage()));
+                        //   //Once created refresh goals display page
+                        //   refreshScreenTime();
+                        //   refreshGoals();
+                        // },
+                        //   child: Icon(Icons.atm),
+                        // ),
 
                         ElevatedButton (
                             onPressed: () async {
@@ -774,6 +799,7 @@ void checkDiffGoal() async{
                                   });
                                   addOrUpdateDiffTime();
                                   refreshGoals();
+                                  numOfCompleted();
                                 });
                             },
                             style: ElevatedButton.styleFrom(
