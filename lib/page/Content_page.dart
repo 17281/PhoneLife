@@ -585,15 +585,12 @@ void checkDiffGoal() async{
 
   void addOrUpdateDiffTime() async {
     if (diffGoals.isEmpty){
-      print('goal added');
       await addDiffGoal();
       }
     else {
       if (counter > 0 ){
-        print('goal 2 updated');
         await updateDiffGoal();
       } else {
-        print('goal 2 added');
         await addDiffGoal();
       }
     }
@@ -602,15 +599,12 @@ void checkDiffGoal() async{
   //add or update
   void addOrUpdateTotalTime() async{
     if (goals.isEmpty){
-      print('goal added');
       await addGoal();
     }
     else {
       if (secCounter > 0 ){
-        print('goal 2 updated');
         await updateGoal();
       } else {
-        print('goal 2 added');
         await addGoal();
       }
     }
@@ -677,7 +671,7 @@ void checkDiffGoal() async{
                 Container(
                   child: Text('Current Usage',
                     style: TextStyle(
-                      color: Color (0xffffaa00),
+                      color: Color (0xffffffff),
                       fontSize: 25
                     ),
                   ),
@@ -685,7 +679,11 @@ void checkDiffGoal() async{
 
                 Container(
                   child: Text('$_hours : $_min : $_sec',
-                  style: TextStyle(color:Colors.white, fontSize: 60),
+                  style: TextStyle(color: (hours <= 1)? Colors.green: (hours == 1 && min >= 30)? Color(
+                      0xff77c73a) : (hours <=2)? Color(0xff9bc206): (hours == 2 && min >= 30)? Color(
+                      0xffd9ff00) : (hours <= 3)? Colors.yellow : (hours == 3 && min >= 30)? Colors.amberAccent
+                      : (hours <= 4)? Color(0xfff8a500) : (hours == 4 && min >= 30)? Color(0xffff6702) : Colors.red
+                      , fontSize: 60),
                   ),
                 ),
                 Divider(),
@@ -722,13 +720,17 @@ void checkDiffGoal() async{
                 Container(
                   child: Text('Average Time',
                     style: TextStyle(
-                        color:Color(0xffffaa00),
+                        color:Color(0xffffffff),
                         fontSize: 25),
                   ),
                 ),
                 Container(
                   child: Text('$_diffHours : $_diffMin : $_diffSec',
-                    style: TextStyle(color: Colors.white, fontSize: 60,),
+                    style: TextStyle(color: (diffMin <= 3)? Colors.green: (diffMin <= 5 )? Color(
+                        0xff77c73a) : (diffMin <= 7)? Color(0xff9bc206): (diffMin <=  9 )? Color(
+                        0xffd9ff00) : (diffMin <= 10 )? Colors.yellow : (diffMin <= 12 )? Colors.amberAccent
+                        : (diffMin <= 14)? Color(0xfff8a500) : (diffMin <= 15)? Color(0xffff6702) : Colors.red
+                        , fontSize: 60),
                   ),
                 ),
               ]
@@ -792,15 +794,15 @@ void checkDiffGoal() async{
                         ),
                          SizedBox(height: 24,),
 
-                        // ElevatedButton(onPressed:() async {
-                        //   await Navigator.of(context).push(
-                        //       MaterialPageRoute(builder: (context) => ScreenTimePage()));
-                        //   //Once created refresh goals display page
-                        //   refreshScreenTime();
-                        //   refreshGoals();
-                        // },
-                        //   child: Icon(Icons.atm),
-                        // ),
+                        ElevatedButton(onPressed:() async {
+                          await Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => ScreenTimePage()));
+                          //Once created refresh goals display page
+                          refreshScreenTime();
+                          refreshGoals();
+                        },
+                          child: Icon(Icons.atm),
+                        ),
 
                         ElevatedButton (
                             onPressed: () async {
@@ -849,16 +851,16 @@ void checkDiffGoal() async{
                 ]),
           ),
 
-          MaterialButton(onPressed: () async {
-            if (isStartService == false) {
-              startForegroundService();
-              setState(()=> isStartService = true);
-            } else {
-              await FlutterForegroundPlugin.stopForegroundService();
-              setState(()=> isStartService = false);
-            }
-          }, color: Colors.orange, child: Text((isStartService == false)? "startService" : "stopService"),
-          )
+          // MaterialButton(onPressed: () async {
+          //   if (isStartService == false) {
+          //     startForegroundService();
+          //     setState(()=> isStartService = true);
+          //   } else {
+          //     await FlutterForegroundPlugin.stopForegroundService();
+          //     setState(()=> isStartService = false);
+          //   }
+          // }, color: Colors.orange, child: Text((isStartService == false)? "startService" : "stopService"),
+          // )
         ]),
     );
   }
