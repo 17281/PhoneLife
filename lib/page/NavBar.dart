@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:phoneapp/db/User_database.dart';
-import 'package:phoneapp/page/Content_page.dart';
 import 'package:phoneapp/Utils.dart';
 
 class NavBar extends StatefulWidget {
-  int totalTime;
-  int totalAverageTime;
-  int? countOfCompletedGoals;
-  int? countOfUncompletedGoals;
-  int screenCount;
+  final int totalTime;
+  final int totalAverageTime;
+  final int? countOfCompletedGoals;
+  final int? countOfUncompletedGoals;
+  final int screenCount;
   NavBar({
     required this.totalTime,
     required this.totalAverageTime,

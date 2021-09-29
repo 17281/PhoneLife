@@ -191,7 +191,6 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
   int counter = 10;
 
   void diffTimer() {
-    counter = 10;
     _diffTimer = Timer.periodic(Duration(seconds: 1),(timer) {
       if (counter > 0) {
         setState(() {
@@ -199,13 +198,15 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
         });
       }else {
         timer.cancel();
+        setState(() {
+          counter = 10;
+        });
         checkDiffGoal();
       }
     });
   }
 
   void startTimer() {
-    secCounter = 10;
     _timer = Timer.periodic(Duration(seconds: 1),(timer) {
       if (secCounter > 0) {
         setState(() {
@@ -213,6 +214,9 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
         });
       }else {
         timer.cancel();
+        setState(() {
+          secCounter = 10;
+        });
         checkGoal();
       }
     });
@@ -896,7 +900,8 @@ void checkDiffGoal() async{
     final finalPercentC = ('$percentageC%').toString();
     final finalPercentUC = ('$percentageUC%').toString();
     final List<GoalCompletionData> chartData = <GoalCompletionData>[
-      GoalCompletionData(unCompletedNum, 'Not Completed', finalPercentUC, Colors.redAccent),
+      GoalCompletionData(unCompletedNum, 'Not Completed', finalPercentUC, Color(
+          0xFFE57A07)),
       GoalCompletionData(completedNum, 'Completed', finalPercentC, Colors.indigoAccent)
 
     ];

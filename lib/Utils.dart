@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:phoneapp/page/Content_page.dart';
 class Utils {
 
   static bool goalChosen = true;
