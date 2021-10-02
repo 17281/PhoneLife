@@ -97,6 +97,13 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     calculateTotalTime();
     calculateDiffTime();
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final _hours = twoDigits(hours);
+    final _min = twoDigits(min);
+    final _sec = twoDigits(sec);
+    final _diffHours = twoDigits(diffH);
+    final _diffMin = twoDigits(diffMin);
+    final _diffSec = twoDigits(diffSec);
     return Drawer(
       child: Container (
         color: Colors.grey,
@@ -120,7 +127,7 @@ class _NavBarState extends State<NavBar> {
                   Divider(),
                   ListTile(
                     leading: Icon(Icons.add_alarm_outlined),
-                    trailing: Text("$hours : $min : $sec", style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                    trailing: Text("$_hours : $_min : $_sec", style: TextStyle(fontSize: 12, color: Colors.white) ,),
                     title: Container(
                       child: Text(' Screen Time', style: TextStyle(fontSize: 17, color: Colors.white),),
                     ),
@@ -128,7 +135,7 @@ class _NavBarState extends State<NavBar> {
                   SizedBox(height:50,),
                   ListTile(
                     leading: Icon(Icons.add_to_home_screen),
-                    trailing: Text("$diffH: $diffMin : $diffSec", style: TextStyle(fontSize: 12, color: Colors.white) ,),
+                    trailing: Text("$_diffHours: $_diffMin : $_diffSec", style: TextStyle(fontSize: 12, color: Colors.white) ,),
                     title: Container(
                       child: Text('Average Screen Time', style: TextStyle(fontSize: 17, color: Colors.white),),
                     ),

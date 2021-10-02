@@ -671,7 +671,7 @@ void checkDiffGoal() async{
                 Container(
                   child: Text('Current Usage',
                     style: TextStyle(
-                      color: Color (0xffffffff),
+                      color: Color (0xffffab02),
                       fontSize: 25
                     ),
                   ),
@@ -679,7 +679,7 @@ void checkDiffGoal() async{
 
                 Container(
                   child: Text('$_hours : $_min : $_sec',
-                  style: TextStyle(color: (hours <= 1)? Colors.green: (hours == 1 && min >= 30)? Color(
+                  style: TextStyle(color: (hours <= 1)? Colors.white: (hours == 1 && min >= 30)? Color(
                       0xff77c73a) : (hours <=2)? Color(0xff9bc206): (hours == 2 && min >= 30)? Color(
                       0xffd9ff00) : (hours <= 3)? Colors.yellow : (hours == 3 && min >= 30)? Colors.amberAccent
                       : (hours <= 4)? Color(0xfff8a500) : (hours == 4 && min >= 30)? Color(0xffff6702) : Colors.red
@@ -688,7 +688,7 @@ void checkDiffGoal() async{
                 ),
                 Divider(),
                 Container(
-                    height: 250,
+                    height: 300,
                     child: (completedNum == 0 && unCompletedNum == 0) ? Center(
                       child: LinearProgressIndicator(
                         color: Colors.white,
@@ -697,13 +697,30 @@ void checkDiffGoal() async{
                     ) :
                     SfCircularChart(
                       title: ChartTitle(
-                          text:'Goal Chart',
+                        text:'Completion Chart',
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontStyle: FontStyle.italic
+                        ) ,
                       ),
                       tooltipBehavior: TooltipBehavior(enable: true),
+                      legend: Legend(
+                        isVisible: true,
+                        toggleSeriesVisibility: true,
+                        position: LegendPosition.bottom,
+                        orientation: LegendItemOrientation.horizontal,
+                        opacity: 0.3,
+                        title: LegendTitle( text: 'Goal status',
+                          textStyle:
+                            TextStyle(
+                              color: Colors.white,),
+                        ),
+                        textStyle:
+                          TextStyle(
+                            color: Colors.white,),
+                      ),
                       series: <CircularSeries>[DoughnutSeries<GoalCompletionData, String>(
                         dataSource: getChartData(),
-                        explode: true,
-                        explodeOffset: '8%',
                         startAngle: 0,
                         endAngle:0,
                         xValueMapper: (GoalCompletionData data, _) => data.name,
@@ -716,17 +733,17 @@ void checkDiffGoal() async{
                     )
                 ),
                 Divider(),
-                SizedBox(height: 30, ),
+                SizedBox(height: 10, ),
                 Container(
                   child: Text('Average Time',
                     style: TextStyle(
-                        color:Color(0xffffffff),
+                        color:Color(0xffffab02),
                         fontSize: 25),
                   ),
                 ),
                 Container(
                   child: Text('$_diffHours : $_diffMin : $_diffSec',
-                    style: TextStyle(color: (diffMin <= 3)? Colors.green: (diffMin <= 5 )? Color(
+                    style: TextStyle(color: (diffMin <= 3)? Colors.white: (diffMin <= 5 )? Color(
                         0xff77c73a) : (diffMin <= 7)? Color(0xff9bc206): (diffMin <=  9 )? Color(
                         0xffd9ff00) : (diffMin <= 10 )? Colors.yellow : (diffMin <= 12 )? Colors.amberAccent
                         : (diffMin <= 14)? Color(0xfff8a500) : (diffMin <= 15)? Color(0xffff6702) : Colors.red
@@ -738,7 +755,7 @@ void checkDiffGoal() async{
             alignment: Alignment.center,
           ),
 
-          SizedBox(height: 30,),
+          SizedBox(height: 20,),
           Container(
             width: 250,
             child: Row(
@@ -760,7 +777,6 @@ void checkDiffGoal() async{
                                   final goalValue = goalValues[goalIndex];
                                   Utils.showSnackBar(context, '"$goalValue" has been selected, Survive the day without using your phone over $goalIndex hours');
                                   Navigator.pop(context);
-
                                   setState(() {
                                     goalTime = goalIndex;
                                     this.createdTime = DateTime.now();
@@ -794,15 +810,15 @@ void checkDiffGoal() async{
                         ),
                          SizedBox(height: 24,),
 
-                        ElevatedButton(onPressed:() async {
-                          await Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => ScreenTimePage()));
-                          //Once created refresh goals display page
-                          refreshScreenTime();
-                          refreshGoals();
-                        },
-                          child: Icon(Icons.atm),
-                        ),
+                        // ElevatedButton(onPressed:() async {
+                        //   await Navigator.of(context).push(
+                        //       MaterialPageRoute(builder: (context) => ScreenTimePage()));
+                        //   //Once created refresh goals display page
+                        //   refreshScreenTime();
+                        //   refreshGoals();
+                        // },
+                        //   child: Icon(Icons.atm),
+                        // ),
 
                         ElevatedButton (
                             onPressed: () async {
@@ -919,7 +935,7 @@ void checkDiffGoal() async{
     final finalPercentUC = ('$percentageUC%').toString();
     final List<GoalCompletionData> chartData = <GoalCompletionData>[
       GoalCompletionData(unCompletedNum, 'Not Completed', finalPercentUC, Color(
-          0xFFE57A07)),
+          0xFFEC674B)),
       GoalCompletionData(completedNum, 'Completed', finalPercentC, Colors.indigoAccent)
 
     ];
