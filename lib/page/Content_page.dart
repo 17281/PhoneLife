@@ -7,7 +7,6 @@ import 'package:phoneapp/model/Goals.dart';
 import 'package:rxdart/rxdart.dart';
 import '../Utils.dart';
 import 'package:phoneapp/model/ScreenTime.dart';
-import 'package:phoneapp/page/Screen_Time_Page.dart';
 import 'dart:async';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:phoneapp/model/DiffTime.dart';
@@ -810,16 +809,6 @@ void checkDiffGoal() async{
                         ),
                          SizedBox(height: 24,),
 
-                        // ElevatedButton(onPressed:() async {
-                        //   await Navigator.of(context).push(
-                        //       MaterialPageRoute(builder: (context) => ScreenTimePage()));
-                        //   //Once created refresh goals display page
-                        //   refreshScreenTime();
-                        //   refreshGoals();
-                        // },
-                        //   child: Icon(Icons.atm),
-                        // ),
-
                         ElevatedButton (
                             onPressed: () async {
                               Utils.diffGoalChosen = ContentPage.diffGoalChosen;
@@ -866,17 +855,6 @@ void checkDiffGoal() async{
                   ),
                 ]),
           ),
-
-          // MaterialButton(onPressed: () async {
-          //   if (isStartService == false) {
-          //     startForegroundService();
-          //     setState(()=> isStartService = true);
-          //   } else {
-          //     await FlutterForegroundPlugin.stopForegroundService();
-          //     setState(()=> isStartService = false);
-          //   }
-          // }, color: Colors.orange, child: Text((isStartService == false)? "startService" : "stopService"),
-          // )
         ]),
     );
   }

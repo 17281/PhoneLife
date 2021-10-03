@@ -396,7 +396,7 @@ class ScreenTimeDatabase {
   //read all content then list them
   Future<List<ScreenContents>> readAllTime() async {
     final db = await instance.database;
-    ///   Sorts data by time      ASC == asending order
+    ///   Sorts data by time      ASC == ascending order
     final orderBy = '${STFields.startTime} ASC';
     final result = await db.query(screenTimeTable, orderBy: orderBy);
     print (result);
