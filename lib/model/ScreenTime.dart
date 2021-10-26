@@ -7,7 +7,6 @@ class STFields {
   static final List<String> values = [
     ST_id, startTime, stopTime, diffTime, createdTime,
   ];
-  ///TODO:Add Bool of IsScreenON?
   static final String ST_id = '_STid';
   static final String startTime = 'startTime';
   static final String stopTime = 'stopTime';

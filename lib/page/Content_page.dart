@@ -1,32 +1,32 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:phoneapp/db/User_database.dart';
-import 'package:phoneapp/model/Goals.dart';
-import 'package:rxdart/rxdart.dart';
-import '../Utils.dart';
-import 'package:phoneapp/model/ScreenTime.dart';
 import 'dart:async';
+
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:phoneapp/model/DiffTime.dart';
 import 'package:is_lock_screen/is_lock_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_foreground_plugin/flutter_foreground_plugin.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'package:phoneapp/model/ScreenTime.dart';
+import 'package:phoneapp/db/User_database.dart';
+import 'package:phoneapp/model/Goals.dart';
+import 'package:phoneapp/model/DiffTime.dart';
 import 'package:phoneapp/page/NavBar.dart';
+import '../Utils.dart';
 
 class NotificationService {
   static final NotificationService _notificationService =
   NotificationService._internal();
-
   factory NotificationService() {
     return _notificationService;
   }
   NotificationService._internal();
-
 }
 
 void startForegroundService() async {
@@ -63,8 +63,6 @@ class ContentPage extends StatefulWidget {
 
 //the state of content page remains as a stateful widget
 class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
-
-
   //counting the amount of time phone is opened
   int screenCounter = 0;
   bool isStartService = false;
@@ -97,24 +95,22 @@ class _ContentPageState extends State<ContentPage> with WidgetsBindingObserver{
     if (x <= 1) {
       //only seconds if average time is lesser than 60sec
       setState(() => diffSec = averageSec);
-    }
-    else {
+    } else {
       //Seconds
       var seconds = averageSec%60;
       setState(() => diffSec = seconds);
 
       //Minutes
-      var z = (x%60).round();
-      setState(() => diffMin = z);
+      var minutes = (x%60).round();
+      setState(() => diffMin = minutes);
 
       //Only hours if seconds < 3600
-      var y = (x/60).round();
-      if (y <= 0) {
+      var hours = (x/60).round();
+      if (hours <= 0) {
         setState(() => diffH = 0);
-      }
-      else {
+      } else {
         //Hours
-        setState(() => diffH = y%60);
+        setState(() => diffH = hours%60);
       }
     }
   }
@@ -431,9 +427,11 @@ void checkDiffGoal() async{
   Future submit()async {
     //Duration between initial time to final time
     Duration difference = stopTime.difference(startTime);
+    //converts the difference in time from duration class into integer
     final diffTime = difference.inSeconds;
     print(diffTime);
     timeStamp = DateFormat.yMd().format(DateTime.now());
+    //Awaits and adds all the entries into the database
     final finalTime = ScreenContents(
         stopTime: DateTime.now(),
         startTime: startTime,
@@ -524,7 +522,6 @@ void checkDiffGoal() async{
       isDiffComplete: true
     );
     await DiffTimeDatabase.instance.updateDiffGoal(currentDiffGoal);
-
     Utils.showSnackBar(context, 'The difference goal of $diffGoalTime is completed!');
   }
 
@@ -655,13 +652,13 @@ void checkDiffGoal() async{
         screenCount: screenCounter,
       ),
         appBar: AppBar(
-          // title: Text('Number of completed goals: $completedNum'),
         ),
     body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          
           Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -801,7 +798,7 @@ void checkDiffGoal() async{
                             child: Container(
                               constraints: BoxConstraints(maxWidth: 350.0, maxHeight: 40),
                               alignment: Alignment.center,
-                              child: Text('Under $goalIndex hours',
+                              child: Text ((ContentPage.goalChosen == false) ? 'Daily Goal' : 'Under $goalIndex hour(s)',
                                 style: TextStyle(color: Colors.white, fontSize: 20),
                               ),
                             ),
@@ -816,9 +813,8 @@ void checkDiffGoal() async{
                                 child: buildTimerPicker(),
                                 onClicked: () {
                                 final timeValues = values[index];
-                                  Utils.showSnackBar(context, '$timeValues minutes has been selected');
+                                  Utils.showSnackBar(context, '$timeValues minute(s) has been selected');
                                   Navigator.pop(context);
-
                                   final timeValue = int.parse(timeValues);
                                   setState(() {
                                     diffGoalTime = timeValue;
@@ -844,7 +840,7 @@ void checkDiffGoal() async{
                               child: Container (
                                 constraints: BoxConstraints(maxWidth: 350.0, maxHeight: 40),
                                 alignment: Alignment.center,
-                                child: Text('Under $index Minutes',
+                                child: Text( (ContentPage.diffGoalChosen == false) ? 'Hourly Goal' : 'Under $index Minute(s)',
                                   style: TextStyle(color: Colors.white, fontSize: 20)
                                 ),
                               ),

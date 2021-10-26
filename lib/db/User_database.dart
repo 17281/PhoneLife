@@ -309,9 +309,9 @@ class ScreenTimeDatabase {
   Future<Database> _initScreenTimeDB(String filepath ) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
-  //version of database
     //TODO:REMEBER TO DELETE
     await deleteDatabase(path);
+    ///The current version of the database and calls the function which creates the db
   return await openDatabase(path, version: 3, onCreate: _createScreenTimeDB);
   }
 
@@ -355,7 +355,7 @@ class ScreenTimeDatabase {
     final orderBy1 = '${STFields.ST_id} ASC';
     String dateToday = DateFormat.yMd().format(DateTime.now()).toString();
     final totalTimerResults = await db.rawQuery('SELECT SUM(diffTime) FROM $screenTimeTable WHERE createdTime = ? ORDER BY $orderBy1 ', ["$dateToday"]);
-    //converting string to datetime variables
+    ///converting string into datetime variables then inserts into DB
     final timeResult = int.parse(totalTimerResults[0]['SUM(diffTime)'].toString());
 
     finalTime = timeResult;
@@ -411,7 +411,7 @@ class ScreenTimeDatabase {
       screenTimeTable,
       content.toJson(),
 
-      //defining which data you want to update
+      ///defining which data you want to update
       where: '${STFields.ST_id} = ?',
       whereArgs: [content.ST_id],
     );
