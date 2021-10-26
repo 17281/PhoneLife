@@ -26,8 +26,6 @@ class DiffTimeDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
     //opens database file with its pathway
-    //TODO:REMEBER TO DELETE
-    await deleteDatabase(path);
     return await openDatabase(path, version: 3, onCreate: _createDB);
   }
 
@@ -174,8 +172,6 @@ class DiffTimeDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
     //opens database file with its pathway
-    //TODO:REMEBER TO DELETE
-    await deleteDatabase(path);
     return await openDatabase(path, version: 3, onCreate: _createDB);
   }
 
@@ -309,8 +305,6 @@ class ScreenTimeDatabase {
   Future<Database> _initScreenTimeDB(String filepath ) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
-    //TODO:REMEBER TO DELETE
-    await deleteDatabase(path);
     ///The current version of the database and calls the function which creates the db
   return await openDatabase(path, version: 3, onCreate: _createScreenTimeDB);
   }
@@ -396,7 +390,7 @@ class ScreenTimeDatabase {
   //read all content then list them
   Future<List<ScreenContents>> readAllTime() async {
     final db = await instance.database;
-    ///   Sorts data by time      ASC == ascending order
+    ///   Sorts data by time      ASC == asending order
     final orderBy = '${STFields.startTime} ASC';
     final result = await db.query(screenTimeTable, orderBy: orderBy);
     print (result);

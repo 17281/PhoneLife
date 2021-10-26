@@ -16,7 +16,7 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static final String title = '';
+  static final String title = 'User';
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,

@@ -5,7 +5,7 @@ final String userTable = 'User';
 class UserFields {
   static final List<String> values = [
     ///add all fields
-    id, isCompleted, goalTime ,time,
+    id, isCompleted, goalTime ,time, //description
   ];
 
   static final String id = '_id';
@@ -13,6 +13,7 @@ class UserFields {
   static final String goalTime = 'goalTime';
   static final String time = 'time';
 }
+
 
 //Contents of table in flutter
 class UserContent {
